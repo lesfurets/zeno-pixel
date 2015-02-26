@@ -179,6 +179,7 @@ To run e2e tests
 
 ##Todo
 
+ * Drop jquery and jquery-ui (D&D issue)
  * Windows suport
  * Easiest way to add and edit page config
  * New api to get the tasks in progress
