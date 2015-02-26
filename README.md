@@ -21,20 +21,12 @@ if the [prerequistes](https://github.com/lesfurets/zeno-pixel/blob/master/docs/g
 
     npm install
 
-Zeno has never been tested on windows and probably don't work. Need to migrate the path concatenation with path.join()
+To start zeno
 
-## Usage
+    node zenoServer.js
 
-[Configure](https://github.com/lesfurets/zeno-pixel/blob/master/docs/getting-started.md#config) the pages using page_template.json<br>
-Build and run:
-
-    grunt
-    node zenoServer.js [parameters]
-
-Available parameters:<br>
-* `--port`: application port (default: 1337)<br>
-* `--log`: log file name<br>
-* `--file`: configuration file name (default: pages.json)
+To have more details about usage, see [USAGE](https://github.com/lesfurets/zeno-pixel/blob/master/docs/getting-started.md#usage) section<br>
+Zeno has never been tested on windows and probably don't work.
 
 ## Todo
 
