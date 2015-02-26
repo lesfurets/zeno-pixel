@@ -1,0 +1,11 @@
+node_modules/*
+screenshots/*
+js/zeno*
+css/zeno*
+
+js/bower_components/
+*/.DS_Store
+*.log
+*.pdf
+pages.json
+.eslintrc

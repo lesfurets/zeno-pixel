@@ -1,0 +1,9 @@
+header
+  div(class="logo")
+      a(href="#/compare")
+          div(class="s") ZENO
+  div(class="search", ng-class="{'search-open': showSearch}")
+      div(ng-click="showSearch=!showSearch")
+          i(class="fa fa-search")
+      input(type="text", ng-model="query")
+      i(class="fa fa-times", ng-click="query=''")

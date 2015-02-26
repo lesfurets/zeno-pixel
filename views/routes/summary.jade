@@ -1,0 +1,31 @@
+h2 Summary
+
+div(class="central summary")
+    div(class="block")
+        ul
+            li(class="flex")
+                label Desktop
+                span {{results.desktop.results.length}}
+                div(class="progress-bar")
+                    div(class="progress", ng-style="{'width': (results.desktop.results.length + 1) + '%'}")
+            li(class="flex")
+                label Tablet
+                span {{results.tablet.results.length}}
+                div(class="progress-bar")
+                    div(class="progress", ng-style="{'width': (results.tablet.results.length + 1) + '%'}")
+            li(class="flex")
+                label Mobile
+                span {{results.mobile.results.length}}
+                div(class="progress-bar")
+                    div(class="progress", ng-style="{'width': (results.mobile.results.length + 1) + '%'}")
+    div(class="block")
+        ul
+            li
+                label Success
+                span(style="color:#109618") {{list.desktop.length + list.mobile.length + list.tablet.length - (results.desktop.results.length + results.mobile.results.length + results.tablet.results.length)}}
+            li
+                label Warning
+                span(style="color:#FF9900") 0
+            li
+                label Error
+                span(style="color:#DC3912") {{results.desktop.results.length + results.mobile.results.length + results.tablet.results.length}}

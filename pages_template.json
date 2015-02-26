@@ -1,0 +1,17 @@
+{
+	"host" : "{$alias}lesfurets.com",
+	"envs" : [
+		{"alias": "test", "server" : "test.", "port": 8080},
+		{"alias": "prod", "server": "", "alternative": ["mobile."]}
+	],
+	"sitemap" : ["sitemapUrl", ""],
+	"desktop" : [
+	    {"url": "$host", "name": "homepage"}
+	],
+	"mobile": [
+		{"url": "$host", "name": "responsive"},
+		{"url": "$host", "name": "nonresponsive", "alternative": 0}
+	],
+	"tablet": [
+	]
+}

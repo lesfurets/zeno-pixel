@@ -1,0 +1,65 @@
+div(lazy-img)
+  div(class="thead pages")
+    ul
+      li(ng-click="hideUrls=!hideUrls;rowReduce()")
+        span url
+      li(ng-repeat="env in list.envs", ng-mouseenter="env.visible=true", ng-mouseleave="env.visible=false")
+        span
+          a(href='#/env/{{env.alias}}/{{device}}') {{env.alias}}
+        i(class="fa fa-refresh refreshEnv", ng-show="!env.offset && env.visible", ng-click="refreshEnv(env, $index)")
+      li
+        span result
+  table(class="screens", ng-hide="hideUrls")
+    tbody
+      tr(ng-repeat="url in (filtered = (list[device] | filter: filterList))", ng-class="{hideLine: url.low, success: url.success, failure: url.failure}", ng-show="hide($index)")
+        td(ng-click="url.low=!url.low;rowReduce()") {{url.name}}
+        td(ng-repeat="env in list.envs", ng-mouseenter="hover=true", ng-mouseleave="hover=false")
+          div(ng-model="$parent.name", data-drop="true", jqyoui-droppable="{onDrop:'dropCallback($index, url.name, $parent.$index)'}", class="td")
+            a(ng-href="#/history/{{env.server}}{{url.name}}", class="link dragLink")
+              img(class="lazy", data-offset="{{env.offset}}", data-original="{{resolveDiskPath(env.server, url.name, url.params, env.offset)}}", ng-model="$parent.name", ng-class="{draging: url.draging}", data-drag="true", data-jqyoui-options="{revert: 'invalid'}", jqyoui-draggable="{index: {{$index}}, onStart:'dragStart()', onStop:'dragStop()'}")
+            i(class="refreshScreen fa fa-refresh", ng-show="!env.offset && hover", ng-click="refreshImage($index, $parent.$index)")
+            a(ng-href="{{resolveHost(env, url)}}", target="_blank")
+              i(class="fa fa-external-link", style="top:80px", ng-show="hover")
+            div(ng-class="{glasspaneRefresh : isRefreshing(url, $index)}")
+        td
+          div(class="td")
+            div(class="webperf", ng-show="webperf", ng-if="url.webperf")
+              div
+                label Time
+                span {{url.webperf.time / 1000}} s
+              div
+                label Requests
+                span {{url.webperf.req}}
+              div
+                label Size
+                span {{url.webperf.size  / 1000}} ko
+            i(class="fa fa-info-circle", ng-mouseenter="webperf=true", ng-mouseleave="webperf=false")
+            div(class="ratio ratio{{$index}}")
+              div(class="diffHeader") Last mismatch: {{url.percentage}} %
+              a(ng-if="url.src", href="#/compare")
+                img(ng-src="{{url.src}}")
+  div(class="thead emails")
+    ul
+      li(ng-click="hideEmails=!hideEmails")
+        span Email
+      li
+        span Current
+      li
+        span Previous
+      li
+        span result
+  table(class="screens", ng-hide="hideEmails")
+    tbody
+      tr(ng-repeat="email in (filteredEmail = (list.emails | filter: filterList))")
+        td(ng-click="low=!low;rowReduce()") {{email.name}}
+        td(ng-mouseenter="hover=true", ng-mouseleave="hover=false")
+          div(ng-model="email.name", data-drop="true", jqyoui-droppable="{onDrop:'emailDropCallback(email.name, $index)'}", class="td")
+            a(ng-href="#/history/{{email.name}}", class="link dragLink")
+              img(ng-model="email.name", class="lazy", data-original="{{resolveDiskPath('', email.name)}}", data-drag="true", data-jqyoui-options="{revert: 'invalid'}", jqyoui-draggable="{index: {{$index}}, onStart:'dragStart()', onStop:'dragStop()'}")
+            i(class="refreshScreen fa fa-refresh", ng-show="!env.offset && hover", ng-click="refreshEmail($index)")
+        td
+          div(ng-model="email.name", data-drop="true", jqyoui-droppable="{onDrop:'emailDropCallback(email.name, $index)'}")
+            a(ng-href="#/history/{{email.name}}", class="link dragLink")
+              img(ng-model="email.name", class="lazy", data-original="{{resolveDiskPath('', email.name, '', -1)}}", data-drag="true", data-jqyoui-options="{revert: 'invalid'}", jqyoui-draggable="{index: {{$index}}, onStart:'dragStart()', onStop:'dragStop()'}")
+        td
+          div(class="emailRatio{{$index}}")

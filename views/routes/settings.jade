@@ -1,0 +1,83 @@
+div(class='detail')
+  div(class="detailControl")
+    div
+      button(class="btn add", ng-click="updateModel()") Save
+
+    h3 Settings
+
+    div(style="color:rgb(211, 63, 26)")
+      i(class='fa fa-warning', style='float:left')
+      div(style='float:left; padding:0; margin-left:6px')
+        span Image name is not editable.
+        br
+        span Use "Save" button to save on disk.
+
+  div(class="detailContent")
+    ul(class='list')
+      li(class="list-row", style='cursor:default;padding: 0 20px')
+        div(style="padding:0")
+          div(style="width:15%;float:left") Generic Host :
+          div {{list.host}}
+        div(style='overflow:auto')
+          div(style="padding:0; float:left;width:15%;") Environments:
+          div(class='pageInfos')
+            header
+              div Alias
+              div Value
+            ul(ui-sortable="sortableOptions", ng-model="list.envs")
+              li(ng-repeat="env in list.envs")
+                div {{$index + 1}}
+                div {{env.alias}}
+                div {{env.server}}
+                div ☰
+          div(style="float:left;color:rgb(211, 63, 26);margin-left:30px") Order the list according to the environment weight criteria
+            br
+            span Full comparaison from top 2 is executed after each environment update.
+        div
+          div(style="width:15%;float:left") Engine :
+          div(class="engineSwitch")
+            div PhantomJs
+            div(class="onoffswitch")
+              input(type="checkbox", name="onoffswitch", class="onoffswitch-checkbox", id="myonoffswitch", ng-model="engine", ng-change="updateEngine()")
+              label(class="onoffswitch-label", for="myonoffswitch")
+                span(class="onoffswitch-inner")
+                span(class="onoffswitch-switch")
+            div SlimerJS
+      li
+        div(ng-click="show.desktop = !show.desktop", ng-class="{selected : show.desktop}")
+          a Desktop
+          span(class="length") {{list.desktop.length}}
+        ul(ng-show="show.desktop")
+          li(ng-repeat='url in (filtered.desktop = (list.desktop | filter:query))', ng-mouseenter="visible.d=true", ng-mouseleave="visible.d=false")
+            div(style="width:30%")
+              span Name
+              span {{url.name}}
+            div(style='float:left')
+              span Url
+              input(ng-model='url.url')
+
+      li
+        div(ng-click="show.tablet = !show.tablet", ng-class="{selected : show.tablet}")
+          a(ng-click="") Tablet
+          span(class="length") {{list.tablet.length}}
+        ul(ng-show="show.tablet")
+          li(ng-repeat='url in (filtered.tablet = (list.tablet | filter:query))', ng-mouseenter="visible.t=true", ng-mouseleave="visible.t=false")
+            div(style="width:30%")
+              span Name
+              span {{url.name}}
+            div(style='float:left')
+              span Url
+              input(ng-model='url.url')
+
+      li
+        div(ng-click="show.mobile = !show.mobile", ng-class="{selected : show.mobile}")
+          a(ng-click="") Mobile
+          span(class="length") {{list.mobile.length}}
+        ul(ng-show="show.mobile")
+          li(ng-repeat='url in (filtered.mobile = (list.mobile | filter:query))', ng-mouseenter="visible.m=true", ng-mouseleave="visible.m=false")
+            div(style="width:30%")
+              span Name
+              span {{url.name}}
+            div(style='float:left')
+              span Url
+              input(ng-model='url.url')

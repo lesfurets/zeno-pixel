@@ -1,0 +1,18 @@
+{
+	"host" : "{$alias}localhost",
+	"envs" : [
+		{"alias": "production", "server": "", "alternative": ["mobile."], "port": 1340},
+		{"alias": "dev", "server": ""}
+	],
+	"desktop" : [
+	    {"url": "$host/mock", "name": "mock"},
+	    {"url": "google.fr", "name": "google"}
+	],
+	"mobile": [
+	    {"url": "$host/mock", "name": "mobile-mock"},
+	    {"url": "$host", "name": "nonresponsive", "alternative":0}
+	],
+	"tablet": [
+		{"url": "$host", "name": "tabletHomepage"}
+	]
+}

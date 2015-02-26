@@ -1,0 +1,118 @@
+doctype html
+html(ng-app="zeno", ng-controller="GlobalController as global", lang="en")
+    head
+        title Zeno
+        link(href='//fonts.googleapis.com/css?family=Lato:300,400,700', rel='stylesheet', type='text/css')
+        link(href='css/font-awesome.min.css', rel='stylesheet', type='text/css')
+        link(rel='stylesheet', media="screen", href='css/zeno.css')
+    body(class="fancy-scrollbar", ng-keypress="keyPress($event)", scroll-detection)
+        a(id="back-to-top")
+          i(class="fa fa-chevron-up")
+
+        include nav
+
+        div(class="summary")
+            div(class="block refine")
+                div(class="filter")
+                    span Filters
+                    p
+                        input(type='checkbox', ng-model="hideSuccess", id="hs")
+                        label(for="hs", class="checkbox")
+                        span Hide success ({{list[device].length - results[device].results.length}})
+                    p
+                        input(type='checkbox', ng-model="hideFailures", id="hf")
+                        label(for="hf", class="checkbox")
+                        span Hide failures ({{results[device].results.length}})
+                div(class="threshold")
+                    span Threshold : {{sliderOffset}} %
+                    div(class="flex", style="margin-top:20px")
+                        div 0
+                        div(slider, class="slider")
+                            div(class="slider-back")
+                            div(class="slider-progress")
+                            div(class="slider-button")
+                        div 100
+
+            div(class="block compare")
+                span Select 2 environments
+                form
+                    div(class="envList")
+                        p(ng-repeat="env in list.envs", style="display:inline")
+                          input(type='checkbox', ng-model="compareform.env[env.alias]", id="{{env.alias}}")
+                          label(for="{{env.alias}}", class="checkbox")
+                          span {{env.alias}}
+                    div(ng-show="compareform.valid==2", class="launch")
+                        div Remaining: {{ listToCompare.length }} / {{ list[device].length }}
+                        button(ng-click="compareAll()" ng-class="{stopCompare: compareform.comparing}") {{compareform.text}}
+            div(class="block pieblock")
+                ul
+                    li
+                        label Desktop
+                        span {{results.desktop.results.length}} / {{list.desktop.length}}
+                    li
+                        label Tablet
+                        span {{results.tablet.results.length}} / {{list.tablet.length}}
+                    li
+                        label Mobile
+                        span {{results.mobile.results.length}} / {{list.mobile.length}}
+                ul
+                    li
+                        label Engine
+                        span {{list.engine}}
+                    li
+                        label Tasks
+                    li
+                        label
+        div(class="container")
+            div(class="tabs")
+                div(class="tab", ng-class="{active: isTabActive('desktop')}")
+                    a(href='#/compare/desktop')
+                        span Desktop
+                div(class="tab", ng-class="{active: isTabActive('tablet')}")
+                    a(href='#/compare/tablet')
+                        span Tablet
+                div(class="tab", ng-class="{active: isTabActive('mobile')}")
+                    a(href='#/compare/mobile')
+                        span Mobile
+            div(class="subcontainer")
+                nav
+                    ul
+                        li(ng-class="{active: isIconActive()}")
+                            a(href="#/compare")
+                                i(class="fa fa-picture-o")
+                        li(ng-class="{active: location.path()=='/summary'}")
+                            a(href="#/summary")
+                                i(class="fa fa-line-chart")
+                        li(ng-class="{active: location.path()=='/settings'}")
+                            a(href="#/settings")
+                                i(class="fa fa-cog")
+                        li(ng-class="{active: location.path()=='/log'}")
+                            a(href="#/log")
+                                i(class="fa fa-info")
+                div(class="main")
+                    div(ng-view)
+
+    //- Third party
+    script(src="js/bower_components/jquery/jquery.min.js")
+    script(src="js/bower_components/jquery-ui/jquery-ui.min.js")
+
+    script(src="js/bower_components/angular/angular.min.js")
+    script(src="js/bower_components/angular-route/angular-route.min.js")
+    script(src="js/bower_components/angular-resource/angular-resource.min.js")
+    script(src="js/bower_components/angular-sanitize/angular-sanitize.min.js")
+    script(src="js/bower_components/angular-dragdrop/src/angular-dragdrop.min.js")
+    script(src="/js/libs/resemble.js")
+    script(src="/js/libs/sortable.js")
+    //- script(src="socket.io/socket.io.js")
+    script(src="//cdn.socket.io/socket.io-1.1.0.js")
+    script(src='/js/bower_components/angular-socket-io/socket.js')
+
+    //- Application
+    script(src="/js/zeno.js")
+    script(src="/js/zeno-services.js")
+    script(src="/js/zeno-controllers.js")
+    script(src="/js/zeno-filters.js")
+    script(src="/js/zeno-directives.js")
+
+    //- LiveReload: only in dev mode
+    script(src="//localhost:35729/livereload.js")

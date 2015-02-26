@@ -1,0 +1,16 @@
+div(class='detail')
+
+  div(class="detailControl")
+    i(class="fa fa-info-circle", ng-mouseenter="tooltip=true", ng-mouseleave="tooltip=false")
+    h3 {{title}}
+    div(class='current')  Current: {{current}}
+
+  div(class="detailContent")
+    div(class="sliderThumb fancy-scrollbar")
+      ul
+        li(ng-repeat='date in versions.slice().reverse() | filter:query', ng-class="{selected: isSelected(date)}", ng-click="setImage(date)")
+          div(data-drop="true", jqyoui-droppable="{onDrop:'dropCallback(date)'}", ng-model="$index")
+            div {{date}}
+            img(ng-src="{{dir+date}}/{{title+ext}}", ng-model="$index", err-src="{{date}}", data-drag="true", data-jqyoui-options="{revert: 'invalid'}", jqyoui-draggable)
+    div(class="view fancy-scrollbar")
+      img(ng-src="{{mainImageUrl}}")

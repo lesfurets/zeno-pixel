@@ -1,0 +1,23 @@
+div(class='detail')
+
+  div(class="detailControl")
+    div(class='btn back')
+      a(href="/#/desktop")
+        i(class="fa fa-long-arrow-left")
+    h3 {{title1}} / {{title2}}
+    div(class="result")
+
+  div(class="detailContent")
+    div(class="sliderThumb fancy-scrollbar")
+      ul
+        li(ng-class="{selected: isSelected(1)}", ng-click="setImage(file1, 1)")
+          div {{title1}}
+          img(ng-src="{{file1}}")
+        li(ng-class="{selected: isSelected(2)}", ng-click="setImage(file2, 2)")
+          div {{title2}}
+          img(ng-src="{{file2}}")
+        li(ng-class="{selected: isSelected(3)}", ng-click="setImage('result', 3)")
+          div result
+          img
+    div(class="view fancy-scrollbar")
+      img(ng-src="{{mainImageUrl}}")
