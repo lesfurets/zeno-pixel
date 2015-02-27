@@ -10,6 +10,8 @@ html, body{
     height   : 100%;
 }
 
+* { box-sizing: border-box; }
+
 ::-moz-selection {
     background: #b3d4fc;
     text-shadow: none;
@@ -366,7 +368,7 @@ header {
         position        : relative;
         z-index         : 2;
         background-color: #f6f6f6;
-        width           : calc(~"100% - 70px - 11px - 20px");
+        width           : calc(~"100% - 60px - 11px");
         min-height      : 300px;
         border-radius   : 5px;
         box-shadow      : -3px 0px 5px 0px rgba(155, 155, 155, 0.5);
@@ -824,12 +826,12 @@ input[type="checkbox"]:checked + label.checkbox:after {
         display: flex;
 
         li {
-            position        : relative;
-            flex            : 1;
-            padding-top     : 20px;
-            min-height      : 40px;
-            font-weight     : bold;
-            text-transform  : uppercase;
+            position       : relative;
+            flex           : 1;
+            padding        : 10px 0;
+            min-height     : 40px;
+            font-weight    : bold;
+            text-transform : uppercase;
 
             a {
                 color : #1F4474;
@@ -850,7 +852,7 @@ input[type="checkbox"]:checked + label.checkbox:after {
             .refreshEnv {
                 position : absolute;
                 right    : 15px;
-                top      : 23px;
+                top      : 10px;
                 cursor   : pointer;
                 font-size: 16px;
 
@@ -863,6 +865,7 @@ input[type="checkbox"]:checked + label.checkbox:after {
 }
 
 /*Table rules*/
+@imHeight : 170px;
 .screens {
     border-collapse: collapse;
     border-spacing : 0;
@@ -873,7 +876,20 @@ input[type="checkbox"]:checked + label.checkbox:after {
 
     tbody {
         .tableBorder;
+
+        tr {
+            border-bottom: 1px solid @white;
+
+            &.failure>td {
+                background-color: #F8E5E5 !important;
+            }
+
+            &.success>td {
+                background-color: rgba(14, 74, 119, 0.2) !important;
+            }
+        }
     }
+
 
     tbody>tr:nth-child(odd)>td {
         background-color: #e0e0e0;
@@ -892,108 +908,104 @@ input[type="checkbox"]:checked + label.checkbox:after {
         }
     }
 
-    tr.failure>td {
-        background-color: #F8E5E5 !important;
-    }
-
-    tr.success>td {
-        background-color: rgba(14, 74, 119, 0.2) !important;
-    }
-
     .hideRow img, .hideRow i {
         display: none !important;
     }
-}
 
-@imHeight : 170px;
-.screens td {
-    width        : 20%;
-    height       : 200px;
+    tbody td {
+        width: 20%;
+        height: 200px;
 
-    &:first-child {
-        cursor        : pointer;
-        padding-left  : 10px;
-        font-size     : 14px;
-        color         : #777;
-        text-transform: capitalize;
-        vertical-align: top;
-    }
-    &:last-child {
-        span {
-            padding-left: 10px;
-            font-weight: bold;
+        &:first-child {
+            cursor        : pointer;
+            font-size     : 14px;
+            color         : #777;
+            text-transform: capitalize;
+            vertical-align: top;
+
+            label {
+                padding-left: 10px;
+            }
+        }
+        &:last-child {
+            span {
+                padding-left: 10px;
+                font-weight: bold;
+            }
+
+            img {
+                height          : @imHeight;
+                background-color: @white;
+            }
+
+            i {top: 5px;}
+        }
+
+        .webperf {
+            position        : absolute;
+            z-index         : 20;
+            top             : 10px;
+            left            : 30px;
+            background-color: @white;
+            padding         : 5px;
+            border          : 1px solid #BABABA;
+
+            label {
+                display : inline-block;
+                width   : 80px;
+            }
+        }
+
+        div {
+            position : relative;
+            height   : 100%;
+
+            .diffHeader {
+                position   : absolute;
+                top        : 2px;
+                right      : 10px;
+                letter-spacing: 1px;
+            }
+
+            .ratio {
+                padding-top: 15px;
+                padding-left: 30px;
+            }
+        }
+
+        i {
+            position : absolute;
+            top      : 10px;
+            right    : 20px;
+            font-size: 20px;
+            cursor   : pointer;
+
+            &:hover {
+                color: #428bca;
+            }
         }
 
         img {
-            height          : @imHeight;
             background-color: @white;
-        }
-    }
+            height          : @imHeight;
+            margin          : 0 auto;
 
-    .webperf {
-        position        : absolute;
-        z-index         : 20;
-        top             : 10px;
-        left            : 30px;
-        background-color: @white;
-        padding         : 5px;
-        border          : 1px solid #BABABA;
-
-        label {
-            display : inline-block;
-            width   : 80px;
-        }
-    }
-
-    div.td {
-        position : relative;
-        height   : 100%;
-
-        .diffHeader {
-            position   : absolute;
-            top        : 2px;
-            right      : 10px;
-            letter-spacing: 1px;
+            &.draging {
+                border    : 1px solid rgb(196, 196, 209);
+                box-shadow: 1px 0px 3px #888;
+                transform : rotate(5deg);
+            }
         }
 
-        .ratio {
-            padding-top: 15px;
-            padding-left: 30px;
+        .glasspaneRefresh {
+            position        : absolute;
+            background-color: #666;
+            opacity         : 0.7;
+            top             : 0;
+            left            : 0;
+            width           : 100%;
+            height          : 100%;
         }
-    }
-
-    i {
-        position : absolute;
-        top      : 20px;
-        right    : 20px;
-        font-size: 20px;
-        cursor   : pointer;
-
-        &:hover {
-            color: #428bca;
-        }
-    }
-
-    img {
-        background-color: @white;
-        height          : @imHeight;
-        margin          : 0 auto;
-
-        &.draging {
-            border    : 1px solid rgb(196, 196, 209);
-            box-shadow: 1px 0px 3px #888;
-            transform : rotate(5deg);
-        }
-    }
-
-    .glasspaneRefresh {
-        position        : absolute;
-        background-color: #666;
-        opacity         : 0.7;
-        top             : 0;
-        left            : 0;
-        width           : 100%;
-        height          : 100%;
     }
 }
 
@@ -1097,8 +1109,4 @@ input[type="checkbox"]:checked + label.checkbox:after {
     width: 40%;
     margin: auto;
     padding-top: 20%;
-}
-
-@media screen and (max-width: 1024px) and (min-width: 768px) {
-    .main {width : 100%;}
 }

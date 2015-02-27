@@ -12,7 +12,8 @@ div(lazy-img)
   table(class="screens", ng-hide="hideUrls")
     tbody
       tr(ng-repeat="url in (filtered = (list[device] | filter: filterList))", ng-class="{hideLine: url.low, success: url.success, failure: url.failure}", ng-show="hide($index)")
-        td(ng-click="url.low=!url.low;rowReduce()") {{url.name}}
+        td(ng-click="url.low=!url.low;rowReduce()")
+          label {{url.name}}
         td(ng-repeat="env in list.envs", ng-mouseenter="hover=true", ng-mouseleave="hover=false")
           div(ng-model="$parent.name", data-drop="true", jqyoui-droppable="{onDrop:'dropCallback($index, url.name, $parent.$index)'}", class="td")
             a(ng-href="#/history/{{env.server}}{{url.name}}", class="link dragLink")
@@ -38,7 +39,7 @@ div(lazy-img)
               div(class="diffHeader") Last mismatch: {{url.percentage}} %
               a(ng-if="url.src", href="#/compare")
                 img(ng-src="{{url.src}}")
-  div(class="thead emails")
+  div(class="thead emails", ng-if="list.emails")
     ul
       li(ng-click="hideEmails=!hideEmails")
         span Email

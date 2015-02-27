@@ -80,13 +80,13 @@ describe 'Core tests', ->
         return
 
     it "should be able to decode Urls", ->
-        zeno.parseUrl(zeno.pages.envs[0].server, zeno.pages.envs[0].port, zeno.pages.desktop[0].url)
+        zeno.parseUrl(zeno.pages.envs[0].server, zeno.pages.desktop[0].url, zeno.pages.envs[0].port)
             .should.be.equal('localhost:1340/mock')
 
-        zeno.parseUrl(zeno.pages.envs[0].server, undefined, zeno.pages.desktop[0].url)
+        zeno.parseUrl(zeno.pages.envs[0].server, zeno.pages.desktop[0].url)
             .should.be.equal('localhost/mock')
 
-        zeno.parseUrl(zeno.pages.envs[0].alternative, undefined, zeno.pages.mobile[1].url)
+        zeno.parseUrl(zeno.pages.envs[0].alternative, zeno.pages.mobile[1].url)
             .should.be.equal('mobile.localhost')
         return
 

@@ -1,5 +1,7 @@
 #Plugins
 
+/!\ Still not stable.
+
 Zeno uses [EventEmitter](http://nodejs.org/docs/latest/api/events.html) to trigger events where each module can attach handlers to. The idea is to keep the core as minimalist as possible and export features in modules.
 
 ## Availabale events
