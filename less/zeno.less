@@ -322,7 +322,7 @@ header {
 
     .subcontainer {
         clear: both;
-        overflow: auto;
+        overflow: hidden;
         width: 100%;
         background-color: #d8d8d8;
     }
@@ -440,54 +440,54 @@ div[ng-view] {
         display: none;
     }
     .onoffswitch-label {
-        display: block;
-        overflow: hidden;
-        cursor: pointer;
-        border: 2px solid #999999;
+        display      : block;
+        overflow     : hidden;
+        cursor       : pointer;
+        border       : 2px solid #999999;
         border-radius: 20px;
     }
     .onoffswitch-inner {
-        display: block;
-        width: 200%;
+        display    : block;
+        width      : 200%;
         margin-left: -100%;
-        transition: margin 0.3s ease-in 0s;
+        transition : margin 0.3s ease-in 0s;
     }
     .onoffswitch-inner:before, .onoffswitch-inner:after {
-        display: block;
-        float: left;
-        width: 50%;
-        height: 25px;
-        padding: 0;
+        display    : block;
+        float      : left;
+        width      : 50%;
+        height     : 25px;
+        padding    : 0;
         line-height: 25px;
-        color: @white;
-        box-sizing: border-box;
+        color      : @white;
+        box-sizing : border-box;
     }
     .onoffswitch-inner:before {
-        content: "";
-        padding-left: 10px;
+        content         : "";
+        padding-left    : 10px;
         background-color: #EEEEEE;
-        color: @white;
+        color           : @white;
     }
     .onoffswitch-inner:after {
-        content: "";
-        padding-right: 10px;
+        content         : "";
+        padding-right   : 10px;
         background-color: #5EA2D6;
-        color: #999999;
-        text-align: right;
+        color           : #999999;
+        text-align      : right;
     }
     .onoffswitch-switch {
-        display: block;
-        width: 18px;
-        height: 18px;
-        margin: 6px;
-        background: @white;
-        border: 2px solid #999999;
+        display      : block;
+        width        : 20px;
+        height       : 20px;
+        margin       : 6px;
+        background   : @white;
+        border       : 2px solid #999999;
         border-radius: 20px;
-        position: absolute;
-        top: 12px;
-        bottom: 0;
-        right: 56px;
-        transition: all 0.3s ease-in 0s;
+        position     : absolute;
+        top          : 12px;
+        bottom       : 0;
+        right        : 56px;
+        transition   : all 0.3s ease-in 0s;
     }
     .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
         margin-left: 0;
@@ -619,18 +619,18 @@ label.checkbox {
 }
 
 label.checkbox:after {
-    opacity: 0;
-    content: '';
-    position: absolute;
-    width: 9px;
-    height: 5px;
-    background: transparent;
-    top: 4px;
-    left: 4px;
-    border: 3px solid #5A5A5A;
-    border-top: none;
+    opacity     : 0;
+    content     : '';
+    position    : absolute;
+    width       : 9px;
+    height      : 5px;
+    background  : transparent;
+    top         : 4px;
+    left        : 4px;
+    border      : 3px solid #5A5A5A;
+    border-top  : none;
     border-right: none;
-    transform: rotate(-45deg);
+    transform   : rotate(-45deg);
 }
 
 label.checkbox:hover::after {
@@ -646,13 +646,16 @@ input[type="checkbox"]:checked + label.checkbox:after {
     bottom          : 20px;
     right           : -50px;
     background-color: rgba(0, 0, 0, 0.4);
-    color           : @white;
     text-decoration : none;
     width           : 40px;
     height          : 40px;
     text-align      : center;
     line-height     : 40px;
     z-index         : 100;
+
+    i {
+        color : @white;
+    }
 }
 
 @orange: #f58546;
@@ -816,6 +819,7 @@ input[type="checkbox"]:checked + label.checkbox:after {
 }
 
 @tableBorder: #cfcfcf;
+@imHeight   : 170px;
 .tableBorder{ border: 1px solid @tableBorder; }
 
 .thead {
@@ -828,24 +832,86 @@ input[type="checkbox"]:checked + label.checkbox:after {
         li {
             position       : relative;
             flex           : 1;
-            padding        : 10px 0;
             min-height     : 40px;
             font-weight    : bold;
             text-transform : uppercase;
+            color          : #777;
 
-            a {
-                color : #1F4474;
+            a { color : #1F4474;}
+
+            div{
+                position: relative;
+                border-bottom: 1px solid @white;
+
+                &.failure {
+                    background-color: #F8E5E5 !important;
+                }
+
+                &.success {
+                    background-color: rgba(14, 74, 119, 0.2) !important;
+                }
+
+                img {
+                    height: @imHeight;
+                    background-color: #ffffff;
+                    border: 1px dashed #dbdbdb;
+
+                    &.draging {
+                        border    : 1px solid rgb(196, 196, 209);
+                        box-shadow: 1px 0px 3px #888;
+                        transform : rotate(5deg);
+                    }
+                }
+
+                i {
+                    position : absolute;
+                    top      : 10px;
+                    right    : 20px;
+                    font-size: 20px;
+                    cursor   : pointer;
+
+                    &:hover {
+                        color: #428bca;
+                    }
+                }
+
+                .diffHeader {
+                    position   : absolute;
+                    top        : 2px;
+                    right      : 10px;
+                    letter-spacing: 1px;
+                }
+
+                .ratio {
+                    padding-top: 15px;
+                    padding-left: 30px;
+                }
+            }
+
+            div:first-child {
+                padding : 20px 0;
+            }
+
+            div:not(:first-child) {
+                height: @imHeight;
             }
 
             span {
                 padding: 8px 0 8px 20px;
             }
 
-            &:first-child, &:last-child{
-                color : #777;
-                cursor: pointer;
+            &:first-child {
+                color         : #777;
+                text-transform: capitalize;
+                cursor        : pointer;
+                font-size     : 14px;
+
+                label {
+                    margin-top: 10px;
+                    padding-left: 10px;
+                }
             }
-            &:not(:first-child) span {
+            &:not(:first-child) div:first-child span {
                 border-left: 1px solid @tableBorder;
             }
 
@@ -860,153 +926,47 @@ input[type="checkbox"]:checked + label.checkbox:after {
                     color: #428bca;
                 }
             }
+
+            .webperf {
+                position        : absolute;
+                z-index         : 20;
+                top             : 10px;
+                left            : 30px;
+                background-color: @white;
+                padding         : 5px;
+                border          : 1px solid #BABABA;
+
+                label {
+                    display : inline-block;
+                    width   : 80px;
+                }
+            }
+
+            .glasspaneRefresh {
+                position        : absolute;
+                background-color: #666;
+                opacity         : 0.7;
+                top             : 0;
+                left            : 0;
+                width           : 100%;
+                height          : 100%;
+            }
         }
     }
 }
 
-/*Table rules*/
-@imHeight : 170px;
-.screens {
-    border-collapse: collapse;
-    border-spacing : 0;
-    border-spacing : 1px;
-    border-color   : @tableBorder;
-    width          : 100%;
-    color          : #777;
-
-    tbody {
-        .tableBorder;
-
-        tr {
-            border-bottom: 1px solid @white;
-
-            &.failure>td {
-                background-color: #F8E5E5 !important;
-            }
-
-            &.success>td {
-                background-color: rgba(14, 74, 119, 0.2) !important;
-            }
-        }
+.hideLine {
+    td {
+        height: inherit;
     }
 
-
-    tbody>tr:nth-child(odd)>td {
-        background-color: #e0e0e0;
-    }
-    tbody>tr:nth-child(even)>td {
-        background-color: @white;
-    }
-
-    .hideLine {
-        td {
-            height: inherit;
-        }
-
-        div {
-            display: none !important;
-        }
-    }
-
-    .hideRow img, .hideRow i {
+    div {
         display: none !important;
     }
+}
 
-    tbody td {
-        width: 20%;
-        height: 200px;
-
-        &:first-child {
-            cursor        : pointer;
-            font-size     : 14px;
-            color         : #777;
-            text-transform: capitalize;
-            vertical-align: top;
-
-            label {
-                padding-left: 10px;
-            }
-        }
-        &:last-child {
-            span {
-                padding-left: 10px;
-                font-weight: bold;
-            }
-
-            img {
-                height          : @imHeight;
-                background-color: @white;
-            }
-
-            i {top: 5px;}
-        }
-
-        .webperf {
-            position        : absolute;
-            z-index         : 20;
-            top             : 10px;
-            left            : 30px;
-            background-color: @white;
-            padding         : 5px;
-            border          : 1px solid #BABABA;
-
-            label {
-                display : inline-block;
-                width   : 80px;
-            }
-        }
-
-        div {
-            position : relative;
-            height   : 100%;
-
-            .diffHeader {
-                position   : absolute;
-                top        : 2px;
-                right      : 10px;
-                letter-spacing: 1px;
-            }
-
-            .ratio {
-                padding-top: 15px;
-                padding-left: 30px;
-            }
-        }
-
-        i {
-            position : absolute;
-            top      : 10px;
-            right    : 20px;
-            font-size: 20px;
-            cursor   : pointer;
-
-            &:hover {
-                color: #428bca;
-            }
-        }
-
-        img {
-            background-color: @white;
-            height          : @imHeight;
-            margin          : 0 auto;
-
-            &.draging {
-                border    : 1px solid rgb(196, 196, 209);
-                box-shadow: 1px 0px 3px #888;
-                transform : rotate(5deg);
-            }
-        }
-
-        .glasspaneRefresh {
-            position        : absolute;
-            background-color: #666;
-            opacity         : 0.7;
-            top             : 0;
-            left            : 0;
-            width           : 100%;
-            height          : 100%;
-        }
-    }
+.hideRow img, .hideRow i {
+    display: none !important;
 }
 
 .detail {

@@ -57,7 +57,16 @@ angular.module('zeno.services', [])
       # and the mismatch value of the main images
       if @first
         @percentage = data.misMatchPercentage
-        @compare(@index, @file1.replace(ext, '_thumb' + ext), @file2.replace(ext, '_thumb' + ext), @block, @offsets, false)
+        file1_thumb = @file1
+        file2_thumb = @file2
+
+        if !@offsets[0]
+          file1_thumb = @file1.replace(ext, '_thumb' + ext)
+
+        if !@offsets[0]
+          file2_thumb = @file2.replace(ext, '_thumb' + ext)
+
+        @compare(@index, file1_thumb, file2_thumb, @block, @offsets, false)
       else
         diffBlock     = new Image()
         diffBlock.src = data.getImageDataUrl()
@@ -66,7 +75,7 @@ angular.module('zeno.services', [])
         f1 = @getName(@file1)
         f2 = @getName(@file2)
 
-        @block.html '<div class="diffHeader">Mismatch: ' + @percentage + ' %</div>'
+        @block.html '<span class="diffHeader">Mismatch: ' + @percentage + ' %</span>'
 
         if @offsets[0]
           f1 += ':' + @offsets[0]

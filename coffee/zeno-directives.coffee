@@ -25,7 +25,7 @@ angular.module('zeno.directives', [])
   .directive 'lazyImg', () ->
     return link: (scope, element, attrs) ->
       $(window).on "angularEvt resize scroll rowReduce", (e) ->
-        $('table img').each ()->
+        $('.pages img').each ()->
           $this = $(this)
           if isElementInViewport($this) && !$this.attr('src')
             $this.attr('src', $this.attr('data-original'))
