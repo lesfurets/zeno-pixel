@@ -216,6 +216,10 @@ angular.module('zeno.services', [])
       localStorage.setItem(name, src)
       return
 
+    factory.removeStorageImage = (name) ->
+      localStorage.removeItem(name)
+      return
+
     factory.getStorageImage = (name) ->
       if typeof localStorage != 'undefined'
         return localStorage.getItem(name)

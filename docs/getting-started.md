@@ -31,9 +31,6 @@ Install Imagemagick to create thumbnails:
 
 Install PhantomJS: see doc [here](http://phantomjs.org/download.html)
 
-There is no posibility to set thumbnail height/width. Height value is hardcoded and equals to 200px.<br>
-If you need to change it to adapt your layout, you'll have to edit the less file.
-
 [Less](http://lesscss.org/) and [Coffeescript](coffeescript.org) are used to generate css and js.
 
 If they are not alredy installed
@@ -54,12 +51,13 @@ To auto rebuild after each client code change:
     grunt watch
 
 
-Grunt is also configured to use its Live reload on less files (see Gruntfile.js).<br>
+Grunt is also configured to use its Live reload on less files using *grunt watch* (see Gruntfile.js).<br>
 Mobile and tablet rendering is done using *User Agent* and *viewport*.
 
 ##Config
 
 You need to adapt the pages_template.json to your needs. Default file name is `pages.json`, you can specify another file using the `--file` parameter <br>
+There is no limit to envs length but the first two environments will be considered as the reference couple.
 
 ```json
 {
@@ -97,7 +95,7 @@ For each page, you can specify:
 * `name`    : name on the file system<br/>
 * `cookies` : array of cookies name needed for this page. See cookies section
 
-Other options are available:<br>
+Other root options are available:<br>
 * `sitemap` : list of xml sitemaps urls, each linkh will populate desktop, mobile and tablet pages list
 
 ##Usage
@@ -113,6 +111,7 @@ Available parameters:<br>
 * `--cookie`: cookie file name (default: cookies.json)<br>
 * `--folder`: folder name(default: screenshots)<br>
 * `--enigne`: headless engine phantomjs|slimerjs<br>
+* `--startAction`: compare images from the reference couple<br>
 
 Available core services:
 

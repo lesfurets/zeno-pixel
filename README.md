@@ -39,4 +39,4 @@ see [LICENSE]() file
 ## Changelog
 
  * 1.0
-  > * Hello World !
+ > * Hello World !

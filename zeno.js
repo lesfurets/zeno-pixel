@@ -27,6 +27,9 @@ var Zeno = function (app, server, io, params) {
     // --engine
     this.engine        = require('./tools/engine').get(params.engine);
 
+    // --startAction
+    this.startAction   = params.startAction || false;
+
     this.log           = utils.log;
     this.devices       = ['desktop', 'tablet', 'mobile'];
     this.versioning    = 'versioning';
@@ -99,6 +102,10 @@ Zeno.prototype = {
             }
 
             self.loadModules(cb);
+
+            if (self.startAction) {
+                self.devicesComparaison(self.instance[0], self.instance[1]);
+            }
         });
 
         // Fetch cookies file

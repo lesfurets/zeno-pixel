@@ -133,6 +133,11 @@ zenoCtrl = ($scope, $location, $timeout, ZenoService, PagesFactory, ResultsFacto
       updatedRow.src = data.src
       # try to add the image in the browser local storage
       ResultsFactory.setStorageImage(updatedRow.name, data.src)
+    else if updatedRow.src || $scope.hasStoredImage(updatedRow)
+      # clean error data
+      ResultsFactory.removeStorageImage(updatedRow.name)
+      delete updatedRow.src
+
 
     socket.emit "updateResults",
       device  : $scope.device,
