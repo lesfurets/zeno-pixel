@@ -32,8 +32,7 @@ div(lazy-img)
             div
               label Size
               span {{url.webperf.size  / 1000}} ko
-            span {{url.webperf.size  / 1000}} ko
           i(class="fa fa-info-circle", ng-mouseenter="webperf=true", ng-mouseleave="webperf=false")
           span(class="diffHeader") Last mismatch: {{url.percentage}} %
-          a(ng-if="url.src", href="#/compare")
-            img(ng-src="{{url.src}}")
+          a(ng-if="hasStoredImage(url)", href="#/compare/{{list.envs[0].alias}}")
+            img(ng-src="{{getStoredImage(url)}}")

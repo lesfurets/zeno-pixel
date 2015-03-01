@@ -86,8 +86,7 @@ Zeno.prototype = {
         // Fetch configuration file
         fs.readFile(this.pageFile, 'utf-8', function(err, file){
             if (err) {
-                self.log('Error reading Pages.json: ');
-                self.log(err);
+                self.log('No file fconfiguration founded');
             } else {
                 self.pages            = JSON.parse(file);
                 self.pages.refreshing = {
@@ -95,11 +94,11 @@ Zeno.prototype = {
                     tablet: [],
                     mobile: []
                 };
-                self.instance = self.pages.envs;
+                self.instance     = self.pages.envs;
                 self.pages.engine = self.engine.name;
-
-                self.loadModules(cb);
             }
+
+            self.loadModules(cb);
         });
 
         // Fetch cookies file
@@ -328,7 +327,7 @@ Zeno.prototype = {
             fs.mkdirSync(todayDir);
             this.updateVersionList();
 
-            self.io.sockets.emit('versionUpdated', {versions: this.versions});
+            self.io.sockets.emit('updateVersion', {versions: this.versions});
         }
 
         var args = [this.engine.ssl, this.phantomScript, JSON.stringify({

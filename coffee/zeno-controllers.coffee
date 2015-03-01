@@ -2,7 +2,7 @@
 
 # Home Controller : #/compare/:env
 # ===================================
-zenoCtrl = ($scope, $location, $timeout, ZenoService, PagesFactory, socket, $routeParams) ->
+zenoCtrl = ($scope, $location, $timeout, ZenoService, PagesFactory, ResultsFactory, socket, $routeParams) ->
   $scope.sorted      = false
   $scope.hasFiltered = false # to help lazyload and filtering: true first time filtered is used
 
@@ -131,6 +131,8 @@ zenoCtrl = ($scope, $location, $timeout, ZenoService, PagesFactory, socket, $rou
 
     if data.percentage != '0.00' # do not keep success image
       updatedRow.src = data.src
+      # try to add the image in the browser local storage
+      ResultsFactory.setStorageImage(updatedRow.name, data.src)
 
     socket.emit "updateResults",
       device  : $scope.device,
@@ -173,6 +175,14 @@ zenoCtrl = ($scope, $location, $timeout, ZenoService, PagesFactory, socket, $rou
       $scope.results[device].results.push({name: name, percentage: percentage})
       $scope.results[device].date = new Date()
     return
+
+  $scope.hasStoredImage = (url) ->
+    if url.src || ResultsFactory.getStorageImage(url.name)
+      return true
+    return false
+
+  $scope.getStoredImage = (url) ->
+    url.src || ResultsFactory.getStorageImage(url.name)
 
   # hide/show a row
   $scope.hide = (index) ->
@@ -280,7 +290,9 @@ zenoCtrl = ($scope, $location, $timeout, ZenoService, PagesFactory, socket, $rou
   # socketIO listeners
   # ------------------
 
-  # fired when an update is done
+  # fired when one image update is done
+  # @params update.name
+  # @params update.env
   socket.on "updateOneScreen", (update) ->
     col  = -1
     name = update.name
@@ -291,22 +303,23 @@ zenoCtrl = ($scope, $location, $timeout, ZenoService, PagesFactory, socket, $rou
         col = i
       return
 
-    $scope.filtered.forEach (page) ->
+    angular.forEach $scope.filtered, (page) ->
       if page.name == name
         page.refreshing[col] = false
         page.params = "?" + new Date().getTime() # trick to force the image refresh by changing the url
-        $scope.$apply()
+      return
     return
 
-  socket.on "versionUpdated", (update) ->
+  # fired when a version update is done
+  socket.on "updateVersion", (update) ->
     $scope.versions = update.versions
     return
 
+  # fired when one image update is done
   socket.on "updateOneWebPerf", (update) ->
     angular.forEach $scope.list[update.device], (url) ->
       if url.name == update.name
         url.webperf = update.wp
-        $scope.$apply()
       return
     return
 
@@ -546,7 +559,7 @@ globalCtrl = ($scope, $location, PagesFactory, ResultsFactory, VersionService, d
     return
 
   PagesFactory.getPages (data) ->
-    $scope.list          = data
+    $scope.list = data
 
     if $scope.list.engine is 'slimerjs'
       $scope.engine = true
@@ -577,7 +590,7 @@ globalCtrl = ($scope, $location, PagesFactory, ResultsFactory, VersionService, d
     $scope.sliderOffset = offset
     return
 
-  $scope.compareAll = ()->
+  $scope.compareAll = () ->
     $scope.$broadcast 'compareAll'
     return
 
@@ -609,7 +622,7 @@ globalCtrl = ($scope, $location, PagesFactory, ResultsFactory, VersionService, d
 
 # Injectors
 # =========
-zenoCtrl.$inject     = ['$scope', '$location', '$timeout', 'ZenoService', 'PagesFactory', 'socket', '$routeParams']
+zenoCtrl.$inject     = ['$scope', '$location', '$timeout', 'ZenoService', 'PagesFactory', 'ResultsFactory', 'socket', '$routeParams']
 envCtrl.$inject      = ['$scope', '$routeParams', '$timeout', 'socket']
 versionCtrl.$inject  = ['$scope', 'VersionService', '$routeParams']
 compareCtrl.$inject  = ['$scope', '$routeParams', 'CompareService']

@@ -212,4 +212,12 @@ angular.module('zeno.services', [])
         cb(data)
       return
 
+    factory.setStorageImage = (name, src) ->
+      localStorage.setItem(name, src)
+      return
+
+    factory.getStorageImage = (name) ->
+      if typeof localStorage != 'undefined'
+        return localStorage.getItem(name)
+
     return factory

@@ -117,7 +117,7 @@ header {
 
     .block {
         padding: 10px 15px;
-        width: 30%;
+        width: 32%;
         background: #0A101B;
         border-radius: 3px;
         color: #fff;
@@ -880,6 +880,7 @@ input[type="checkbox"]:checked + label.checkbox:after {
                     top        : 2px;
                     right      : 10px;
                     letter-spacing: 1px;
+                    font-size  : 12px;
                 }
 
                 .ratio {
@@ -909,6 +910,7 @@ input[type="checkbox"]:checked + label.checkbox:after {
                 label {
                     margin-top: 10px;
                     padding-left: 10px;
+                    display: inline-block;
                 }
             }
             &:not(:first-child) div:first-child span {
@@ -933,8 +935,19 @@ input[type="checkbox"]:checked + label.checkbox:after {
                 top             : 10px;
                 left            : 30px;
                 background-color: @white;
-                padding         : 5px;
+                font-size       : 12px;
+                padding         : 5px !important;
+                letter-spacing  : 1px;
                 border          : 1px solid #BABABA;
+
+                div {
+                    height: inherit;
+                    padding: 0;
+                }
+
+                span {
+                    border: none !important;
+                }
 
                 label {
                     display : inline-block;
