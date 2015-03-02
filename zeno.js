@@ -225,6 +225,11 @@ Zeno.prototype = {
              * Fired when user update the configuration from /pages
              */
             socket.on('updateList', function (data) {
+                self.devices.forEach(function (device){
+                    data.list[device].forEach(function (url) {
+                        delete url.percentage;
+                    });
+                });
                 self.pages    = data.list;
                 self.instance = self.pages.envs;
             });

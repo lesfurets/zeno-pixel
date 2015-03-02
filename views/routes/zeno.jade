@@ -1,10 +1,10 @@
 div(lazy-img)
   div(class="thead pages")
     ul
-      li(ng-click="hideUrls=!hideUrls;rowReduce()")
+      li(ng-click="rowReduce()")
         div
           span url
-        div(ng-repeat="url in (filtered = (list[device] | filter: filterList))", ng-class="{hideLine: url.low, success: url.success, failure: url.failure}", ng-show="hide($index)", ng-click="low=!low;rowReduce()")
+        div(ng-repeat="url in (filtered = (list[device] | filter: filterList))", ng-class="{hideLine: url.low, success: url.success, failure: url.failure}", ng-show="hide($index)", ng-click="url.low=!url.low;rowReduce()")
           label {{url.name}}
       li(ng-repeat="env in list.envs")
         div(ng-mouseenter="env.visible=true", ng-mouseleave="env.visible=false")
@@ -22,7 +22,7 @@ div(lazy-img)
         div
           span result
         div(class="ratio ratio{{$index}}", ng-repeat="url in (filtered = (list[device] | filter: filterList))", ng-class="{hideLine: url.low, success: url.success, failure: url.failure}", ng-show="hide($index)")
-          div(class="webperf", ng-show="webperf", ng-if="url.webperf")
+          div(class="tooltip", ng-show="webperf", ng-if="url.webperf")
             div
               label Time
               span {{url.webperf.time / 1000}} s

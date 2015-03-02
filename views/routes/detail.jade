@@ -1,7 +1,11 @@
 div(class='detail')
 
   div(class="detailControl")
-    i(class="fa fa-info-circle", ng-mouseenter="tooltip=true", ng-mouseleave="tooltip=false")
+    div(style="position:relative")
+      i(class="fa fa-info-circle", ng-mouseenter="tooltip=true", ng-mouseleave="tooltip=false")
+      div(class="tooltip", ng-show="tooltip")
+        span Drag and drop 2 versions to see differences
+
     h3 {{title}}
     div(class='current')  Current: {{current}}
 

@@ -479,14 +479,13 @@ pagesCtrl = ($scope, socket) ->
     tablet : false
     mobile : false
 
-  # deep watch on model
+  # deep watch on model: a little bit aggresive
   $scope.$watch 'list', (newList) ->
     # clean model of useless data
     for device in $scope.devices
       for page in newList[device]
-        delete page.percentage
-        delete page.src
-        delete page.low
+        delete page.src        # only needed for the views
+        delete page.low        # only needed for the views
 
     socket.emit "updateList",
       list: newList

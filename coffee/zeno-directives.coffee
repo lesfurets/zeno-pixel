@@ -66,6 +66,6 @@ angular.module('zeno.directives', [])
         angular.element(element[0].querySelector('.slider-button')).css({left: offset + '%'})
 
         scope.filterBySliderValue(offset)
-        scope.$apply('sliderOffser')
+        scope.$apply()
         return
       return

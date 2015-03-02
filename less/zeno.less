@@ -883,8 +883,7 @@ input[type="checkbox"]:checked + label.checkbox:after {
                     font-size  : 12px;
                 }
 
-                .ratio {
-                    padding-top: 15px;
+                &.ratio {
                     padding-left: 30px;
                 }
             }
@@ -929,32 +928,6 @@ input[type="checkbox"]:checked + label.checkbox:after {
                 }
             }
 
-            .webperf {
-                position        : absolute;
-                z-index         : 20;
-                top             : 10px;
-                left            : 30px;
-                background-color: @white;
-                font-size       : 12px;
-                padding         : 5px !important;
-                letter-spacing  : 1px;
-                border          : 1px solid #BABABA;
-
-                div {
-                    height: inherit;
-                    padding: 0;
-                }
-
-                span {
-                    border: none !important;
-                }
-
-                label {
-                    display : inline-block;
-                    width   : 80px;
-                }
-            }
-
             .glasspaneRefresh {
                 position        : absolute;
                 background-color: #666;
@@ -968,18 +941,38 @@ input[type="checkbox"]:checked + label.checkbox:after {
     }
 }
 
-.hideLine {
-    td {
-        height: inherit;
-    }
+.tooltip {
+    position        : absolute;
+    z-index         : 20;
+    top             : 10px;
+    left            : 30px;
+    background-color: @white;
+    font-size       : 12px;
+    padding         : 5px !important;
+    letter-spacing  : 1px;
+    border          : 1px solid #BABABA;
 
     div {
-        display: none !important;
+        height: inherit;
+        padding: 0;
+    }
+
+    span {
+        border: none !important;
+    }
+
+    label {
+        display : inline-block;
+        width   : 80px;
     }
 }
 
-.hideRow img, .hideRow i {
-    display: none !important;
+.hideLine {
+    height: 40px !important;
+
+    img, i {
+        display: none !important;
+    }
 }
 
 .detail {
