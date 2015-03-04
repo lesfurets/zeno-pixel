@@ -363,7 +363,7 @@ Zeno.prototype = {
                 }
 
             } catch(err) {
-                self.log(err + ':' + chunk);
+                self.log('Phantom Error:' + chunk);
             }
 
             self.emit('onScreenshotDone', {

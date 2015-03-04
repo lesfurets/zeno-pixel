@@ -45,7 +45,7 @@ if (options.url) {
             page.resources[req.id] = {
                 request: req,
                 startReply: null,
-                endReply: null
+                endReply: nullp
             };
         }
     };
@@ -74,7 +74,7 @@ if (options.url) {
 
     page.open('http://' + options.url, function(status) {
         if (status !== 'success') {
-            console.log('Fail to load the address:', options.url);
+            console.log("Error opening url \"" + page.reason_url + "\": " + page.reason);
             phantom.exit(1);
         }
     });

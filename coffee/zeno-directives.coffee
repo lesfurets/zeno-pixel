@@ -57,15 +57,31 @@ angular.module('zeno.directives', [])
   # Directive to control the slider
   .directive 'slider', ($window)->
     return link: (scope, element, attrs) ->
+      offset = 0
+
       element.bind 'mousedown', (ev) ->
         offset = Math.round((ev.pageX - element[0].getBoundingClientRect().left) * 100 / element.prop('offsetWidth'))
 
+        element.bind 'mousemove', (ev) ->
+          offset = Math.round((ev.pageX - element[0].getBoundingClientRect().left) * 100 / element.prop('offsetWidth'))
+          layout()
+          return
+
+        $(window).bind 'mouseup', (ev) ->
+          element.unbind 'mousemove'
+          $(window).unbind 'mouseup'
+
+          layout()
+          scope.filterBySliderValue(offset)
+          scope.$apply()
+          $(window).trigger('rowReduce')
+          return
+        return
+
+      layout = () ->
         if offset < 0
           offset = 0
 
         angular.element(element[0].querySelector('.slider-button')).css({left: offset + '%'})
-
-        scope.filterBySliderValue(offset)
-        scope.$apply()
         return
       return
