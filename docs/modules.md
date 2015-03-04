@@ -29,6 +29,18 @@ zeno.on('onCopyDone', function(data) {
 ```
 `data.name` : image name<br>
 
+### onEnvUpdate
+
+Trigger when an environment update is requested.
+
+``` js
+zeno.on('onEnvUpdate', function(data) {
+});
+```
+
+`data.device` : device use for the update<br>
+`data.env`    : server property of an environment object<br>
+
 You need antother event ? Feel free to fork the project and create a pull request.
 
 ## How to add module ?

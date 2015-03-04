@@ -143,7 +143,7 @@ Zeno.prototype = {
         });
 
         this.app.get('/pages', function(req, res) {
-            res.sendfile(self.pageFile, "utf8");
+            res.sendFile(self.pageFile, "utf8");
         });
 
         this.app.get('/versions', function(req, res) {
@@ -452,10 +452,10 @@ Zeno.prototype = {
             return;
         }
 
-        this.log('Update ' + device + ' screenshots (' + env.server + ')');
-
         if (!utils.contains(this.pages.refreshing[device], env.server)) {
+            this.log('Update ' + device + ' screenshots (' + env.server + ')');
             this.pages.refreshing[device].push(env.server);
+
             pages.forEach(function (page) {
                 if (page.url) {
                     var alternative = undefined;
@@ -481,6 +481,11 @@ Zeno.prototype = {
                         options: options
                     });
                 }
+            });
+
+            self.emit('onEnvUpdate', {
+                device : device,
+                env    : env.server
             });
         } else {
             this.log('Refresh desktop already in progress: ' + env.server);
