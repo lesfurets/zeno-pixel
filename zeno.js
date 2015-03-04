@@ -143,7 +143,7 @@ Zeno.prototype = {
         });
 
         this.app.get('/pages', function(req, res) {
-            res.send(JSON.stringify(self.pages));
+            res.sendfile(self.pageFile, "utf8");
         });
 
         this.app.get('/versions', function(req, res) {
@@ -336,10 +336,11 @@ Zeno.prototype = {
         var todayDir = p.join(this.dir, this.versioning, (d.getMonth() + 1) + '-' + d.getDate() + '-' + d.getFullYear());
 
         if (!fs.existsSync(todayDir)) {
-            fs.mkdirSync(todayDir);
-            this.updateVersionList();
+            fs.mkdir(todayDir, function (err){
+                this.updateVersionList();
 
-            self.io.sockets.emit('updateVersion', {versions: this.versions});
+                self.io.sockets.emit('updateVersion', {versions: this.versions});
+            });
         }
 
         var args = [this.engine.ssl, this.phantomScript, JSON.stringify({
@@ -453,8 +454,8 @@ Zeno.prototype = {
 
         this.log('Update ' + device + ' screenshots (' + env.server + ')');
 
-        if (!utils.contains(pages.refreshing, env.server)) {
-            pages.refreshing.push(env.server);
+        if (!utils.contains(this.pages.refreshing[device], env.server)) {
+            this.pages.refreshing[device].push(env.server);
             pages.forEach(function (page) {
                 if (page.url) {
                     var alternative = undefined;

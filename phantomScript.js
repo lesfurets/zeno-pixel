@@ -45,7 +45,7 @@ if (options.url) {
             page.resources[req.id] = {
                 request: req,
                 startReply: null,
-                endReply: nullp
+                endReply: null
             };
         }
     };
