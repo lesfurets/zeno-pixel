@@ -83,7 +83,7 @@ angular.module('zeno.services', [])
         if @offsets[1]
           f2 += ':' + @offsets[1]
 
-        a = angular.element('<a href="#/compare/' + f1 + '/' + f2 + '"/>')
+        a = angular.element('<a href="#/result/' + f1 + '/' + f2 + '"/>')
         @block.append a
         a.append diffBlock
 
@@ -113,18 +113,18 @@ angular.module('zeno.services', [])
       @block   = block
       @file1   = file1
       @file2   = file2
-      CompareService.compare(file1, file2, block, self.onComplete)
+      CompareService.compare(file1, file2, self.onComplete)
       return
 
-    @onComplete = (data, block, file1, file2) ->
+    @onComplete = (data) ->
       $rootScope.$broadcast('compareResult', {src: data.getImageDataUrl()})
       return
 
     return
 
-  .service 'CompareService', ($rootScope) ->
-    self = this
-    @compare = (file1, file2, block, onComplete) ->
+  # Basic service to compare 2 images
+  .service 'CompareService', ($rootScope, dir ,ext) ->
+    @compare = (file1, file2, onComplete, block) ->
       xhr  = new XMLHttpRequest()
       xhr2 = new XMLHttpRequest()
       done = $.Deferred()
@@ -149,15 +149,12 @@ angular.module('zeno.services', [])
 
     @onComplete = (data) ->
       angular.element('.result').text('Mismatch: ' + data.misMatchPercentage)
-      angular.element('.slider ul li:last img').attr('src', data.getImageDataUrl())
+      angular.element('.sliderThumb ul li:last img').attr('src', data.getImageDataUrl())
 
       $rootScope.$broadcast('compareResult', {src: data.getImageDataUrl()})
       return
 
     @extractParams = (versions, param) ->
-      dir = 'screenshots/'
-      ext = '.png'
-
       index = param.indexOf(':')
       if index != -1 #offset is present
         offset = parseInt(param.substring(index + 1, param.length), 10)

@@ -17,7 +17,8 @@ socket   = {}
 app    = express()
 server = require('http').Server(app)
 app.set('port', port)
-app.set('views', path.join(__dirname, '/views'))
+app.set('view engine', 'jade');
+app.set('views', path.join(__dirname, base, 'views'))
 app.use(express.static(path.join(__dirname)))
 
 #add fake web page to render
@@ -116,21 +117,6 @@ describe 'APIs tests', ->
             response.statusCode.should.equal(200)
 
             results.results.should.be.ok
-            done()
-        return
-
-    it "should respond with initial valid configuration", (done) ->
-        request 'http://localhost:' + port + '/pages', (error, response, body) ->
-            response.statusCode.should.equal(200)
-
-            pages = JSON.parse(body)
-            pages.should.be.ok
-            pages.host.should.be.ok
-            pages.envs.should.be.ok
-
-            pages.desktop.should.be.ok
-            pages.mobile.should.be.ok
-            pages.tablet.should.be.ok
             done()
         return
 

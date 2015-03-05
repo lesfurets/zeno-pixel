@@ -143,7 +143,15 @@ Zeno.prototype = {
         });
 
         this.app.get('/pages', function(req, res) {
-            res.sendFile(self.pageFile, "utf8");
+            var options = {
+                root: __dirname
+            };
+
+            res.sendFile(self.pageFile, options, function (err) {
+                if (err) {
+                    self.log(err);
+                }
+            });
         });
 
         this.app.get('/versions', function(req, res) {
@@ -337,9 +345,9 @@ Zeno.prototype = {
 
         if (!fs.existsSync(todayDir)) {
             fs.mkdir(todayDir, function (err){
-                this.updateVersionList();
+                self.updateVersionList();
 
-                self.io.sockets.emit('updateVersion', {versions: this.versions});
+                self.io.sockets.emit('updateVersion', {versions: self.versions});
             });
         }
 

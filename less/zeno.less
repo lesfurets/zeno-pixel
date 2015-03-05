@@ -512,94 +512,6 @@ div[ng-view] {
   }
 }
 
-.sliderThumb{
-    flex            : 0 280px;
-    border-right    : 1px solid rgba(0, 0, 0, 0.2);
-    background-color: @white;
-    overflow        : auto;
-
-    img {
-        height    : 200px;
-        max-width : 100%;
-        display   : block;
-        margin    : 10px auto;
-        background: @white;
-    }
-
-    ul li {
-        position     : relative;
-        padding      : 5px 10px;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-        cursor       : pointer;
-
-        &.selected {
-            background-color: rgba(214, 216, 219, 1);
-            font-weight     : bold;
-        }
-
-        i {
-            position : absolute;
-            top      : 20px;
-            right    : 20px;
-            font-size: 20px;
-            cursor   : pointer;
-            color    : #000;
-
-            &:hover {
-                color: #428bca;
-            }
-        }
-    }
-}
-
-/*Custom scrollbar*/
-.fancy-scrollbar {
-    -webkit-overflow-scrolling: touch
-}
-
-.fancy-scrollbar::-webkit-scrollbar {
-    height: 9px;
-    width : 9px;
-}
-.fancy-scrollbar::-webkit-scrollbar-button:start:decrement,
-.fancy-scrollbar::-webkit-scrollbar-button:end:increment {
-    background: transparent;
-    display   : none
-}
-.fancy-scrollbar::-webkit-scrollbar-track-piece {
-    background: #d0d0d0
-}
-.fancy-scrollbar::-webkit-scrollbar-track-piece:vertical:start {
-    border-top-left-radius    : 5px;
-    border-top-right-radius   : 5px;
-    border-bottom-right-radius: 0;
-    border-bottom-left-radius : 0
-}
-.fancy-scrollbar::-webkit-scrollbar-track-piece:vertical:end {
-    border-top-left-radius    : 0;
-    border-top-right-radius   : 0;
-    border-bottom-right-radius: 5px;
-    border-bottom-left-radius : 5px
-}
-.fancy-scrollbar::-webkit-scrollbar-track-piece:horizontal:start {
-    border-top-left-radius    : 5px;
-    border-top-right-radius   : 0;
-    border-bottom-right-radius: 0;
-    border-bottom-left-radius : 5px
-}
-.fancy-scrollbar::-webkit-scrollbar-track-piece:horizontal:end {
-    border-top-left-radius    : 0;
-    border-top-right-radius   : 5px;
-    border-bottom-right-radius: 5px;
-    border-bottom-left-radius : 0
-}
-.fancy-scrollbar::-webkit-scrollbar-thumb:vertical,.fancy-scrollbar::-webkit-scrollbar-thumb:horizontal {
-    background: #999;
-    border-radius: 5px;
-    display: block;
-    height: 50px
-}
-
 /*custom checkboxes*/
 input[type="checkbox"] {
     visibility: hidden;
@@ -1064,6 +976,46 @@ input[type="checkbox"]:checked + label.checkbox:after {
             margin-top: 30px;
             padding: 4px;
             border: 1px solid #C5C5C5;
+        }
+    }
+
+    .sliderThumb{
+        flex            : 0 280px;
+        border-right    : 1px solid rgba(0, 0, 0, 0.2);
+        background-color: @white;
+        overflow        : auto;
+
+        img {
+            height    : 200px;
+            max-width : 100%;
+            display   : block;
+            margin    : 10px auto;
+            background: @white;
+        }
+
+        ul li {
+            position     : relative;
+            padding      : 5px 10px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+            cursor       : pointer;
+
+            &.selected {
+                background-color: rgba(214, 216, 219, 1);
+                font-weight     : bold;
+            }
+
+            i {
+                position : absolute;
+                top      : 20px;
+                right    : 20px;
+                font-size: 20px;
+                cursor   : pointer;
+                color    : #000;
+
+                &:hover {
+                    color: #428bca;
+                }
+            }
         }
     }
 }

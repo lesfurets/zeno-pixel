@@ -427,7 +427,7 @@ versionCtrl = ($scope, VersionService, $routeParams) ->
     first  = $scope.dir + ui.draggable.attr('err-src') + '/' + $scope.title + $scope.ext
     second = $scope.dir + date + '/' + $scope.title + $scope.ext
 
-    VersionService.compare(first, second, undefined, VersionService.onComplete)
+    VersionService.compare(first, second, VersionService.onComplete)
     return
 
   $scope.$on 'compareResult', (evt, data) ->
@@ -449,7 +449,7 @@ compareCtrl = ($scope, $routeParams, CompareService) ->
   $scope.current = 3 # default displayed image
 
   # init main image by starting a comparaison
-  CompareService.compare($scope.file1, $scope.file2, undefined, CompareService.onComplete)
+  CompareService.compare($scope.file1, $scope.file2, CompareService.onComplete)
 
   $scope.setImage = (src, id) ->
     $scope.current = id
@@ -620,6 +620,7 @@ globalCtrl = ($scope, $location, PagesFactory, ResultsFactory, VersionService, d
   $scope.isIconActive = () ->
     $location.path().indexOf('compare') != -1 ||
     $location.path().indexOf('history') != -1 ||
+    $location.path().indexOf('result') != -1 ||
     $location.path().indexOf('env') != -1
 
   return
