@@ -63,7 +63,7 @@ angular.module('zeno.services', [])
         if !@offsets[0]
           file1_thumb = @file1.replace(ext, '_thumb' + ext)
 
-        if !@offsets[0]
+        if !@offsets[1]
           file2_thumb = @file2.replace(ext, '_thumb' + ext)
 
         @compare(@index, file1_thumb, file2_thumb, @block, @offsets, false)
@@ -94,6 +94,7 @@ angular.module('zeno.services', [])
 
         $rootScope.$broadcast('result', {
           index     : @index,
+          offsets   : @offsets,
           success   : success,
           src       : data.getImageDataUrl(),
           percentage: @percentage
