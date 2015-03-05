@@ -130,11 +130,12 @@ zenoCtrl = ($scope, $location, $timeout, ZenoService, PagesFactory, ResultsFacto
       return
 
     # do not keep success image
-    # do not keep offset results because there is no thumb (too large)
-    if data.percentage != '0.00' and !data.offsets[0] and !data.offsets[1]
+    if data.percentage != '0.00'
       updatedRow.src = data.src
       # try to add the image in the browser local storage
-      ResultsFactory.setStorageImage(updatedRow.name, data.src)
+      # do not keep offset results because there is no thumb (too large)
+      if !data.offsets[0] and !data.offsets[1]
+        ResultsFactory.setStorageImage(updatedRow.name, data.src)
     else if updatedRow.src || $scope.hasStoredImage(updatedRow)
       # clean error data
       ResultsFactory.removeStorageImage(updatedRow.name)
