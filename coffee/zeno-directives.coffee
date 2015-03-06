@@ -24,7 +24,7 @@ angular.module('zeno.directives', [])
   # Directive which trigger the image load according to custom events
   .directive 'lazyImg', () ->
     return link: (scope, element, attrs) ->
-      $(window).on "angularEvt resize scroll rowReduce", (e) ->
+      $(window).on 'angularEvt resize scroll rowReduce', () ->
         $('.pages img').each ()->
           $this = $(this)
           if isElementInViewport($this) && !$this.attr('src')
@@ -33,7 +33,7 @@ angular.module('zeno.directives', [])
         return
 
       isElementInViewport = (el) ->
-        if typeof jQuery == "function" && el instanceof jQuery
+        if typeof jQuery == 'function' && el instanceof jQuery
           el = el[0]
         rect = el.getBoundingClientRect()
 
@@ -67,7 +67,7 @@ angular.module('zeno.directives', [])
           layout()
           return
 
-        $(window).bind 'mouseup', (ev) ->
+        $(window).bind 'mouseup', () ->
           element.unbind 'mousemove'
           $(window).unbind 'mouseup'
 

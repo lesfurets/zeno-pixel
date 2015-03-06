@@ -481,7 +481,11 @@ Zeno.prototype = {
                         viewportSize : details.viewport
                     };
 
-                    alternative ? server = alternative : server = env.server;
+                    if (typeof alternative !== 'undefined'){
+                        server = alternative;
+                    } else {
+                        server = env.server;
+                    }
 
                     self.listtoshot.push({
                         url    : self.parseUrl(server, page.url, env.port),
@@ -562,7 +566,12 @@ Zeno.prototype = {
                 {width: width, height: height}
         };
 
-        alternative ? server = alternative : server = env.server;
+        if (typeof alternative !== 'undefined'){
+            server = alternative;
+        } else {
+            server = env.server;
+        }
+
         var realUrl = this.parseUrl(server, url, env.port);
 
         // do not trigger update if it's already running, just queue it

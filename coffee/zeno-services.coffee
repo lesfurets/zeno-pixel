@@ -60,10 +60,8 @@ angular.module('zeno.services', [])
         file1_thumb = @file1
         file2_thumb = @file2
 
-        if !@offsets[0]
+        if !@offsets[0] and !@offsets[1]
           file1_thumb = @file1.replace(ext, '_thumb' + ext)
-
-        if !@offsets[1]
           file2_thumb = @file2.replace(ext, '_thumb' + ext)
 
         @compare(@index, file1_thumb, file2_thumb, @block, @offsets, false)
@@ -75,7 +73,8 @@ angular.module('zeno.services', [])
         f1 = @getName(@file1)
         f2 = @getName(@file2)
 
-        @block.html '<span class="diffHeader">Mismatch: ' + @percentage + ' %</span>'
+        @block.find('a').remove()
+        @block.find('.diffHeader').text('Mismatch: ' + @percentage + ' %')
 
         if @offsets[0]
           f1 += ':' + @offsets[0]
@@ -84,8 +83,8 @@ angular.module('zeno.services', [])
           f2 += ':' + @offsets[1]
 
         a = angular.element('<a href="#/result/' + f1 + '/' + f2 + '"/>')
-        @block.append a
-        a.append diffBlock
+        @block.append a    # add link
+        a.append diffBlock # add image
 
         if @percentage == '0.00'
           success = true
