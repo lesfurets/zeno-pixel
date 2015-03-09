@@ -1,14 +1,12 @@
 'use strict'
 
 angular.module('zeno.directives', [])
+  # Directive which permit to know when the list is loaded and whose images are 404
   .directive 'errSrc', () ->
     return link: (scope, element, attrs) ->
       element.bind 'error', () ->
         this.parentNode.parentNode.style.display = 'none'
         scope.addError(attrs.errSrc)
-        return
-      element.bind 'load', () ->
-        scope.addSuccess(attrs.src)
         return
       return
   # Directive which add the focus inside the search field when it's opening

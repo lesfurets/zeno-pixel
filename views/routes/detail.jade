@@ -12,7 +12,7 @@ div(class='detail')
   div(class="detailContent")
     div(class="sliderThumb")
       ul
-        li(ng-repeat='date in versions.slice(0, 15).reverse() | filter:query', ng-class="{selected: isSelected(date)}", ng-click="setImage(date)")
+        li(ng-repeat='date in available | filter:query', ng-class="{selected: isSelected(date)}", ng-click="setImage(date)")
           div(data-drop="true", jqyoui-droppable="{onDrop:'dropCallback(date)'}", ng-model="$index")
             div {{date}}
             img(ng-src="{{dir+date}}/{{title+ext}}", ng-model="$index", err-src="{{date}}", data-drag="true", data-jqyoui-options="{revert: 'invalid'}", jqyoui-draggable)

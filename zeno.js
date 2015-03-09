@@ -77,6 +77,7 @@ Zeno.prototype = {
 
         // Init results object
         this.devices.forEach(function(device) {
+            self.results.engine = self.engine.name;
             self.results[device]         = {};
             self.results[device].results = [];
         });
@@ -89,7 +90,7 @@ Zeno.prototype = {
         // Fetch configuration file
         fs.readFile(this.pageFile, 'utf-8', function(err, file){
             if (err) {
-                self.log('No file fconfiguration founded');
+                self.log('No file configuration founded');
             } else {
                 self.pages            = JSON.parse(file);
                 self.pages.refreshing = {
@@ -98,7 +99,6 @@ Zeno.prototype = {
                     mobile: []
                 };
                 self.instance     = self.pages.envs;
-                self.pages.engine = self.engine.name;
             }
 
             self.loadModules(cb);

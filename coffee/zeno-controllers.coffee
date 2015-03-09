@@ -388,36 +388,24 @@ envCtrl = ($scope, $routeParams, $timeout, socket) ->
 versionCtrl = ($scope, VersionService, $routeParams) ->
   $scope.title        = $routeParams.pageId
   $scope.dir          = $scope.dir + 'versioning/'
-  $scope.current      = $scope.versions[$scope.versions.length - 1]
-  $scope.error        = []
-  $scope.success      = []
+  $scope.available    = $scope.versions.slice($scope.versions.length-15, $scope.versions.length).reverse()
+  $scope.current      = $scope.available[0]
   $scope.mainImageUrl = $scope.dir + $scope.title + $scope.ext
 
-  # methods help to determine initial mainImageurl
+  # methods to determine initial mainImageurl
+  # @param date of a 404 image
   $scope.addError = (date) ->
-    $scope.error.push(date)
-    if $scope.success.length + $scope.error.length == $scope.versions.length
-      for d in $scope.versions by -1
-        if !contains($scope.error, d)
-          $scope.current = d
-          $scope.$apply()
-          break
+    for d, i in $scope.available
+      if d is date
+        $scope.available.splice(i, 1)
+        $scope.current = $scope.available[0]
+        $scope.$apply()
+        break
     return
 
-  $scope.addSuccess = (date) ->
-    $scope.success.push(date)
-    if $scope.success.length + $scope.error.length == $scope.versions.length
-      for d in $scope.versions by -1
-        if !contains($scope.error, d)
-          $scope.current = d
-          $scope.$apply()
-          break
+  $scope.$watch 'current', (newValue, OldValue) ->
+    $scope.mainImageUrl = $scope.dir + newValue + '/' + $scope.title + $scope.ext
     return
-
-  $scope.$watch (->
-    $scope.current),
-    (newValue, OldValue) ->
-      $scope.mainImageUrl = $scope.dir + newValue + '/' + $scope.title + $scope.ext
 
   $scope.setImage = (date) ->
     $scope.current = date
@@ -554,7 +542,7 @@ globalCtrl = ($scope, $location, PagesFactory, ResultsFactory, VersionService, d
   $scope.hideSuccess  = false
 
   $scope.$on "updateEngine", (evt, data) ->
-    $scope.list.engine = data
+    $scope.results.engine = data
     return
 
   $scope.$on "remaining", (evt, data) ->
@@ -567,9 +555,6 @@ globalCtrl = ($scope, $location, PagesFactory, ResultsFactory, VersionService, d
 
   PagesFactory.getPages (data) ->
     $scope.list = data
-
-    if $scope.list.engine is 'slimerjs'
-      $scope.engine = true
 
     ResultsFactory.getResults (data) ->
       $scope.results = data
@@ -584,6 +569,9 @@ globalCtrl = ($scope, $location, PagesFactory, ResultsFactory, VersionService, d
               page.percentage = result.percentage
               page.success    = false
               page.failure    = true
+
+          if $scope.results.engine is 'slimerjs'
+            $scope.engine = true
 
           # add success information if page no error
           if !page.hasOwnProperty('percentage')
