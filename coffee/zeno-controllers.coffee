@@ -444,8 +444,8 @@ compareCtrl = ($scope, $routeParams, CompareService) ->
 
   $scope.setImage = (src, id) ->
     $scope.current = id
-    if(src == 'result')
-      $scope.mainImageUrl = $('.slider ul li:last img').attr('src')
+    if src is 'result'
+      $scope.mainImageUrl = angular.element('.sliderThumb ul li:last img').attr('src')
     else
       $scope.mainImageUrl = src
     return
