@@ -5,12 +5,10 @@ div(class='detail')
 
     h3 Settings
 
-    div(style="color:rgb(211, 63, 26)")
-      i(class='fa fa-warning', style='float:left')
-      div(style='float:left; padding:0; margin-left:6px')
-        span Image name is not editable.
-        br
-        span Use "Save" button to save on disk.
+    div(style="position:relative")
+      i(class="fa fa-info-circle", ng-mouseenter="tooltip=true", ng-mouseleave="tooltip=false")
+      div(class="tooltip", ng-show="tooltip")
+        span Use the save button to save configuration on disk
 
   div(class="detailContent")
     ul(class='list')
@@ -30,9 +28,8 @@ div(class='detail')
                 div {{env.alias}}
                 div {{env.server}}
                 div ☰
-          div(style="float:left;color:rgb(211, 63, 26);margin-left:30px") Order the list according to the environment weight criteria
-            br
-            span Full comparaison from top 2 is executed after each environment update.
+          div(style="float:left;color:rgb(211, 63, 26);margin-left:30px")
+            span Order the list to define a reference couple (top 2)
         div
           div(style="width:15%;float:left") Engine :
           div(class="engineSwitch")

@@ -238,7 +238,9 @@ Zeno.prototype = {
                         delete url.percentage;
                     });
                 });
-                self.pages    = data.list;
+                self.pages.desktop = data.list.desktop;
+                self.pages.mobile  = data.list.mobile;
+                self.pages.tablet = data.list.tablet;
                 self.instance = self.pages.envs;
             });
 
@@ -288,6 +290,9 @@ Zeno.prototype = {
         });
     },
 
+    /*
+     * finalize express configuration adn error handling
+     */
     endInit: function () {
         var self = this;
         this.app.get('*', function(req, res, next) {
