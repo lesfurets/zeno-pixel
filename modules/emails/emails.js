@@ -16,35 +16,49 @@ var imap = new Imap({
  **********************/
 exports.module = function (zeno) {
 
-    zeno.io.sockets.on('connection', function (socket) {
-        /*
-         * Fired when an email is refreshed by a client
-         * Create an image from an email
-         * data.name : name to search in mail box
-         * data.path : path to write the image
-         */
-        socket.on('refreshOneEmail', function (data) {
-            self.takeEmailScreenshot(data.email, data.path);
-            var options = {};
-            readEmail(data.name, function(body) {
-                options = {
-                    viewportSize: {width: 1600, height: 1100},
-                    body        : body
-                };
-
-                zeno.emit('takeScreenshot', {
-                    url: undefined,
-                    path: data.path,
-                    options: options
-                });
-            });
+  /*
+   * @param data.device : device to render
+   * @param data.env    : environment name
+   */
+  zeno.on('onEnvUpdate', function (data) {
+    if (zeno.pages.emails) {
+        zeno.pages.emails.forEach(function (email) {
+            renderEmail(email.email, email.name);
         });
+    }
+  });
+
+  zeno.io.sockets.on('connection', function (socket) {
+    /*
+     * Fired when an email is refreshed by a client
+     * @param data.name : name to search in mail box
+     * @param data.path : path to write the image
+     */
+    socket.on('refreshOneEmail', function (data) {
+        renderEmail(data.name, data.path);
     });
+  });
 
-    function readEmail(search, cb) {
-        var buffer = '';
+  function renderEmail(name, path) {
+    var options = {};
+    readEmail(name, function(body) {
+      options = {
+            viewportSize: {width: 1600, height: 1100},
+            body        : body
+      };
 
-        imap.once('ready', function() {
+      zeno.emit('takeScreenshot', {
+            url: undefined,
+            path: path,
+            options: options
+      });
+    });
+  };
+
+  function readEmail(search, cb) {
+      var buffer = '';
+
+      imap.once('ready', function() {
             openInbox(function(err, box) {
                 if (err) throw err;
 
@@ -70,18 +84,18 @@ exports.module = function (zeno) {
                 f.once('end', function() {
                     imap.end();
                 });
-            });
-      });
+          });
+    });
 
-      imap.once('error', function(err) {
+    imap.once('error', function(err) {
         console.log('Imap error: ' + err);
-      });
+    });
 
-      imap.once('end', function() {});
-      imap.connect();
-    };
+    imap.once('end', function() {});
+    imap.connect();
+  };
 
-    function openInbox(cb) {
-      imap.openBox('INBOX', true, cb);
-    }
+  function openInbox(cb) {
+    imap.openBox('INBOX', true, cb);
+  }
 };
