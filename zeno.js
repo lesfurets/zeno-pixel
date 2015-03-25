@@ -83,6 +83,7 @@ Zeno.prototype = {
         });
 
         this.addCoreRoad();
+        this.addListeners();
         this.addSocketIoListeners();
 
         this.log('Engine detected: ' + this.engine.name + ' ' + this.engine.version);
@@ -197,6 +198,25 @@ Zeno.prototype = {
 
             self.devicesComparaison(env1, env2);
             res.send('{status: "Comparaison started"}');
+        });
+    },
+
+    /*
+     * Attach core listeners
+     */
+    addListeners: function () {
+        var self = this;
+        this.on('takeScreenshot', function (data) {
+            //check for fallbacks
+            if(typeof data.options.device === 'undefined') {
+                data.options.device = 'desktop';
+            }
+
+            if(typeof data.options.env === 'undefined') {
+                data.options.env = '';
+            }
+
+            self.takeScreenshot(data.url, data.path, data.options);
         });
     },
 
@@ -426,7 +446,7 @@ Zeno.prototype = {
                 } else {
                     // Start comparaison if at least one environment has been updated
                     if (self.pages.refreshing.desktop.length || self.pages.refreshing.tablet.length || self.pages.refreshing.mobile.length){
-                        self.devicesComparaison(self.instance[0], self.instance[1]);
+                        // self.devicesComparaison(self.instance[0], self.instance[1]);
                     }
 
                     // wait that everthing is finished before allowing the next refresh

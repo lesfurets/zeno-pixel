@@ -22,6 +22,7 @@ exports.module = function (zeno) {
    */
   zeno.on('onEnvUpdate', function (data) {
     if (zeno.pages.emails) {
+        console.log('Update Emails');
         zeno.pages.emails.forEach(function (email) {
             renderEmail(email.email, email.name);
         });
