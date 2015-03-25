@@ -9,13 +9,13 @@ Zeno is composed of a [NodeJS](http://nodejs.org) backend:
  - Compare two images
  - Modular approach able to add additional feature
 
-A frontend build with [AngularJs](https://angularjs.org/):
+And a frontend build with [AngularJs](https://angularjs.org/):
 
  - Drag n drop one image to another to compare them
  - Client side comparaison
- - Edit configuration
+ - Configuration edition
  - Results filtering
- - Get history of each url
+ - Url history
 
 ##Setup
 
@@ -100,6 +100,8 @@ Other root options are available:<br>
 
 ##Usage
 
+Example:
+
     node zenoServer.js --port 1234 --log logFile.log
 
 And go to: http://localhost:1234.<br>
@@ -111,9 +113,9 @@ Available parameters:<br>
 * `--cookie`: cookie file name (default: cookies.json)<br>
 * `--folder`: folder name(default: screenshots)<br>
 * `--enigne`: headless engine phantomjs|slimerjs<br>
-* `--startAction`: compare images from the reference couple<br>
+* `--startAction`: compare images from the reference couple at startup<br>
 
-Available core services:
+Available web services:
 
     http://localhost:1234/upadte/:environment
     http://localhost:1234/pages
@@ -124,7 +126,7 @@ Available core services:
 
 ##Cookies
 
-It is possible to inject prerecorded cookies to phantomjs. In your pages.json, add for each line where your need cookies
+It is possible to inject prerecorded cookies to the rendering engine. In your pages.json, add for each line where your need cookies
 
     "cookies" : ["cookie1", "cookies2", ...]
 
@@ -147,10 +149,6 @@ Be sure that your cookies are coherent on each environement or you will possibly
 
 see the [Modules](https://github.com/lesfurets/zeno-ui/blob/master/docs/modules.md) section
 
-##PDF exctration
-
-In an environment view (/env/MY_ENV), it is possible to ask a pdf extract of the current whole set of pages
-
 ##Shortcuts
 
  * T: scroll to top
@@ -158,7 +156,7 @@ In an environment view (/env/MY_ENV), it is possible to ask a pdf extract of the
 
 ##Tests
 
-Zeno uses the third party librairies:
+Zeno uses the third party librairies for front end tests:
 
  * [Jasmine](http://pivotal.github.io/jasmine) as its test scaffolding for the unit and e2e tests.
  * [Karma](http://karma-runner.github.io/) as its test runner
@@ -168,13 +166,13 @@ To run front unit tests (by default autowatch=true in karma.conf.js)
 
     npm test
 
-To run back run tests (mocha test suite)
-
-    npm run back
-
 To run e2e tests
 
     npm run protractor
+
+To run back end tests (mocha test suite)
+
+    npm run back
 
 ##Todo
 
