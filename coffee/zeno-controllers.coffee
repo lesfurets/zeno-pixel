@@ -342,21 +342,16 @@ envCtrl = ($scope, $routeParams, $timeout, socket) ->
   $scope.current         = 0
   $scope.selectedVersion = $scope.versions[$scope.versions.length - 1]
 
-  $timeout () ->
-    angular.forEach $scope.list.envs, (env)->
-      if env.alias == $scope.title && $scope.list[$scope.device]
-        $scope.value        = env.server
-        $scope.mainImageUrl = $scope.dir + $scope.value + $scope.list[$scope.device][0].name + $scope.ext
-      return
+  angular.forEach $scope.list.envs, (env)->
+    if env.alias is $scope.title && $scope.list[$scope.device]?
+      $scope.value        = env.server
+      $scope.mainImageUrl = $scope.dir + $scope.value + $scope.list[$scope.device][0].name + $scope.ext
     return
-  , 100
 
-  $scope.$watch (->
-    $scope.current),
-    (newValue) ->
-      if $scope.list[$scope.device]
-        $scope.mainImageUrl = $scope.dir + $scope.value + $scope.list[$scope.device][$scope.current].name + $scope.ext
-      return
+  $scope.$watch 'current', () ->
+    if $scope.filtered
+      $scope.mainImageUrl = $scope.dir + $scope.value + $scope.filtered[$scope.current].name + $scope.ext
+    return
 
   $scope.isSelected = ($index) ->
     $scope.current == $index
