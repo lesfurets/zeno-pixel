@@ -43,7 +43,7 @@ angular.module('zeno', [
     }).
     when('/settings', {
       templateUrl: 'routes/settings',
-      controller: 'PagesController'
+      controller: 'SettingsController'
     }).
     when('/log', {
       templateUrl: 'routes/log',

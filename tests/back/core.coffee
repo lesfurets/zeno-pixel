@@ -6,7 +6,6 @@ path     = require('path')
 fs       = require('fs')
 express  = require('express')
 io       = require("socket.io").listen(server)
-ioClient = require('socket.io-client')
 base     = '../../'
 Zeno     = require(base + 'zeno')
 utils    = require(base + 'tools/utils')
@@ -162,6 +161,7 @@ describe 'Rendering tests',  ->
         return
 
     it "should emit event onScreenshotDone", (done)->
+        this.timeout(5000)
         zeno.on 'onScreenshotDone', (data) ->
             data.name.should.equal('mobile-mock')
             done()
@@ -180,31 +180,6 @@ describe 'Rendering tests',  ->
 
     it "should have update the versions", ->
         zeno.versions.should.have.length(1)
-        return
-    return
-
-describe 'Socket IO tests',  ->
-    before () ->
-        options = {
-          transports: ['websocket'],
-          'force new connection': true
-        }
-        socket = ioClient.connect('http://localhost:' + port, options)
-
-        socket.on 'connect', () ->
-            ioClient.emit('updateResults', {test: 'test'});
-            # done()
-            return
-        return
-
-    it "should update the configuration", ->
-        socket.should.be.ok
-        return
-
-    after ->
-        if socket.connected
-            console.log 'disconnect'
-            socket.disconnect()
         return
     return
 

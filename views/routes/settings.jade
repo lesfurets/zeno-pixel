@@ -30,7 +30,7 @@ div(class='detail')
                 div ☰
           div(style="float:left;color:rgb(211, 63, 26);margin-left:30px")
             span Order the list to define a reference couple (top 2)
-        div
+        div(style="padding-bottom:0")
           div(style="width:15%;float:left") Engine :
           div(class="engineSwitch")
             div PhantomJs
@@ -40,6 +40,9 @@ div(class='detail')
                 span(class="onoffswitch-inner")
                 span(class="onoffswitch-switch")
             div SlimerJS
+        div(style="padding-top:0")
+          div(style="width:15%;float:left") Webstorage :
+          button(class="btn", style="margin-top:15px", ng-click="cleanStorage()") Clean
       li
         div(ng-click="show.desktop = !show.desktop", ng-class="{selected : show.desktop}")
           a Desktop

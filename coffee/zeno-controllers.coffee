@@ -245,11 +245,11 @@ zenoCtrl = ($scope, $location, $timeout, ZenoService, PagesFactory, ResultsFacto
 
         $scope.$emit "remaining", $scope.listToCompare
 
-        name          = $scope.listToCompare[0].name
-        index         = $scope.getRealIndex(name) #to update results after comparaison
-        $last         = $('.ratio' + $scope.getFilteredIndex(name))
-        first         = name + $scope.ext
-        offsets       = [$scope.env[0].offset, $scope.env[1].offset]
+        name     = $scope.listToCompare[0].name
+        index    = $scope.getRealIndex(name) #to update results after comparaison
+        $last    = $('.ratio' + $scope.getFilteredIndex(name))
+        first    = name + $scope.ext
+        offsets  = [$scope.env[0].offset, $scope.env[1].offset]
         ZenoService.compare(index, $scope.dir + $scope.env[0] + first, $scope.dir + $scope.env[1] + first, $last, offsets, true)
     else
       #need to stop the comparaison, compareText will be set by the last result
@@ -457,9 +457,9 @@ compareCtrl = ($scope, $routeParams, CompareService) ->
     return
   return
 
-# Page configuration Controller : #/pages
+# Page configuration Controller : #/settings
 # ==================================================
-pagesCtrl = ($scope, socket) ->
+settingsCtrl = ($scope, socket, ResultsFactory) ->
   $scope.show =
     desktop: false
     tablet : false
@@ -494,6 +494,21 @@ pagesCtrl = ($scope, socket) ->
   # call when a disk save is asked by client
   $scope.updateModel = () ->
     socket.emit "saveList"
+    return
+
+  # clean each localStorage record
+  $scope.cleanStorage = () ->
+    $scope.list.desktop.forEach (page) ->
+      ResultsFactory.removeStorageImage(page.name)
+      return
+
+    $scope.list.mobile.forEach (page) ->
+      ResultsFactory.removeStorageImage(page.name)
+      return
+
+    $scope.list.tablet.forEach (page) ->
+      ResultsFactory.removeStorageImage(page.name)
+      return
     return
 
   $scope.sortableOptions =
@@ -617,7 +632,7 @@ zenoCtrl.$inject     = ['$scope', '$location', '$timeout', 'ZenoService', 'Pages
 envCtrl.$inject      = ['$scope', '$routeParams', '$timeout', 'socket']
 versionCtrl.$inject  = ['$scope', 'VersionService', '$routeParams']
 compareCtrl.$inject  = ['$scope', '$routeParams', 'CompareService']
-pagesCtrl.$inject    = ['$scope', 'socket']
+settingsCtrl.$inject = ['$scope', 'socket', 'ResultsFactory']
 logCtrl.$inject      = ['$scope', 'socket', '$http', '$interval']
 summaryCtrl.$inject  = ['$scope']
 globalCtrl.$inject   = ['$scope', '$location', 'PagesFactory', 'ResultsFactory', 'VersionService', 'dir', 'ext']
@@ -627,7 +642,7 @@ angular.module('zeno.controllers', [])
   .controller('EnvController', envCtrl)
   .controller('VersionController', versionCtrl)
   .controller('CompareController', compareCtrl)
-  .controller('PagesController', pagesCtrl)
+  .controller('SettingsController', settingsCtrl)
   .controller('LogController', logCtrl)
   .controller('SummaryController', summaryCtrl)
 	.controller('GlobalController', globalCtrl)
