@@ -84,6 +84,9 @@ angular.module('zeno.services', [])
 
         if @percentage == '0.00'
           success = true
+          a = angular.element('<a href="#/result/' + f1 + '/' + f2 + '"/>')
+          @block.append a    # add link
+          a.append diffBlock # add image
         else
           success = false
 
