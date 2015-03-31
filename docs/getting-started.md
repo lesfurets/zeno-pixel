@@ -96,7 +96,7 @@ For each page, you can specify:
 * `cookies` : array of cookies name needed for this page. See cookies section
 
 Other root options are available:<br>
-* `sitemap` : list of xml sitemaps urls, each linkh will populate desktop, mobile and tablet pages list
+* `sitemap` : list of xml sitemaps urls, each link will populate desktop, mobile and tablet pages list
 
 ##Usage
 
