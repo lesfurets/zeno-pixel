@@ -74,7 +74,7 @@ if (options.url) {
 
     page.open('http://' + options.url, function(status) {
         if (status !== 'success') {
-            console.log("Error opening url \"" + page.reason_url + "\": " + page.reason);
+            console.log("Error opening url \"" + options.url);
             phantom.exit(1);
         }
     });

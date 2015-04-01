@@ -7,7 +7,6 @@ coffee/*
 tests/*
 screenshots/*
 node_modules/*
-style.css
 .git/*
 *.sh
 *.log

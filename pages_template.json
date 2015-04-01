@@ -1,17 +1,21 @@
 {
 	"host" : "{$alias}lesfurets.com",
 	"envs" : [
+		{"alias": "prod", "server" : ""},
 		{"alias": "test", "server" : "test.", "port": 8080},
-		{"alias": "prod", "server": "", "alternative": ["mobile."]}
+		{"alias": "previous", "server": "", "offset": -1}
 	],
 	"sitemap" : ["sitemapUrl", ""],
 	"desktop" : [
-	    {"url": "$host", "name": "homepage"}
+	    {"url": "$host", "name": "homepage"},
+	    {"url": "$host", "name": "homepageConnected", "cookies": ["demo"]}
 	],
 	"mobile": [
-		{"url": "$host", "name": "responsive"},
-		{"url": "$host", "name": "nonresponsive", "alternative": 0}
+		{"url": "$host", "name": "responsive"}
 	],
 	"tablet": [
+	],
+	"emails": [
+		{"email": "Bienvenue chez LesFurets.com", "name": "email1"}
 	]
 }

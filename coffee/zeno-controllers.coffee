@@ -317,11 +317,6 @@ zenoCtrl = ($scope, $location, $timeout, ZenoService, PagesFactory, ResultsFacto
       return
     return
 
-  # fired when a version update is done
-  socket.on "updateVersion", (update) ->
-    $scope.versions = update.versions
-    return
-
   # fired when one image update is done
   socket.on "updateOneWebPerf", (update) ->
     angular.forEach $scope.list[update.device], (url) ->
@@ -537,7 +532,7 @@ summaryCtrl = ($scope) ->
 
 # Global Controller : One controller to rule them all
 # ===================================================
-globalCtrl = ($scope, $location, PagesFactory, ResultsFactory, VersionService, dir, ext) ->
+globalCtrl = ($scope, $location, PagesFactory, ResultsFactory, VersionService, socket, dir, ext) ->
   $scope.listToCompare = [] # list of pages comparaison in progress
   $scope.devices      = ['desktop', 'tablet', 'mobile']
   $scope.compareform  = {env: {}, valid: 0, comparing: false, text: 'Compare'} # object handling the compare form
@@ -623,6 +618,11 @@ globalCtrl = ($scope, $location, PagesFactory, ResultsFactory, VersionService, d
     $location.path().indexOf('result') != -1 ||
     $location.path().indexOf('env') != -1
 
+  # fired when a version update is done
+  socket.on "updateVersion", (update) ->
+    $scope.versions = update.versions
+    return
+
   return
 
 # Injectors
@@ -634,7 +634,7 @@ compareCtrl.$inject  = ['$scope', '$routeParams', 'CompareService']
 settingsCtrl.$inject = ['$scope', 'socket', 'ResultsFactory']
 logCtrl.$inject      = ['$scope', 'socket', '$http', '$interval']
 summaryCtrl.$inject  = ['$scope']
-globalCtrl.$inject   = ['$scope', '$location', 'PagesFactory', 'ResultsFactory', 'VersionService', 'dir', 'ext']
+globalCtrl.$inject   = ['$scope', '$location', 'PagesFactory', 'ResultsFactory', 'VersionService', 'socket', 'dir', 'ext']
 
 angular.module('zeno.controllers', [])
 	.controller('ZenoController', zenoCtrl)

@@ -371,8 +371,6 @@ Zeno.prototype = {
         if (!fs.existsSync(todayDir)) {
             fs.mkdir(todayDir, function (err){
                 self.updateVersionList();
-
-                self.io.sockets.emit('updateVersion', {versions: self.versions});
             });
         }
 
@@ -629,6 +627,7 @@ Zeno.prototype = {
             });
 
             self.versions = dirs;
+            self.io.sockets.emit('updateVersion', {versions: self.versions});
         });
     },
 
