@@ -30,7 +30,7 @@ Zeno has never been tested on windows and probably don't work.
 
 ## Todo
 
-see [TODO](https://github.com/lesfurets/zeno-pixel/blob/master/docs/getting-started.md#setup) file
+see [TODO](https://github.com/lesfurets/zeno-pixel/blob/master/docs/getting-started.md#todo) section
 
 ## License
 
@@ -38,5 +38,5 @@ see [LICENSE]() file
 
 ## Changelog
 
- * 1.0
- > * Hello World !
+## 1.0
+ ** Hello World !
