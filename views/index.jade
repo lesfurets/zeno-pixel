@@ -48,13 +48,19 @@ html(ng-app="zeno", ng-controller="GlobalController as global", lang="en")
                 ul
                     li
                         label Desktop
-                        span {{results.desktop.results.length}} / {{list.desktop.length}}
+                        span(style="color:#DC3912") {{results.desktop.results.length}}
+                        span /
+                        span(style="color:#109618") {{list.desktop.length}}
                     li
                         label Tablet
-                        span {{results.tablet.results.length}} / {{list.tablet.length}}
+                        span(style="color:#DC3912") {{results.tablet.results.length}}
+                        span /
+                        span(style="color:#109618") {{list.tablet.length}}
                     li
                         label Mobile
-                        span {{results.mobile.results.length}} / {{list.mobile.length}}
+                        span(style="color:#DC3912") {{results.mobile.results.length}}
+                        span /
+                        span(style="color:#109618") {{list.mobile.length}}
                 ul
                     li
                         label Engine

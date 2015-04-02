@@ -45,6 +45,7 @@ angular.module('zeno.services', [])
         else # 404 with at least one image
           $rootScope.$broadcast('result', {
             index   : self.index,
+            offsets : @offsets,
             success : false,
             percentage: -1
           })
@@ -74,15 +75,7 @@ angular.module('zeno.services', [])
         f2 = @getName(@file2)
 
         @block.find('a').remove()
-        @block.find('.diffHeader').text('Mismatch: ' + @percentage + ' %')
-
-        if @offsets[0]
-          f1 += ':' + @offsets[0]
-
-        if @offsets[1]
-          f2 += ':' + @offsets[1]
-
-        a = angular.element('<a href="#/result/' + f1 + '/' + f2 + '"/>')
+        a = angular.element('<a href="'+ @getComputedUrl(f1, f2, @offsets) + '" class="computed"/>')
         @block.append a    # add link
         a.append diffBlock # add image
 
@@ -99,6 +92,15 @@ angular.module('zeno.services', [])
           percentage: @percentage
         })
       ).bind(this)
+
+    @getComputedUrl = (name1, name2, offsets) ->
+      if offsets[0]
+        name1 += ':' + offsets[0]
+
+      if offsets[1]
+        name2 += ':' + offsets[1]
+      url = '#/result/' + name1 + '/' + name2
+      return url
 
     @getName = (file) ->
       return file.substring(file.lastIndexOf('/') + 1, file.length).replace(ext, '')

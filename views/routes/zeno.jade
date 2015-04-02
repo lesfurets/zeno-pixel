@@ -33,6 +33,6 @@ div(lazy-img)
               label Size
               span {{url.webperf.size  / 1000}} ko
           i(class="fa fa-info-circle", ng-mouseenter="webperf=true", ng-mouseleave="webperf=false")
-          span(class="diffHeader") Last mismatch: {{url.percentage}} %
-          a(ng-if="hasStoredImage(url)", href="#/result/{{list.envs[0].server + url.name}}/{{list.envs[1].server + url.name}}", class="storage")
+          span(class="diffHeader") Mismatch: {{url.percentage}} %
+          a(ng-if="hasImage(url, $index)", ng-href="{{getComputedUrl(url)}}", class="storage")
             img(ng-src="{{getStoredImage(url)}}")

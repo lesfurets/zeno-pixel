@@ -135,7 +135,7 @@ zenoCtrl = ($scope, $location, $timeout, ZenoService, PagesFactory, ResultsFacto
         # do not keep offset results because there is no thumb (too large)
         if !data.offsets[0] and !data.offsets[1]
           ResultsFactory.setStorageImage(updatedRow.name, data.src)
-      else if updatedRow.src || $scope.hasStoredImage(updatedRow)
+      else
         # clean error data
         ResultsFactory.removeStorageImage(updatedRow.name)
         delete updatedRow.src
@@ -156,7 +156,7 @@ zenoCtrl = ($scope, $location, $timeout, ZenoService, PagesFactory, ResultsFacto
       newIndex = $scope.getRealIndex(name) #to update results after comparaison
       $last    = $('.ratio' + $scope.getFilteredIndex(name))
       first    = name + $scope.ext
-      offsets  = [$scope.env[0].offset, $scope.env[1].offset]
+      offsets  = [$scope.list.envs[0].offset, $scope.list.envs[1].offset]
       ZenoService.compare(newIndex, $scope.dir + $scope.env[0] + first, $scope.dir + $scope.env[1] + first, $last, offsets, true)
     else
       $scope.$apply ->
@@ -183,8 +183,8 @@ zenoCtrl = ($scope, $location, $timeout, ZenoService, PagesFactory, ResultsFacto
       $scope.results[device].date = new Date()
     return
 
-  $scope.hasStoredImage = (url) ->
-    if url.src || ResultsFactory.getStorageImage(url.name)
+  $scope.hasImage = (url, index) ->
+    if !angular.element('.ratio' + index + ' a.computed').length && (url.src || ResultsFactory.getStorageImage(url.name))
       return true
     return false
 
@@ -234,7 +234,7 @@ zenoCtrl = ($scope, $location, $timeout, ZenoService, PagesFactory, ResultsFacto
   $scope.isRefreshing = (url, col) ->
     return url.hasOwnProperty('refreshing') && url.refreshing[col]
 
-  # compare the current page or stop it
+  # compare the current page or stop the comparaison
   $scope.$on 'compareAll', (evt, data) ->
     if !$scope.compareform.comparing #no comparaison ongoing
       if $scope.compareform.valid
@@ -248,7 +248,7 @@ zenoCtrl = ($scope, $location, $timeout, ZenoService, PagesFactory, ResultsFacto
         index    = $scope.getRealIndex(name) #to update results after comparaison
         $last    = $('.ratio' + $scope.getFilteredIndex(name))
         first    = name + $scope.ext
-        offsets  = [$scope.env[0].offset, $scope.env[1].offset]
+        offsets  = [$scope.list.envs[0].offset, $scope.list.envs[1].offset]
         ZenoService.compare(index, $scope.dir + $scope.env[0] + first, $scope.dir + $scope.env[1] + first, $last, offsets, true)
     else
       #need to stop the comparaison, compareText will be set by the last result
@@ -270,6 +270,15 @@ zenoCtrl = ($scope, $location, $timeout, ZenoService, PagesFactory, ResultsFacto
         index = i
       return
     return index
+
+  $scope.getComputedUrl = (url, index) ->
+    offsets = []
+    offsets[0] = $scope.list.envs[0].offset
+    offsets[1] = $scope.list.envs[1].offset
+
+    name0 = $scope.list.envs[0].server + url.name
+    name1 = $scope.list.envs[1].server + url.name
+    ZenoService.getComputedUrl(name0, name1, offsets)
 
   # Method use to filter the home page
   # @params element needed to force the browser to redisplay the image
