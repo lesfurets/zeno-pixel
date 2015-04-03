@@ -11,9 +11,11 @@ To see a real demo, come to Zeno *Tool in Actions* at ***DevoxxFR 2015***: [link
 ## Requirements
 
 * [NodeJS](http://nodejs.org)
+* [Imagemagick](http://www.imagemagick.org/)
+ 
+And if you need custom build:
 * [PhantomJS 2.0+](http://phantomjs.org/)
 * [SlimerJS](http://slimerjs.org/)
-* [Imagemagick](http://www.imagemagick.org/)
 
 ## Installation
 
@@ -34,9 +36,10 @@ see [TODO](https://github.com/lesfurets/zeno-pixel/blob/master/docs/getting-star
 
 ## License
 
-see [LICENSE]() file
+see [LICENSE](https://github.com/lesfurets/zeno-pixel/blob/master/LICENSE) file
 
 ## Changelog
 
 ## 1.0
- ** Hello World !
+
+- Welcome Open Source World
