@@ -14,6 +14,7 @@ exports.module = function (zeno) {
         var rawHost = zeno.pages.host.replace('{$alias}', '');
 
         zeno.pages.sitemap.forEach(function(url) {
+            url = url.replace('$host', rawHost);
             getHttpsList(url, function(data) {
                 data.forEach(function (raw) {
                     var url  = raw.replace(rawHost, "$host"),
@@ -40,7 +41,7 @@ exports.module = function (zeno) {
     }
 
     function getHttpsList (file, cb) {
-        https.get(file, function(res) {
+        https.get("https://" + file, function(res) {
             var xml = '';
             res.on('data', function(chunk) {
                 xml += chunk;
@@ -57,12 +58,12 @@ exports.module = function (zeno) {
                 });
             });
         }).on('error', function(e) {
-            log('Error reading sitemap : ' + file);
+            zeno.log('Error reading sitemap : ' + file);
         });
     }
 
     function getHttpList (file, cb) {
-        http.get(file, function(res) {
+        http.get("http://" + file, function(res) {
             var xml = '';
             res.on('data', function(chunk) {
                 xml += chunk;
@@ -78,7 +79,7 @@ exports.module = function (zeno) {
                 });
             });
         }).on('error', function(e) {
-            log('Error reading sitemap : ' + file);
+            zeno.log('Error reading sitemap : ' + file);
         });
     }
 };

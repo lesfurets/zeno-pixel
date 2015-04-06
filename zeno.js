@@ -144,15 +144,7 @@ Zeno.prototype = {
         });
 
         this.app.get('/pages', function(req, res) {
-            var options = {
-                root: __dirname
-            };
-
-            res.sendFile(self.pageFile, options, function (err) {
-                if (err) {
-                    self.log(err);
-                }
-            });
+            res.send(JSON.stringify(self.pages));
         });
 
         this.app.get('/versions', function(req, res) {
@@ -723,6 +715,9 @@ Zeno.prototype = {
             pages: this.pages,
             app: this.app,
             io: this.io,
+
+            //log
+            log: this.log,
 
             // events
             on: this.on.bind(this),
