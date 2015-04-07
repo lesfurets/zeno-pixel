@@ -415,10 +415,19 @@ Zeno.prototype = {
             // Create a thumbnail to reduce Ram blueprint on client
             im.resize({
                 srcPath: path,
-                dstPath: path.replace('.png', '_thumb.png'),
+                dstPath: path.replace(self.ext, '_thumb.png'),
                 height : 200
             }, function(err){
                 if (err) {return console.warn(err);}
+
+                // Copy for versioning
+                var stream = fs.createReadStream(path);
+                stream.pipe(fs.createWriteStream(todayDir + '/' + options.env + name + '_thumb' + self.ext));
+                stream.on('end', function(){
+                    self.emit('onCopyDone', {
+                        name: name
+                    });
+                });
 
                 // Push update url to each client
                 self.io.sockets.emit('updateOneScreen', {

@@ -27,7 +27,7 @@ angular.module('zeno', [
     }).
     when('/history/:pageId', {
       templateUrl: 'routes/detail',
-      controller: 'VersionController'
+      controller: 'HistoryController'
     }).
     when('/result/:file1/:file2', {
       templateUrl: 'routes/compare',

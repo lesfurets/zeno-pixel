@@ -383,7 +383,7 @@ envCtrl = ($scope, $routeParams, $timeout, socket) ->
 
 # History page Controller : #/history/:pageId
 # ============================================
-versionCtrl = ($scope, VersionService, $routeParams) ->
+historyCtrl = ($scope, VersionService, $routeParams) ->
   $scope.title        = $routeParams.pageId
   $scope.dir          = $scope.dir + 'versioning/'
   $scope.available    = $scope.versions.slice($scope.versions.length-15, $scope.versions.length).reverse()
@@ -404,6 +404,12 @@ versionCtrl = ($scope, VersionService, $routeParams) ->
   $scope.$watch 'current', (newValue, OldValue) ->
     $scope.mainImageUrl = $scope.dir + newValue + '/' + $scope.title + $scope.ext
     return
+
+  $scope.getThumbSrc = (date) ->
+    $scope.dir + date + '/' + $scope.title + '_thumb' + $scope.ext
+
+  $scope.getSrc = (date) ->
+    $scope.dir + date + '/' + $scope.title + $scope.ext
 
   $scope.setImage = (date) ->
     $scope.current = date
@@ -638,7 +644,7 @@ globalCtrl = ($scope, $location, PagesFactory, ResultsFactory, VersionService, s
 # =========
 zenoCtrl.$inject     = ['$scope', '$location', '$timeout', 'ZenoService', 'PagesFactory', 'ResultsFactory', 'socket', '$routeParams']
 envCtrl.$inject      = ['$scope', '$routeParams', '$timeout', 'socket']
-versionCtrl.$inject  = ['$scope', 'VersionService', '$routeParams']
+historyCtrl.$inject  = ['$scope', 'VersionService', '$routeParams']
 compareCtrl.$inject  = ['$scope', '$routeParams', 'CompareService']
 settingsCtrl.$inject = ['$scope', 'socket', 'ResultsFactory']
 logCtrl.$inject      = ['$scope', 'socket', '$http', '$interval']
@@ -648,7 +654,7 @@ globalCtrl.$inject   = ['$scope', '$location', 'PagesFactory', 'ResultsFactory',
 angular.module('zeno.controllers', [])
 	.controller('ZenoController', zenoCtrl)
   .controller('EnvController', envCtrl)
-  .controller('VersionController', versionCtrl)
+  .controller('HistoryController', historyCtrl)
   .controller('CompareController', compareCtrl)
   .controller('SettingsController', settingsCtrl)
   .controller('LogController', logCtrl)
