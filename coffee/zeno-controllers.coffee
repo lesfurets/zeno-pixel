@@ -284,7 +284,7 @@ zenoCtrl = ($scope, $location, $timeout, ZenoService, PagesFactory, ResultsFacto
   # @params element needed to force the browser to redisplay the image
   # @return true if the element is displayed, false otherwise
   $scope.filterList = (element) ->
-    isfiltered = [true, true]
+    isfiltered = [true, true] # filter by name or by slider
     if $scope.query
       $scope.hasFiltered = true
 

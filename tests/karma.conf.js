@@ -5,7 +5,7 @@ module.exports = function(config){
 
     files : [
       'js/bower_components/jquery/jquery.js',
-      'js/bower_components/jquery/jquery.js',
+      'js/bower_components/jquery-ui/jquery-ui.js',
       'js/bower_components/angular/angular.js',
       'js/bower_components/angular-route/angular-route.js',
       'js/bower_components/angular-resource/angular-resource.js',
@@ -14,8 +14,8 @@ module.exports = function(config){
       'js/bower_components/angular-socket-io/socket.js',
       'js/bower_components/angular-socket-io/mock/*.js',
       'js/bower_components/angular-dragdrop/src/angular-dragdrop.min.js',
-      'js/vendor/resemble.min.js',
-      'js/vendor/sortable.js',
+      'js/libs/resemble.min.js',
+      'js/libs/sortable.js',
       'js/*.js',
       'tests/front/*.js'
     ],

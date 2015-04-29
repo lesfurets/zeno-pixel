@@ -1,7 +1,7 @@
 'use strict';
 
 describe('the tests of the Global Controller', function() {
-	var scope, $httpBackend, ctrl, rootScope, location;
+	var scope, $httpBackend, createController, ctrl, rootScope;
 
     var list = {
         host : "host.com",
@@ -51,61 +51,30 @@ describe('the tests of the Global Controller', function() {
     };
 
     beforeEach(module('zeno'));
-    beforeEach(inject(function(_$httpBackend_, $rootScope, $controller, $location) {
-        $httpBackend = _$httpBackend_;
+    beforeEach(inject(function($injector) {
+        $httpBackend = $injector.get('$httpBackend');
         $httpBackend.when('GET', '/pages').respond(list);
         $httpBackend.when('GET', '/results').respond(results);
         $httpBackend.when('GET', '/versions').respond(versions);
 
-        location  = $location;
-        location.path('desktop');
+        rootScope = $injector.get('$rootScope');
+        scope = rootScope.$new();
 
-        rootScope = $rootScope;
-
-        scope = $rootScope.$new();
-        scope.device = 'desktop';
-        ctrl  = $controller('GlobalController', {$scope: scope});
+        ctrl = $injector.get('$controller');
+        createController = function() {
+            return ctrl('GlobalController', {'$scope' : scope });
+        };
     }));
 
     it('should fetch a list of pages from json file', function(){
+        $httpBackend.expectGET('/pages');
+        var controller = createController();
         $httpBackend.flush();
 
-        expect(scope.list).toBeDefined();
-        expect(scope.list.envs.length).toBe(3);
-        expect(scope.list.desktop.length).toBe(2);
-    });
+        console.log(scope.pages);
 
-    it('should be init to 0 success and 0 failure', function(){
-        $httpBackend.flush();
-
-        expect(scope.list).toBeDefined();
-        expect(scope.list.success).toBe(0);
-        expect(scope.list.failures).toBe(2);
-    });
-
-    it('should fetch results from server', function(){
-        $httpBackend.flush();
-
-        expect(scope.results).toBeDefined();
-        expect(scope.results.desktop.results.length).toBe(2);
-    });
-
-    it('should be in desktop mode', function(){
-        $httpBackend.flush();
-
-        expect(scope.location.path()).toBe('/desktop');
-        expect(scope.device).toBe('desktop');
-    });
-
-    it('should be able to change of device', function(){
-        $httpBackend.flush();
-
-        location.path('/mobile');
-        rootScope.$apply();
-        expect(scope.device).toBe('mobile');
-
-        location.path('/tablet');
-        rootScope.$apply();
-        expect(scope.device).toBe('tablet');
+        // expect(scope.list).toBeDefined();
+        // expect(scope.list.envs.length).toBe(3);
+        // expect(scope.list.desktop.length).toBe(2);
     });
 });

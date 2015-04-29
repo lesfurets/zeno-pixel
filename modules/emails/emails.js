@@ -1,13 +1,15 @@
+'use strict';
+
 var Imap     = require('imap'),
     inspect  = require('util').inspect;
-
-var imap = new Imap({
+var settings = {
   user: '',
   password: '',
   host: '',
   port: 993,
   tls: true
-});
+};
+var imap = new Imap(settings);
 
 /**********************
  * Plugins: Email Comparaison plugin
@@ -16,7 +18,7 @@ var imap = new Imap({
  **********************/
 exports.module = function (zeno) {
 
-    if (imap.user.length && imap.password.length && imap.host.length) {
+    if (settings.user.length && settings.password.length && settings.host.length) {
         /*
         * @param data.device : device to render
         * @param data.env    : environment name

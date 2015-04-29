@@ -1,6 +1,6 @@
 'use strict';
 
-describe('the tests of the Version Controller', function() {
+describe('the tests of the History Controller', function() {
 
     var scope, $httpBackend, ctrl;
     var list = {
@@ -19,7 +19,7 @@ describe('the tests of the Version Controller', function() {
         scope.versions = versions;
         scope.current  = scope.versions[scope.versions.length - 1];
 
-        ctrl  = $controller('VersionController', {
+        ctrl  = $controller('HistoryController', {
             $scope: scope,
             VersionService : {},
             $routeParams: {pageId :'homepage'}

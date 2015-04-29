@@ -112,13 +112,14 @@ Available parameters:<br>
 * `--file`: configuration file name (default: pages.json)
 * `--cookie`: cookie file name (default: cookies.json)<br>
 * `--folder`: folder name(default: screenshots)<br>
-* `--enigne`: headless engine phantomjs|slimerjs<br>
+* `--engine`: headless engine phantomjs|slimerjs<br>
 * `--startAction`: compare images from the reference couple at startup<br>
 
 Available web services:
 
     http://localhost:1234/upadte/:environment
     http://localhost:1234/pages
+    http://localhost:1234/compare/:env1/:env2
     http://localhost:1234/results
     http://localhost:1234/results/:device
     http://localhost:1234/versions
