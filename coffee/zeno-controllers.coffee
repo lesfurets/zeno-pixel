@@ -572,6 +572,10 @@ globalCtrl = ($scope, $location, PagesFactory, ResultsFactory, VersionService, s
     $scope.versions = res
     return
 
+  PagesFactory.getQueue (data) ->
+    $scope.queue = data
+    return
+
   PagesFactory.getPages (data) ->
     $scope.list = data
 

@@ -147,7 +147,7 @@ Zeno.prototype = {
             res.send(JSON.stringify(self.pages));
         });
 
-        this.app.get('/tasks', function(req, res) {
+        this.app.get('/queue', function(req, res) {
             res.send(JSON.stringify(self.listtoshot));
         });
 
