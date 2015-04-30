@@ -147,6 +147,10 @@ Zeno.prototype = {
             res.send(JSON.stringify(self.pages));
         });
 
+        this.app.get('/tasks', function(req, res) {
+            res.send(JSON.stringify(self.listtoshot));
+        });
+
         this.app.get('/versions', function(req, res) {
             res.send(JSON.stringify(self.versions));
         });
@@ -399,7 +403,10 @@ Zeno.prototype = {
 
         // exit callback
         process.on('exit', function(code) {
-            if(code) {return self.log('Error during ' + self.engine.name + ' exec: ' + code);}
+            if(code) {
+                self.log('Error during ' + self.engine.name + ' exec: ' + code);
+                return self.next();
+            }
 
             self.log('(' + this.pid + ') update done: ' + path);
 
@@ -435,28 +442,36 @@ Zeno.prototype = {
                     env : options.env
                 });
 
-                self.listtoshot.splice(0, 1);
-                if (self.listtoshot.length){
-                    self.takeScreenshot(
-                        self.listtoshot[0].url,
-                        self.listtoshot[0].name,
-                        self.listtoshot[0].options
-                    );
-                } else {
-                    // Start comparaison if at least one environment has been updated
-                    if (self.pages.refreshing.desktop.length || self.pages.refreshing.tablet.length || self.pages.refreshing.mobile.length){
-                        // self.devicesComparaison(self.instance[0], self.instance[1]);
-                    }
-
-                    // wait that everthing is finished before allowing the next refresh
-                    self.pages.refreshing = {
-                        desktop: [],
-                        tablet: [],
-                        mobile: []
-                    };
-                }
+                self.next();
             });
         });
+    },
+
+    /*
+     * Remove current element from the queue
+     * and start the next one
+     */
+    next: function () {
+        this.listtoshot.splice(0, 1);
+        if (this.listtoshot.length){
+            this.takeScreenshot(
+                this.listtoshot[0].url,
+                this.listtoshot[0].name,
+                this.listtoshot[0].options
+            );
+        } else {
+            // Start comparaison if at least one environment has been updated
+            if (this.pages.refreshing.desktop.length || this.pages.refreshing.tablet.length || this.pages.refreshing.mobile.length){
+                this.devicesComparaison(this.instance[0], this.instance[1]);
+            }
+
+            // wait that everthing is finished before allowing the next refresh
+            this.pages.refreshing = {
+                desktop: [],
+                tablet: [],
+                mobile: []
+            };
+        }
     },
 
     /*
