@@ -6,9 +6,10 @@ var pkg = require('phantomjs');
 var phantomjs = {
 	name: 'phantomjs',
 	engine: 'webkit',
-	path: pkg.path,
+	// path: pkg.path,
+	path: '/usr/local/bin/phantomjs',
 	ssl: '--ssl-protocol=tlsv1',
-	version: pkg.version
+	version: '2.0'
 };
 
 pkg = require('slimerjs');

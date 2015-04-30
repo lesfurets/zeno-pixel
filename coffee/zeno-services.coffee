@@ -175,7 +175,7 @@ angular.module('zeno.services', [])
   .factory 'socket', (socketFactory) ->
     return socketFactory()
 
-  .factory 'PagesFactory', ($resource) ->
+  .factory 'PagesFactory', ($resource, $http) ->
     factory = {}
 
     # Get configuration from node server
@@ -200,6 +200,13 @@ angular.module('zeno.services', [])
       else
         resolved = resolved.replace('{$alias}', env.server)
       return resolved
+
+    # Get queue list
+    factory.getQueue = (cb) ->
+      $http.get('/queue').success (data) ->
+        cb(data)
+        return
+      return
 
     return factory
 

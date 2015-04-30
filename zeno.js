@@ -147,7 +147,7 @@ Zeno.prototype = {
             res.send(JSON.stringify(self.pages));
         });
 
-        this.app.get('/tasks', function(req, res) {
+        this.app.get('/queue', function(req, res) {
             res.send(JSON.stringify(self.listtoshot));
         });
 
@@ -213,6 +213,12 @@ Zeno.prototype = {
             }
 
             self.takeScreenshot(data.url, data.path, data.options);
+        });
+
+        this.on('onEnvUpdate', function (data){
+            self.io.sockets.emit('queueChangeEvent', {
+                size: self.listtoshot.length
+            });
         });
     },
 
@@ -453,6 +459,11 @@ Zeno.prototype = {
      */
     next: function () {
         this.listtoshot.splice(0, 1);
+
+        this.io.sockets.emit('queueChangeEvent', {
+            size: this.listtoshot.length
+        });
+
         if (this.listtoshot.length){
             this.takeScreenshot(
                 this.listtoshot[0].url,
@@ -613,15 +624,19 @@ Zeno.prototype = {
 
         var realUrl = this.parseUrl(server, url, env.port);
 
+        this.listtoshot.push({
+            url     : realUrl,
+            name    : name,
+            options : options
+        });
+
+        this.io.sockets.emit('queueChangeEvent', {
+            size: this.listtoshot.length
+        });
+
         // do not trigger update if it's already running, just queue it
-        if(!this.listtoshot.length) {
+        if(this.listtoshot.length === 1) {
             this.takeScreenshot(realUrl, name, options);
-        } else {
-            this.listtoshot.push({
-                url     : realUrl,
-                name    : name,
-                options : options
-            });
         }
     },
 
@@ -643,7 +658,7 @@ Zeno.prototype = {
             });
 
             self.versions = dirs;
-            self.io.sockets.emit('updateVersion', {versions: self.versions});
+            self.io.sockets.emit('updateVersionEvent', {versions: self.versions});
         });
     },
 
