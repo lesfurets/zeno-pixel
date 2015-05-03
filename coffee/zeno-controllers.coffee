@@ -29,7 +29,7 @@ zenoCtrl = ($scope, $location, $timeout, ZenoService, PagesFactory, ResultsFacto
         for env in $scope.list.envs
           if env.alias == k
             if env.offset
-              $scope.env.push("versioning/" + $scope.versions[$scope.versions.length - 1 + env.offset] + "/" + env.server)
+              $scope.env.push($scope.versions[$scope.versions.length - 1 + env.offset] + "/" + env.server)
             else
               $scope.env.push(env.server)
             break
@@ -39,7 +39,7 @@ zenoCtrl = ($scope, $location, $timeout, ZenoService, PagesFactory, ResultsFacto
   # Returns a valid path uri for a choosen environement
   $scope.resolveDiskPath = (env, name, param, offset) ->
     if offset
-      path = $scope.dir + "versioning/" + $scope.versions[$scope.versions.length - 1 + offset] + "/" + env + name + $scope.ext
+      path = $scope.dir + $scope.versions[$scope.versions.length - 1 + offset] + "/" + env + name + $scope.ext
     else
       end = ''
       if typeof param != "undefined"
@@ -61,7 +61,7 @@ zenoCtrl = ($scope, $location, $timeout, ZenoService, PagesFactory, ResultsFacto
   $scope.emailDropCallback = (event, ui, src, $index) ->
     prevVersion = $scope.versions[$scope.versions.length - 2]
     first       = $scope.dir + src + $scope.ext
-    second      = $scope.dir + "versioning/" + prevVersion + "/" + src + $scope.ext
+    second      = $scope.dir + prevVersion + "/" + src + $scope.ext
 
     #start comparaison
     if first != second

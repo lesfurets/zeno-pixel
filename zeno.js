@@ -32,7 +32,6 @@ var Zeno = function (app, server, io, params) {
 
     this.log           = utils.log;
     this.devices       = ['desktop', 'tablet', 'mobile'];
-    this.versioning    = 'versioning';
     this.ext           = '.png';
     this.phantomScript = path.join(__dirname, 'phantomScript.js');
     this.instance      = [];
@@ -57,9 +56,6 @@ Zeno.prototype = {
 
         if (!fs.existsSync(this.dir)) {
             fs.mkdirSync(this.dir);
-        }
-        if (!fs.existsSync(path.join(this.dir, this.versioning))) {
-            fs.mkdirSync(path.join(this.dir, this.versioning));
         }
 
         this.updateVersionList();
@@ -362,7 +358,7 @@ Zeno.prototype = {
             path = p.join(this.dir, options.env +  name + this.ext);
 
         // directory name pattern : mm-dd-yyyy
-        var todayDir = p.join(this.dir, this.versioning, (d.getMonth() + 1) + '-' + d.getDate() + '-' + d.getFullYear());
+        var todayDir = p.join(this.dir, (d.getMonth() + 1) + '-' + d.getDate() + '-' + d.getFullYear());
 
         if (!fs.existsSync(todayDir)) {
             fs.mkdir(todayDir, function (err){
@@ -426,15 +422,6 @@ Zeno.prototype = {
                 height : 200
             }, function(err){
                 if (err) {return console.warn(err);}
-
-                // Copy for versioning
-                var stream = fs.createReadStream(path);
-                stream.pipe(fs.createWriteStream(todayDir + '/' + options.env + name + '_thumb' + self.ext));
-                stream.on('end', function(){
-                    self.emit('onCopyDone', {
-                        name: name
-                    });
-                });
 
                 // Push update url to each client
                 self.io.sockets.emit('updateOneScreen', {
@@ -626,12 +613,12 @@ Zeno.prototype = {
     },
 
     /*
-     * Read versionning folder to update and sort the list
+     * Read versioning folder to update and sort the list
      */
     updateVersionList: function () {
         this.log('Fetch versions list');
         var self = this;
-        fs.readdir(path.join(this.dir, this.versioning), function(err, dirs){
+        fs.readdir(this.dir, function(err, dirs){
             if (err) { return self.log(err); }
 
             dirs.sort(function (a, b) {

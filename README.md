@@ -12,7 +12,7 @@ To see a real demo, come to Zeno *Tool in Actions* at ***DevoxxFR 2015***: [link
 
 * [NodeJS](http://nodejs.org)
 * [Imagemagick](http://www.imagemagick.org/)
- 
+
 And if you need custom build:
 * [PhantomJS 2.0+](http://phantomjs.org/)
 * [SlimerJS](http://slimerjs.org/)
@@ -40,6 +40,4 @@ see [LICENSE](https://github.com/lesfurets/zeno-pixel/blob/master/LICENSE) file
 
 ## Changelog
 
-## 1.0
-
-- Welcome Open Source World
+see [CHANGELOG](https://github.com/lesfurets/zeno-pixel/blob/master/CHANGELOG.md) file
