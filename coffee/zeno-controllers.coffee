@@ -573,7 +573,7 @@ globalCtrl = ($scope, $location, PagesFactory, ResultsFactory, VersionService, s
     return
 
   PagesFactory.getQueue (data) ->
-    $scope.queue = data
+    $scope.queue = data.length
     return
 
   PagesFactory.getPages (data) ->
@@ -638,8 +638,13 @@ globalCtrl = ($scope, $location, PagesFactory, ResultsFactory, VersionService, s
     $location.path().indexOf('env') != -1
 
   # fired when a version update is done
-  socket.on "updateVersion", (update) ->
+  socket.on "updateVersionEvent", (update) ->
     $scope.versions = update.versions
+    return
+
+  # fired when the queue is updated
+  socket.on "queueChangeEvent", (update) ->
+    $scope.queue = update.size
     return
 
   return

@@ -210,6 +210,12 @@ Zeno.prototype = {
 
             self.takeScreenshot(data.url, data.path, data.options);
         });
+
+        this.on('onEnvUpdate', function (data){
+            self.io.sockets.emit('queueChangeEvent', {
+                size: self.listtoshot.length
+            });
+        });
     },
 
     /*
@@ -252,8 +258,8 @@ Zeno.prototype = {
                 });
                 self.pages.desktop = data.list.desktop;
                 self.pages.mobile  = data.list.mobile;
-                self.pages.tablet = data.list.tablet;
-                self.instance = self.pages.envs;
+                self.pages.tablet  = data.list.tablet;
+                self.instance      = self.pages.envs;
             });
 
             /*
@@ -370,6 +376,7 @@ Zeno.prototype = {
                 ua          : options.userAgent,
                 viewportSize: options.viewportSize,
                 cookies     : options.cookies,
+                blacklist   : self.pages.blacklist,
                 path        : path, // path on disk
                 url         : url,  // use to render a page from url
                 body        : options.body  // use to render a page from html
@@ -440,6 +447,11 @@ Zeno.prototype = {
      */
     next: function () {
         this.listtoshot.splice(0, 1);
+
+        this.io.sockets.emit('queueChangeEvent', {
+            size: this.listtoshot.length
+        });
+
         if (this.listtoshot.length){
             this.takeScreenshot(
                 this.listtoshot[0].url,
@@ -600,15 +612,19 @@ Zeno.prototype = {
 
         var realUrl = this.parseUrl(server, url, env.port);
 
+        this.listtoshot.push({
+            url     : realUrl,
+            name    : name,
+            options : options
+        });
+
+        this.io.sockets.emit('queueChangeEvent', {
+            size: this.listtoshot.length
+        });
+
         // do not trigger update if it's already running, just queue it
-        if(!this.listtoshot.length) {
+        if(this.listtoshot.length === 1) {
             this.takeScreenshot(realUrl, name, options);
-        } else {
-            this.listtoshot.push({
-                url     : realUrl,
-                name    : name,
-                options : options
-            });
         }
     },
 
@@ -630,7 +646,7 @@ Zeno.prototype = {
             });
 
             self.versions = dirs;
-            self.io.sockets.emit('updateVersion', {versions: self.versions});
+            self.io.sockets.emit('updateVersionEvent', {versions: self.versions});
         });
     },
 
