@@ -262,8 +262,8 @@ Zeno.prototype = {
                 });
                 self.pages.desktop = data.list.desktop;
                 self.pages.mobile  = data.list.mobile;
-                self.pages.tablet = data.list.tablet;
-                self.instance = self.pages.envs;
+                self.pages.tablet  = data.list.tablet;
+                self.instance      = self.pages.envs;
             });
 
             /*
@@ -380,6 +380,7 @@ Zeno.prototype = {
                 ua          : options.userAgent,
                 viewportSize: options.viewportSize,
                 cookies     : options.cookies,
+                blacklist   : self.pages.blacklist,
                 path        : path, // path on disk
                 url         : url,  // use to render a page from url
                 body        : options.body  // use to render a page from html
