@@ -1,4 +1,4 @@
-#Plugins
+#Modules
 
 /!\ Still not stable.
 

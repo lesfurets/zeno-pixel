@@ -358,25 +358,19 @@ Zeno.prototype = {
      * @param options engine options
      */
     takeScreenshot: function (url, name, options) {
-        var d    = new Date(),
-            p    = require('path'),
-            self = this,
-            path = p.join(this.dir, options.env +  name + this.ext);
+        var p        = require('path'),
+            self     = this,
 
-        // directory name pattern : mm-dd-yyyy
-        var todayDir = p.join(this.dir, (d.getMonth() + 1) + '-' + d.getDate() + '-' + d.getFullYear());
-
-        if (!fs.existsSync(todayDir)) {
-            fs.mkdir(todayDir, function (err){
-                self.updateVersionList();
-            });
-        }
+            // last version path
+            todayDir = p.join(this.dir, this.versions[this.versions.length - 1]),
+            // image path
+            path     = p.join(todayDir, options.env +  name + this.ext);
 
         var args = [this.engine.ssl, this.phantomScript, JSON.stringify({
                 ua          : options.userAgent,
                 viewportSize: options.viewportSize,
                 cookies     : options.cookies,
-                blacklist   : self.pages.blacklist,
+                blacklist   : self.pages.blacklist, // requests to exclude
                 path        : path, // path on disk
                 url         : url,  // use to render a page from url
                 body        : options.body  // use to render a page from html
@@ -629,6 +623,22 @@ Zeno.prototype = {
     },
 
     /*
+     * Add a new unique version, ie a folder on disk
+     */
+    addVersion: function() {
+        var d = new Date();
+
+        // directory name pattern : mm-dd-yyyy-hh:mm
+        var todayDir = p.join(this.dir, this.versioning, (d.getMonth() + 1)
+            + '-' + d.getDate() + '-' + d.getFullYear()
+            + '-' + d.getHours() + ':' + d.getMinutes());
+
+        fs.mkdir(todayDir, function (err){
+            self.updateVersionList();
+        });
+    },
+
+    /*
      * Read versioning folder to update and sort the list
      */
     updateVersionList: function () {
@@ -640,9 +650,21 @@ Zeno.prototype = {
             dirs.sort(function (a, b) {
                 var as = a.split('-');
                 var bs = b.split('-');
-                var diff = new Date(as[2], parseInt(as[0], 10) - 1, as[1]) - new Date(bs[2], parseInt(bs[0], 10) - 1, bs[1]);
 
-                return diff;
+                // Compatibility with zeno 1.0
+                if (as.length === 3 || bs.length === 3) {
+                    var da = new Date(as[2], parseInt(as[0], 10) - 1, as[1]);
+                    var db = new Date(bs[2], parseInt(bs[0], 10) - 1, bs[1]);
+                } else if (as.length === 4 || bs.length === 4) {
+                    var ha = as[3].split(':');
+                    var da = new Date(as[2], parseInt(as[0], 10) - 1, as[1], ha[0], ha[1]);
+                    var hb = bs[3].split(':');
+                    var db = new Date(bs[2], parseInt(bs[0], 10) - 1, bs[1], hb[0], hb[1]);
+                } else {
+                    return -1; // folder in error
+                }
+
+                return da - db;
             });
 
             self.versions = dirs;
