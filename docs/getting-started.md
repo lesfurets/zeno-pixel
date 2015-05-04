@@ -180,5 +180,4 @@ To run back end tests (mocha test suite)
  * Drop jquery and jquery-ui (D&D issue)
  * Windows suport
  * Easiest way to add and edit page config
- * New api to get the tasks in progress
- * Slider drag and drop support
+ * See branch 1.1 for further evolutions
