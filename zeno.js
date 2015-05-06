@@ -58,8 +58,6 @@ Zeno.prototype = {
             fs.mkdirSync(this.dir);
         }
 
-        this.updateVersionList();
-
         if (this.logFile) {
             var logFile   = fs.createWriteStream(this.logFile, {flags : 'a'});
             var logStdout = process.stdout;
@@ -98,6 +96,7 @@ Zeno.prototype = {
                 self.instance     = self.pages.envs;
             }
 
+            self.updateVersionList();
             self.loadModules(cb);
 
             if (self.startAction) {
@@ -215,6 +214,9 @@ Zeno.prototype = {
             self.io.sockets.emit('queueChangeEvent', {
                 size: self.listtoshot.length
             });
+
+
+            addVersion();
         });
     },
 
@@ -362,7 +364,7 @@ Zeno.prototype = {
             self     = this,
 
             // last version path
-            todayDir = p.join(this.dir, this.versions[this.versions.length - 1]),
+            todayDir = p.join(this.dir, this.versions[this.versions.length - 1].name),
             // image path
             path     = p.join(todayDir, options.env +  name + this.ext);
 
@@ -406,15 +408,6 @@ Zeno.prototype = {
             }
 
             self.log('(' + this.pid + ') update done: ' + path);
-
-            // Copy for versioning
-            var stream = fs.createReadStream(path);
-            stream.pipe(fs.createWriteStream(todayDir + '/' + options.env + name + self.ext));
-            stream.on('end', function(){
-                self.emit('onCopyDone', {
-                    name: name
-                });
-            });
 
             // Create a thumbnail to reduce Ram blueprint on client
             im.resize({
@@ -617,6 +610,7 @@ Zeno.prototype = {
         });
 
         // do not trigger update if it's already running, just queue it
+        // and use the last version to update the image
         if(this.listtoshot.length === 1) {
             this.takeScreenshot(realUrl, name, options);
         }
@@ -629,12 +623,17 @@ Zeno.prototype = {
         var d = new Date();
 
         // directory name pattern : mm-dd-yyyy-hh:mm
-        var todayDir = p.join(this.dir, this.versioning, (d.getMonth() + 1)
+        var newFolder = p.join(this.dir, this.versioning, (d.getMonth() + 1)
             + '-' + d.getDate() + '-' + d.getFullYear()
             + '-' + d.getHours() + ':' + d.getMinutes());
 
-        fs.mkdir(todayDir, function (err){
-            self.updateVersionList();
+        fs.mkdir(newFolder, function (err){
+            self.versions.push({
+                name: newFolder,
+                envs: []
+            });
+
+            self.io.sockets.emit('updateVersionEvent', {versions: self.versions});
         });
     },
 
@@ -646,6 +645,10 @@ Zeno.prototype = {
         var self = this;
         fs.readdir(this.dir, function(err, dirs){
             if (err) { return self.log(err); }
+
+            if (dirs.length === 0) {
+                return addVersion();
+            }
 
             dirs.sort(function (a, b) {
                 var as = a.split('-');
@@ -667,8 +670,17 @@ Zeno.prototype = {
                 return da - db;
             });
 
-            self.versions = dirs;
-            self.io.sockets.emit('updateVersionEvent', {versions: self.versions});
+            dirs.forEach(function(dir) {
+                var envs = [];
+                self.pages.envs.forEach(function (env){
+                    envs.push(env.alias);
+                });
+
+                self.versions.push({
+                    name: dir,
+                    envs: envs
+                });
+            });
         });
     },
 

@@ -168,16 +168,6 @@ describe 'Rendering tests',  ->
             return
         return
 
-    it "should emit event onCopyDone", (done)->
-        zeno.on 'onCopyDone', (data) ->
-            data.name.should.equal('mobile-mock')
-            fs.exists params.folder + data.name + zeno.ext, (exists)->
-                exists.should.be.true
-                done()
-                return
-            return
-        return
-
     it "should have update the versions", ->
         zeno.versions.should.have.length(1)
         return

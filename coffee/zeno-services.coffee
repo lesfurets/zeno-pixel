@@ -45,7 +45,7 @@ angular.module('zeno.services', [])
         else # 404 with at least one image
           $rootScope.$broadcast('result', {
             index   : self.index,
-            offsets : @offsets,
+            offsets : offsets,
             success : false,
             percentage: -1
           })

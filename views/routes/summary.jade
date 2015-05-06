@@ -12,12 +12,12 @@ div(class="central summary")
                 label Tablet
                 span {{results.tablet.results.length}}
                 div(class="progress-bar")
-                    div(class="progress", ng-style="{'width': ((results.tablet.results.length*100/list.desktop.length) + 1) + '%'}")
+                    div(class="progress", ng-style="{'width': ((results.tablet.results.length*100/list.tablet.length) + 1) + '%'}")
             li(class="flex")
                 label Mobile
                 span {{results.mobile.results.length}}
                 div(class="progress-bar")
-                    div(class="progress", ng-style="{'width': ((results.mobile.results.length*100/list.desktop.length) + 1) + '%'}")
+                    div(class="progress", ng-style="{'width': ((results.mobile.results.length*100/list.mobile.length) + 1) + '%'}")
     div(class="block")
         ul
             li

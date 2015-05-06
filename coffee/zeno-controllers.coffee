@@ -39,12 +39,12 @@ zenoCtrl = ($scope, $location, $timeout, ZenoService, PagesFactory, ResultsFacto
   # Returns a valid path uri for a choosen environement
   $scope.resolveDiskPath = (env, name, param, offset) ->
     if offset
-      path = $scope.dir + $scope.versions[$scope.versions.length - 1 + offset] + "/" + env + name + $scope.ext
+      path = $scope.dir + $scope.versions[$scope.versions.length - 1 + offset].name + "/" + env + name + $scope.ext
     else
       end = ''
       if typeof param != "undefined"
         end = param
-      path = $scope.dir + env + name + $scope.thumb + end
+      path = $scope.dir + $scope.versions[$scope.versions.length - 1].name + "/" + env + name + $scope.thumb + end
     return path
 
   # Returns a valid host for a choosen environement
@@ -80,9 +80,9 @@ zenoCtrl = ($scope, $location, $timeout, ZenoService, PagesFactory, ResultsFacto
       first = first.substring(0, first.indexOf('?'))
 
     if dropEnv.offset
-      second = $scope.dir + "versioning/" + $scope.versions[$scope.versions.length - 1 + dropEnv.offset] + "/" + dropEnv.server + src + $scope.ext
+      second = $scope.dir + $scope.versions[$scope.versions.length - 1 + dropEnv.offset].name + "/" + dropEnv.server + src + $scope.ext
     else
-      second = $scope.dir + dropEnv.server + src + $scope.ext
+      second = $scope.dir + $scope.versions[$scope.versions.length - 1].name + "/" + dropEnv.server + src + $scope.ext
 
     realIndex  = $index # real index and not the filtered one
 
@@ -157,7 +157,10 @@ zenoCtrl = ($scope, $location, $timeout, ZenoService, PagesFactory, ResultsFacto
       $last    = $('.ratio' + $scope.getFilteredIndex(name))
       first    = name + $scope.ext
       offsets  = [$scope.list.envs[0].offset, $scope.list.envs[1].offset]
-      ZenoService.compare(newIndex, $scope.dir + $scope.env[0] + first, $scope.dir + $scope.env[1] + first, $last, offsets, true)
+      ZenoService.compare(newIndex,
+        $scope.dir + $scope.versions[$scope.versions.length - 1].name + "/" + $scope.env[0] + first,
+        $scope.dir + $scope.versions[$scope.versions.length - 1].name + "/" + $scope.env[1] + first,
+        $last, offsets, true)
     else
       $scope.$apply ->
         $scope.compareform.comparing = false
@@ -249,7 +252,10 @@ zenoCtrl = ($scope, $location, $timeout, ZenoService, PagesFactory, ResultsFacto
         $last    = $('.ratio' + $scope.getFilteredIndex(name))
         first    = name + $scope.ext
         offsets  = [$scope.list.envs[0].offset, $scope.list.envs[1].offset]
-        ZenoService.compare(index, $scope.dir + $scope.env[0] + first, $scope.dir + $scope.env[1] + first, $last, offsets, true)
+        ZenoService.compare(index,
+          $scope.dir + $scope.versions[$scope.versions.length - 1].name + "/" + $scope.env[0] + first,
+          $scope.dir + $scope.versions[$scope.versions.length - 1].name + "/" + $scope.env[1] + first,
+          $last, offsets, true)
     else
       #need to stop the comparaison, compareText will be set by the last result
       $scope.listToCompare = []
@@ -385,10 +391,10 @@ envCtrl = ($scope, $routeParams, $timeout, socket) ->
 # ============================================
 historyCtrl = ($scope, VersionService, $routeParams) ->
   $scope.title        = $routeParams.pageId
-  $scope.dir          = $scope.dir + 'versioning/'
+  $scope.dir          = $scope.dir + '/'
   $scope.available    = $scope.versions.slice($scope.versions.length-15, $scope.versions.length).reverse()
-  $scope.current      = $scope.available[0]
-  $scope.mainImageUrl = $scope.dir + $scope.title + $scope.ext
+  $scope.current      = $scope.available[0].name
+  $scope.mainImageUrl = $scope.dir + $scope.versions[$scope.versions.length-1] + $scope.title + $scope.ext
 
   # methods to determine initial mainImageurl
   # @param date of a 404 image
@@ -396,7 +402,7 @@ historyCtrl = ($scope, VersionService, $routeParams) ->
     for d, i in $scope.available
       if d is date
         $scope.available.splice(i, 1)
-        $scope.current = $scope.available[0]
+        $scope.current = $scope.available[0].name
         $scope.$apply()
         break
     return
