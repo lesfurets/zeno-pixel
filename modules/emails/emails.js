@@ -19,10 +19,7 @@ var imap = new Imap(settings);
 exports.module = function (zeno) {
 
     if (settings.user.length && settings.password.length && settings.host.length) {
-        /*
-        * @param data.device : device to render
-        * @param data.env    : environment name
-        */
+
         zeno.on('onEnvUpdate', function (data) {
             if (zeno.pages.emails) {
                 console.log('Update Emails');
@@ -60,7 +57,7 @@ exports.module = function (zeno) {
         });
     };
 
-  function readEmail(search, cb) {
+    function readEmail(search, cb) {
         var buffer = '';
 
         imap.once('ready', function() {
@@ -89,16 +86,16 @@ exports.module = function (zeno) {
                 f.once('end', function() {
                     imap.end();
                 });
+            });
         });
-    });
 
-    imap.once('error', function(err) {
-        console.log('Imap error: ' + err);
-    });
+        imap.once('error', function(err) {
+            console.log('Imap error: ' + err);
+        });
 
-    imap.once('end', function() {});
-    imap.connect();
-  };
+        imap.once('end', function() {});
+        imap.connect();
+    };
 
   function openInbox(cb) {
     imap.openBox('INBOX', true, cb);

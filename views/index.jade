@@ -1,5 +1,5 @@
 doctype html
-html(ng-app="zeno", ng-controller="GlobalController as global", lang="en")
+html(ng-app="zeno", ng-controller="GlobalController", lang="en")
     head
         title Zeno
         link(href='//fonts.googleapis.com/css?family=Lato:300,400,700', rel='stylesheet', type='text/css')
@@ -69,7 +69,8 @@ html(ng-app="zeno", ng-controller="GlobalController as global", lang="en")
                         label Queue
                         span {{queue}}
                     li
-                        label
+                        label Version
+                        span {{versions[versions.length - 1].name}}
         div(class="container")
             div(class="tabs")
                 div(class="tab", ng-class="{active: isTabActive('desktop')}")

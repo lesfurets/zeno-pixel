@@ -484,7 +484,7 @@ div[ng-view] {
         border       : 2px solid #999999;
         border-radius: 20px;
         position     : absolute;
-        top          : 12px;
+        top          : 13px;
         bottom       : 0;
         right        : 56px;
         transition   : all 0.3s ease-in 0s;
@@ -572,7 +572,7 @@ input[type="checkbox"]:checked + label.checkbox:after {
 
 @orange: #f58546;
 @borderPage: #e5e5eb;
-.list {
+.settingList {
     width: 100%;
 
     .engineSwitch {
@@ -588,6 +588,11 @@ input[type="checkbox"]:checked + label.checkbox:after {
         border-top: 1px solid @borderPage;
         cursor    : pointer;
         position  : relative;
+
+        &:first-of-type {
+            cursor:default;
+            padding: 0 20px
+        }
 
         &:last-of-type {
             border-bottom: 1px solid @borderPage;
@@ -615,7 +620,7 @@ input[type="checkbox"]:checked + label.checkbox:after {
             }
 
             ul {
-                background-color: rgb(237, 241, 243);
+                background-color: #DEE4E7;
             }
 
             .ng-scope {
@@ -632,8 +637,7 @@ input[type="checkbox"]:checked + label.checkbox:after {
                 div {
                     float  : left;
                     color  : #000;
-                    padding: 0;
-                    width  : 120px;
+                    width  : 150px;
 
                     &:first-child {
                         width: 30px
@@ -695,27 +699,32 @@ input[type="checkbox"]:checked + label.checkbox:after {
             color           : #bdbdbd;
 
             li{
-                padding   : 8px 35px;
-                position  : relative;
-                cursor    : default;
-                border-top: 1px solid #757575;
-                overflow  : auto;
+                &:first-of-type {
+                    padding   : 8px 35px;
+                }
+                padding        : 8px 35px;
+                position       : relative;
+                cursor         : default;
+                border-top     : 1px solid #757575;
+                overflow       : auto;
+                display        : flex;
+                flex-direction : row;
+                justify-content: flex-start;
 
                 div {
-                    float: left;
-                    padding: 3px;
+                    padding: 0;
+                    width: 30%;
+                    display: inline-block;
 
                     span {
-                        float: left;
+                        display: inline-block;
+                        margin-top: 8px;
                         margin-right: 20px;
-                        padding-top: 8px;
                     }
 
                     input {
-                        float           : left;
                         border          : none;
-                        color           : @white;
-                        background-color: #8A9497;
+                        color           : #8A9497;
                         padding         : 5px;
                         margin-right    : 5px;
                         width           : 400px;

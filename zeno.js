@@ -210,13 +210,37 @@ Zeno.prototype = {
             self.takeScreenshot(data.url, data.path, data.options);
         });
 
+        /*
+         * @param data.device : device to render
+         * @param data.env    : environment name
+         * @param data.alias  : environment alias
+        */
         this.on('onEnvUpdate', function (data){
             self.io.sockets.emit('queueChangeEvent', {
                 size: self.listtoshot.length
             });
 
+            var lastVersion = self.versions[self.versions.length - 1];
 
-            addVersion();
+            // this env has not been updated yet
+            if (lastVersion.name[data.device].indexOf(data.alias) !== -1) {
+                lastVersion.name[data.device].push(data.alias);
+            } else if (isVersionComplete(lastVersion)) {
+                // refresh the version
+                this.takeScreenshot(
+                    this.listtoshot[0].url,
+                    this.listtoshot[0].name,
+                    this.listtoshot[0].options
+                );
+            } else { // last version is complete, add a new one
+                addVersion(function() {
+                    this.takeScreenshot(
+                        this.listtoshot[0].url,
+                        this.listtoshot[0].name,
+                        this.listtoshot[0].options
+                    );
+                });
+            }
         });
     },
 
@@ -474,13 +498,13 @@ Zeno.prototype = {
 
         if (device === 'mobile') {
             details.viewport = {width: 640, height: 1100};
-            details.ua = 'Mozilla/5.0 (iPhone; CPU iPhone OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5376e Safari/8536.25';
+            details.ua = 'Mozilla/5.0 (iPhone; CPU iPhone OS 8_1 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5376e Safari/8536.25';
         } else if (device === 'desktop') {
             details.viewport = {width: 1600, height: 1100};
             details.ua = 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36';
         } else if (device === 'tablet') {
             details.viewport = {width: 1024, height: 1100};
-            details.ua = 'Mozilla/5.0 (iPad; CPU OS 4_3_5 like Mac OS X; en-us) AppleWebKit/533.17.9 (KHTML, like Gecko) Version/5.0.2 Mobile/8L1 Safari/6533.18.5';
+            details.ua = 'Mozilla/5.0 (iPad; CPU OS 8_0 like Mac OS X) AppleWebKit/600.1.3 (KHTML, like Gecko) Version/8.0 Mobile/12A4345d Safari/600.1.4';
         } else {
             return;
         }
@@ -522,19 +546,11 @@ Zeno.prototype = {
 
             self.emit('onEnvUpdate', {
                 device : device,
-                env    : env.server
+                env    : env.server,
+                alias  : env.alias
             });
         } else {
             this.log('Refresh desktop already in progress: ' + env.server);
-        }
-
-        // do not trigger update if it's already running
-        if(this.listtoshot.length === pages.length) {
-            this.takeScreenshot(
-                this.listtoshot[0].url,
-                this.listtoshot[0].name,
-                this.listtoshot[0].options
-            );
         }
     },
 
@@ -638,7 +654,7 @@ Zeno.prototype = {
     },
 
     /*
-     * Read versioning folder to update and sort the list
+     * Read versioning folder to update and sort the versions list
      */
     updateVersionList: function () {
         this.log('Fetch versions list');
@@ -646,6 +662,7 @@ Zeno.prototype = {
         fs.readdir(this.dir, function(err, dirs){
             if (err) { return self.log(err); }
 
+            // fresh install
             if (dirs.length === 0) {
                 return addVersion();
             }
@@ -676,12 +693,26 @@ Zeno.prototype = {
                     envs.push(env.alias);
                 });
 
-                self.versions.push({
-                    name: dir,
-                    envs: envs
+                fs.readFile(path.join(self.dir, dir, 'status.json'), function (err, data) {
+                    if (!err) {
+                        var status = JSON.parse(data);
+                    }
+                    // else considere the version as full
+
+                    self.versions.push({
+                        name: dir,
+                        desktop: envs,
+                        tablet: envs,
+                        mobile: envs
+                    });
                 });
+
             });
         });
+    },
+
+    isVersionComplete: function (version) {
+        return true;
     },
 
     /*

@@ -11,8 +11,8 @@ div(class='detail')
         span Use the save button to save configuration on disk
 
   div(class="detailContent")
-    ul(class='list')
-      li(class="list-row", style='cursor:default;padding: 0 20px')
+    ul(class='settingList')
+      li(class="list-row")
         div(style="padding:0")
           div(style="width:15%;float:left") Generic Host :
           div {{list.host}}
@@ -49,10 +49,10 @@ div(class='detail')
           span(class="length") {{list.desktop.length}}
         ul(ng-show="show.desktop")
           li(ng-repeat='url in (filtered.desktop = (list.desktop | filter:query))', ng-mouseenter="visible.d=true", ng-mouseleave="visible.d=false")
-            div(style="width:30%")
+            div
               span Name
               span {{url.name}}
-            div(style='float:left')
+            div
               span Url
               input(ng-model='url.url')
 
@@ -62,10 +62,10 @@ div(class='detail')
           span(class="length") {{list.tablet.length}}
         ul(ng-show="show.tablet")
           li(ng-repeat='url in (filtered.tablet = (list.tablet | filter:query))', ng-mouseenter="visible.t=true", ng-mouseleave="visible.t=false")
-            div(style="width:30%")
+            div
               span Name
               span {{url.name}}
-            div(style='float:left')
+            div
               span Url
               input(ng-model='url.url')
 
@@ -75,9 +75,9 @@ div(class='detail')
           span(class="length") {{list.mobile.length}}
         ul(ng-show="show.mobile")
           li(ng-repeat='url in (filtered.mobile = (list.mobile | filter:query))', ng-mouseenter="visible.m=true", ng-mouseleave="visible.m=false")
-            div(style="width:30%")
+            div
               span Name
               span {{url.name}}
-            div(style='float:left')
+            div
               span Url
               input(ng-model='url.url')
