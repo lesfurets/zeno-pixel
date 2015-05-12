@@ -222,24 +222,16 @@ Zeno.prototype = {
 
             var lastVersion = self.versions[self.versions.length - 1];
 
-            // this env has not been updated yet
-            if (lastVersion.name[data.device].indexOf(data.alias) !== -1) {
-                lastVersion.name[data.device].push(data.alias);
-            } else if (isVersionComplete(lastVersion)) {
-                // refresh the version
-                this.takeScreenshot(
-                    this.listtoshot[0].url,
-                    this.listtoshot[0].name,
-                    this.listtoshot[0].options
-                );
+            // this env has not been updated yet, add it
+            if (lastVersion[data.device].indexOf(data.alias) === -1) {
+                lastVersion[data.device].push(data.alias);
+            }
+            // this env has already been updated but others are not
+            // thus it's just an update
+            else if (!self.isVersionComplete(lastVersion)) {
+                self.start();
             } else { // last version is complete, add a new one
-                addVersion(function() {
-                    this.takeScreenshot(
-                        this.listtoshot[0].url,
-                        this.listtoshot[0].name,
-                        this.listtoshot[0].options
-                    );
-                });
+                self.addVersion();
             }
         });
     },
@@ -453,6 +445,17 @@ Zeno.prototype = {
     },
 
     /*
+     * ask for the next rendering
+     */
+    start: function (argument) {
+        this.takeScreenshot(
+            this.listtoshot[0].url,
+            this.listtoshot[0].name,
+            this.listtoshot[0].options
+        );
+    },
+
+    /*
      * Remove current element from the queue
      * and start the next one
      */
@@ -464,11 +467,7 @@ Zeno.prototype = {
         });
 
         if (this.listtoshot.length){
-            this.takeScreenshot(
-                this.listtoshot[0].url,
-                this.listtoshot[0].name,
-                this.listtoshot[0].options
-            );
+            start();
         } else {
             // Start comparaison if at least one environment has been updated
             if (this.pages.refreshing.desktop.length || this.pages.refreshing.tablet.length || this.pages.refreshing.mobile.length){
@@ -634,12 +633,14 @@ Zeno.prototype = {
 
     /*
      * Add a new unique version, ie a folder on disk
+     * @param cb callback function
      */
-    addVersion: function() {
-        var d = new Date();
+    addVersion: function(cb) {
+        var self = this,
+            d    = new Date();
 
         // directory name pattern : mm-dd-yyyy-hh:mm
-        var newFolder = p.join(this.dir, this.versioning, (d.getMonth() + 1)
+        var newFolder = path.join(this.dir, (d.getMonth() + 1)
             + '-' + d.getDate() + '-' + d.getFullYear()
             + '-' + d.getHours() + ':' + d.getMinutes());
 
@@ -650,6 +651,9 @@ Zeno.prototype = {
             });
 
             self.io.sockets.emit('updateVersionEvent', {versions: self.versions});
+
+            if(cb)
+                cb();
         });
     },
 
@@ -712,7 +716,11 @@ Zeno.prototype = {
     },
 
     isVersionComplete: function (version) {
-        return true;
+        var length = this.instance.length;
+        if(version.desktop.length === length && version.tablet.length === length && version.mobile.length === length) {
+            return true;
+        }
+        return false;
     },
 
     /*
