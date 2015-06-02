@@ -25,7 +25,7 @@ page.viewportSize = {
 };
 
 // requests to exclude (trackers ...)
-var blacklist     = options.blacklist;
+var blacklist     = options.blacklist || [];
 var renderTimeout = 0;
 
 page.resources = [];
