@@ -218,9 +218,14 @@ header {
 
         &.pieblock {
             ul {
-                width: 45%;
+                width       : 45%;
                 margin-right: 20px;
-                display: inline-block;
+                display     : inline-block;
+
+                &:last-child li:last-child span {
+                    font-size: 11px;
+                    margin   : 0;
+                }
             }
         }
     }

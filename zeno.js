@@ -370,7 +370,7 @@ Zeno.prototype = {
     },
 
     /*
-     * Create a phantmJs process to take screenshot and create a thumbnail using imagemagick
+     * Create a process to take screenshot and create a thumbnail using imagemagick
      * @param url     page url to capture
      * @param name    image name according to configuration
      * @param options engine options
@@ -445,7 +445,7 @@ Zeno.prototype = {
     },
 
     /*
-     * ask for the next rendering
+     * Start the comparaison
      */
     start: function (argument) {
         this.takeScreenshot(
@@ -467,7 +467,7 @@ Zeno.prototype = {
         });
 
         if (this.listtoshot.length){
-            start();
+            this.start();
         } else {
             // Start comparaison if at least one environment has been updated
             if (this.pages.refreshing.desktop.length || this.pages.refreshing.tablet.length || this.pages.refreshing.mobile.length){

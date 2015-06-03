@@ -6,8 +6,6 @@ Using [PhantomJS](http://phantomjs.org/) or [SlimerJS](http://slimerjs.org/), Ze
 
 See the [Getting started guide](https://github.com/lesfurets/zeno-pixel/blob/master/docs/getting-started.md) to have further explanations on how to use Zeno.
 
-To see a real demo, come to Zeno *Tool in Actions* at ***DevoxxFR 2015***: [link](http://cfp.devoxx.fr/2015/talk/KFR-5145/Armez-vous_d'un_pixel_monitoring_avec_Zeno_!)
-
 ## Requirements
 
 * [NodeJS](http://nodejs.org)
@@ -19,13 +17,7 @@ And if you need custom build:
 
 ## Installation
 
-if the [prerequistes](https://github.com/lesfurets/zeno-pixel/blob/master/docs/getting-started.md#setup) are completed, just do:
-
-    npm install
-
-To start zeno
-
-    node zenoServer.js
+Follow the [setup](https://github.com/lesfurets/zeno-pixel/blob/master/docs/getting-started.md#setup) section.
 
 To have more details about usage, see [USAGE](https://github.com/lesfurets/zeno-pixel/blob/master/docs/getting-started.md#usage) section<br>
 Zeno has never been tested on windows and probably don't work.
