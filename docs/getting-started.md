@@ -93,10 +93,13 @@ For each page, you can specify:
 
 * `url`     : web url to record, omit the protocol.<br/>
 * `name`    : name on the file system<br/>
+* `alternative` : index of the key to use from the alternative array<br/>
 * `cookies` : array of cookies name needed for this page. See cookies section
 
 Other root options are available:<br>
-* `sitemap` : list of xml sitemaps urls, each link will populate desktop, mobile and tablet pages list
+* `sitemap` : list of xml sitemaps urls, each link will populate desktop, mobile and tablet pages list<br/>
+* `blacklist` : list of keywords which will exclude request containing them<br/>
+* `proxy` : proxy url
 
 ##Usage
 

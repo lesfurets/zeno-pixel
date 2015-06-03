@@ -555,16 +555,16 @@ summaryCtrl = ($scope) ->
 # ===================================================
 globalCtrl = ($scope, $location, PagesFactory, ResultsFactory, VersionService, socket, dir, ext) ->
   $scope.listToCompare = [] # list of pages comparaison in progress
-  $scope.devices      = ['desktop', 'tablet', 'mobile']
-  $scope.compareform  = {env: {}, valid: 0, comparing: false, text: 'Compare'} # object handling the compare form
-  $scope.device       = $scope.devices[0]
-  $scope.dir          = dir
-  $scope.ext          = ext
-  $scope.location     = $location # needed in view
-  $scope.sliderOffset = 0
-  $scope.thumb        = '_thumb.png'
-  $scope.hideFailures = false
-  $scope.hideSuccess  = false
+  $scope.devices       = ['desktop', 'tablet', 'mobile']
+  $scope.compareform   = {env: {}, valid: 0, comparing: false, text: 'Compare'} # object handling the compare form
+  $scope.device        = $scope.devices[0]
+  $scope.dir           = dir
+  $scope.ext           = ext
+  $scope.location      = $location # needed in view
+  $scope.sliderOffset  = 0
+  $scope.thumb         = '_thumb.png'
+  $scope.hideFailures  = false
+  $scope.hideSuccess   = false
 
   $scope.$on "updateEngine", (evt, data) ->
     $scope.results.engine = data
@@ -643,7 +643,7 @@ globalCtrl = ($scope, $location, PagesFactory, ResultsFactory, VersionService, s
     $location.path().indexOf('result') != -1 ||
     $location.path().indexOf('env') != -1
 
-  # fired when a version update is done
+  # fired when a version update is created
   socket.on "updateVersionEvent", (update) ->
     $scope.versions = update.versions
     return

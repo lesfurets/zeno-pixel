@@ -96,6 +96,10 @@ Zeno.prototype = {
                 self.instance     = self.pages.envs;
             }
 
+            if (self.pages.proxy) {
+                self.log('Proxy detected: ' + self.pages.proxy);
+            }
+
             self.updateVersionList();
             self.loadModules(cb);
 
@@ -392,8 +396,13 @@ Zeno.prototype = {
                 path        : path, // path on disk
                 url         : url,  // use to render a page from url
                 body        : options.body  // use to render a page from html
-            })],
-            process = spawn(this.engine.path, args);
+            })];
+
+        if (this.pages.proxy) {
+            args.splice(1, 0, '--proxy=' + this.pages.proxy);
+        }
+
+        var process = spawn(this.engine.path, args);
 
         process.stdout.on('data', function(data) {
             var chunk = '' + data, // cast as a string
@@ -640,9 +649,11 @@ Zeno.prototype = {
             d    = new Date();
 
         // directory name pattern : mm-dd-yyyy-hh:mm
-        var newFolder = path.join(this.dir, (d.getMonth() + 1)
+        var newFolder = (d.getMonth() + 1)
             + '-' + d.getDate() + '-' + d.getFullYear()
-            + '-' + d.getHours() + ':' + d.getMinutes());
+            + '-' + d.getHours() + ':' + d.getMinutes();
+
+        this.log('New version added: ', newFolder);
 
         fs.mkdir(newFolder, function (err){
             self.versions.push({

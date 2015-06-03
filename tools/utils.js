@@ -12,9 +12,15 @@ exports.isRGBSimilar   = isRGBSimilar;
 /*
  * Simple logger adding current time before the log
  */
-function log(text) {
-    var d = new Date();
-    var month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+function log() {
+    var d = new Date(),
+        month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        text  = '';
+
+    for (var i = 0; i < arguments.length; i++) {
+        text += arguments[i] + ' ';
+    };
+
     console.log('['+month[d.getMonth()]+' '+d.getDate()+' '+d.getHours()+':'+ d.getMinutes()+':'+d.getSeconds()+'] : ' + text);
 }
 

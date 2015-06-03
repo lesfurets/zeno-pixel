@@ -16,6 +16,9 @@ div(class='detail')
         div(style="padding:0")
           div(style="width:15%;float:left") Generic Host :
           div {{list.host}}
+        div(style="padding:0", ng-if="list.proxy")
+          div(style="width:15%;float:left") Proxy :
+          div {{list.proxy}}
         div(style='overflow:auto')
           div(style="padding:0; float:left;width:15%;") Environments:
           div(class='pageInfos')

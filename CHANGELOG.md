@@ -3,7 +3,7 @@
 ## 1.1
 
 - Update system evolution: more than one version per day
-- UI notification if one image is not updated
+- Add proxy support : available in configuration file.
 
 ## 1.0
 
