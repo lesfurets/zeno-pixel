@@ -270,9 +270,9 @@ Zeno.prototype = {
             });
 
             /*
-             * Fired when user update the configuration from /pages
+             * Fired when user update the configuration from /settings
              */
-            socket.on('updateList', function (data) {
+            socket.on('updateModel', function (data) {
                 self.devices.forEach(function (device){
                     data.list[device].forEach(function (url) {
                         delete url.percentage;
@@ -297,7 +297,7 @@ Zeno.prototype = {
                 self.log('Engine updated : ' + self.engine.name + ' ' + self.engine.version);
             });
 
-            socket.on('saveList', function () {
+            socket.on('saveModel', function () {
                 // todo
             });
         });

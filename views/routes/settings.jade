@@ -1,11 +1,11 @@
 div(class='detail')
   div(class="detailControl")
     div
-      button(class="btn add", ng-click="updateModel()") Save
+      button(class="btn add", ng-click="saveModel()") Save
 
     h3 Settings
 
-    div(style="position:relative")
+    div
       i(class="fa fa-info-circle", ng-mouseenter="tooltip=true", ng-mouseleave="tooltip=false")
       div(class="tooltip", ng-show="tooltip")
         span Use the save button to save configuration on disk
@@ -14,14 +14,14 @@ div(class='detail')
     ul(class='settingList')
       li(class="list-row")
         div(style="padding:0")
-          div(style="width:15%;float:left") Generic Host :
+          label(class="title") Generic Host :
           div {{list.host}}
         div(style="padding:0", ng-if="list.proxy")
-          div(style="width:15%;float:left") Proxy :
+          label(class="title") Proxy :
           div {{list.proxy}}
         div(style='overflow:auto')
-          div(style="padding:0; float:left;width:15%;") Environments:
-          div(class='pageInfos')
+          label(class="title") Environments:
+          div(class='envsDetails')
             header
               div Alias
               div Value
@@ -34,7 +34,7 @@ div(class='detail')
           div(style="float:left;color:rgb(211, 63, 26);margin-left:30px")
             span Order the list to define a reference couple (top 2)
         div(style="padding-bottom:0")
-          div(style="width:15%;float:left") Engine :
+          label(class="title") Engine :
           div(class="engineSwitch")
             div PhantomJs
             div(class="onoffswitch")
@@ -44,14 +44,24 @@ div(class='detail')
                 span(class="onoffswitch-switch")
             div SlimerJS
         div(style="padding-top:0")
-          div(style="width:15%;float:left") Webstorage :
+          label(class="title") Webstorage :
           button(class="btn", style="margin-top:15px", ng-click="cleanStorage()") Clean
       li
         div(ng-click="show.desktop = !show.desktop", ng-class="{selected : show.desktop}")
           a Desktop
           span(class="length") {{list.desktop.length}}
+        span(class="fa fa-plus", ng-click="addDesktop=!addDesktop")
         ul(ng-show="show.desktop")
-          li(ng-repeat='url in (filtered.desktop = (list.desktop | filter:query))', ng-mouseenter="visible.d=true", ng-mouseleave="visible.d=false")
+          li(ng-show="addDesktop", class="addBlock")
+            div
+              label Name
+              input(ng-model="new.desktop.name")
+            div
+              label Url
+              input(placeholder="$host", ng-model="new.desktop.url")
+            div
+              button(class="btn", ng-click="addDesktop=false;addUrl('desktop', new.desktop.name, new.desktop.url)") Add
+          li(ng-repeat='url in (filtered.desktop = (list.desktop | filter:query)) track by url.name', ng-mouseenter="visible.d=true", ng-mouseleave="visible.d=false")
             div
               span Name
               span {{url.name}}
@@ -63,8 +73,18 @@ div(class='detail')
         div(ng-click="show.tablet = !show.tablet", ng-class="{selected : show.tablet}")
           a(ng-click="") Tablet
           span(class="length") {{list.tablet.length}}
+        span(class="fa fa-plus", ng-click="addTablet=!addTablet")
         ul(ng-show="show.tablet")
-          li(ng-repeat='url in (filtered.tablet = (list.tablet | filter:query))', ng-mouseenter="visible.t=true", ng-mouseleave="visible.t=false")
+          li(ng-show="addTablet", class="addBlock")
+            div
+              label Name
+              input(ng-model="new.tablet.name")
+            div
+              label Url
+              input(placeholder="$host", ng-model="new.tablet.url")
+            div
+              button(class="btn", ng-click="addTablet=false;addUrl('tablet', new.tablet.name, new.tablet.url)") Add
+          li(ng-repeat='url in (filtered.tablet = (list.tablet | filter:query)) track by url.name', ng-mouseenter="visible.t=true", ng-mouseleave="visible.t=false")
             div
               span Name
               span {{url.name}}
@@ -76,8 +96,18 @@ div(class='detail')
         div(ng-click="show.mobile = !show.mobile", ng-class="{selected : show.mobile}")
           a(ng-click="") Mobile
           span(class="length") {{list.mobile.length}}
+        span(class="fa fa-plus", ng-click="addMobile=!addMobile")
         ul(ng-show="show.mobile")
-          li(ng-repeat='url in (filtered.mobile = (list.mobile | filter:query))', ng-mouseenter="visible.m=true", ng-mouseleave="visible.m=false")
+          li(ng-show="addMobile", class="addBlock")
+            div
+              label Name
+              input(ng-model="new.mobile.name")
+            div
+              label Url
+              input(placeholder="$host", ng-model="new.mobile.url")
+            div
+              button(class="btn", ng-click="addMobile=false;addUrl('mobile', new.mobile.name, new.mobile.url)") Add
+          li(ng-repeat='url in (filtered.mobile = (list.mobile | filter:query)) track by url.name', ng-mouseenter="visible.m=true", ng-mouseleave="visible.m=false")
             div
               span Name
               span {{url.name}}

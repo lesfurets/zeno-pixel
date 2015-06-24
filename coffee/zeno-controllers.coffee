@@ -481,15 +481,21 @@ settingsCtrl = ($scope, socket, ResultsFactory) ->
     mobile : false
 
   # deep watch on model: a little bit aggresive
-  $scope.$watch 'list', (newList) ->
+  $scope.$watch 'list', (list) ->
+    newList = angular.copy(list)
+
     # clean model of useless data
     for device in $scope.devices
       for page in newList[device]
         delete page.src        # only needed for the views
         delete page.low        # only needed for the views
+        delete page.success
+        delete page.failure
+        delete page.refreshing
 
-    socket.emit "updateList",
+    socket.emit "updateModel",
       list: newList
+
     return
   , true
 
@@ -507,7 +513,7 @@ settingsCtrl = ($scope, socket, ResultsFactory) ->
     return
 
   # call when a disk save is asked by client
-  $scope.updateModel = () ->
+  $scope.saveModel = () ->
     socket.emit "saveList"
     return
 
@@ -524,6 +530,30 @@ settingsCtrl = ($scope, socket, ResultsFactory) ->
     $scope.list.tablet.forEach (page) ->
       ResultsFactory.removeStorageImage(page.name)
       return
+    return
+
+  # add a new entry in the model
+  $scope.addUrl = (device, name, url) ->
+    newObject = {
+      url: url,
+      name: name,
+      success: true,
+      percentage: 0
+    }
+    switch device
+      when 'desktop'
+        delete $scope.new.desktop
+        $scope.list.desktop.push(newObject)
+        $scope.filtered.desktop.push(newObject)
+      when 'mobile'
+        delete $scope.new.mobile
+        $scope.list.mobile.push(newObject)
+        $scope.filtered.mobile.push(newObject)
+      when 'tablet'
+        delete $scope.new.tablet
+        $scope.list.tablet.push(newObject)
+        $scope.filtered.tablet.push(newObject)
+
     return
 
   $scope.sortableOptions =
