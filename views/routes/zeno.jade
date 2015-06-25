@@ -18,10 +18,6 @@ div(lazy-img)
           a(ng-href="{{resolveHost(env, url)}}", target="_blank")
             i(class="fa fa-external-link", style="top:80px", ng-show="hover")
           div(ng-class="{glasspaneRefresh : isRefreshing(url, $parent.$index)}")
-      li
-        div
-          span result
-        div(class="ratio ratio{{$index}}", ng-repeat="url in (filtered = (list[device] | filter: filterList))", ng-class="{hideLine: url.low, success: url.success, failure: url.failure}", ng-show="hide($index)")
           div(class="tooltip", ng-show="webperf", ng-if="url.webperf")
             div
               label Time
@@ -32,7 +28,11 @@ div(lazy-img)
             div
               label Size
               span {{url.webperf.size  / 1000}} ko
-          i(class="fa fa-info-circle", ng-mouseenter="webperf=true", ng-mouseleave="webperf=false")
+          i(class="fa fa-info-circle", ng-mouseenter="webperf=true", ng-mouseleave="webperf=false", ng-if="url.webperf")
+      li
+        div
+          span result
+        div(class="ratio ratio{{$index}}", ng-repeat="url in (filtered = (list[device] | filter: filterList))", ng-class="{hideLine: url.low, success: url.success, failure: url.failure}", ng-show="hide($index)")
           span(class="diffHeader") Mismatch: {{url.percentage}} %
           a(ng-if="hasImage(url, $index)", ng-href="{{getComputedUrl(url)}}", class="storage")
             img(ng-src="{{getStoredImage(url)}}")

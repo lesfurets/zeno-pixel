@@ -17,8 +17,6 @@ exports.module = function (zeno) {
                 var d          = new Date(),
                     dateFormat = d.getMonth()+'-'+d.getDate()+'-'+d.getFullYear();
 
-                page.webperf    = data.metrics;
-
                 // Push webperf to all connected clients
                 zeno.io.sockets.emit('updateOneWebPerf', {
                     name   : page.name,

@@ -218,6 +218,11 @@ angular.module('zeno.services', [])
         cb(data)
       return
 
+    factory.getWebPerfs = (cb) ->
+      $resource('/webperf').get (data) ->
+        cb(data)
+      return
+
     factory.setStorageImage = (name, src) ->
       localStorage.setItem(name, src)
       return

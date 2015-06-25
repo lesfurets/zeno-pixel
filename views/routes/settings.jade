@@ -61,7 +61,7 @@ div(class='detail')
               input(placeholder="$host", ng-model="new.desktop.url")
             div
               button(class="btn", ng-click="addDesktop=false;addUrl('desktop', new.desktop.name, new.desktop.url)") Add
-          li(ng-repeat='url in (filtered.desktop = (list.desktop | filter:query)) track by url.name', ng-mouseenter="visible.d=true", ng-mouseleave="visible.d=false")
+          li(ng-repeat='url in (filtered.desktop = (list.desktop | filter:query))', ng-mouseenter="visible.d=true", ng-mouseleave="visible.d=false")
             div
               span Name
               span {{url.name}}
@@ -84,7 +84,7 @@ div(class='detail')
               input(placeholder="$host", ng-model="new.tablet.url")
             div
               button(class="btn", ng-click="addTablet=false;addUrl('tablet', new.tablet.name, new.tablet.url)") Add
-          li(ng-repeat='url in (filtered.tablet = (list.tablet | filter:query)) track by url.name', ng-mouseenter="visible.t=true", ng-mouseleave="visible.t=false")
+          li(ng-repeat='url in (filtered.tablet = (list.tablet | filter:query))', ng-mouseenter="visible.t=true", ng-mouseleave="visible.t=false")
             div
               span Name
               span {{url.name}}
@@ -107,7 +107,7 @@ div(class='detail')
               input(placeholder="$host", ng-model="new.mobile.url")
             div
               button(class="btn", ng-click="addMobile=false;addUrl('mobile', new.mobile.name, new.mobile.url)") Add
-          li(ng-repeat='url in (filtered.mobile = (list.mobile | filter:query)) track by url.name', ng-mouseenter="visible.m=true", ng-mouseleave="visible.m=false")
+          li(ng-repeat='url in (filtered.mobile = (list.mobile | filter:query))', ng-mouseenter="visible.m=true", ng-mouseleave="visible.m=false")
             div
               span Name
               span {{url.name}}

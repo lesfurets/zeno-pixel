@@ -492,6 +492,7 @@ settingsCtrl = ($scope, socket, ResultsFactory) ->
         delete page.success
         delete page.failure
         delete page.refreshing
+        delete page.params
 
     socket.emit "updateModel",
       list: newList
@@ -514,7 +515,7 @@ settingsCtrl = ($scope, socket, ResultsFactory) ->
 
   # call when a disk save is asked by client
   $scope.saveModel = () ->
-    socket.emit "saveList"
+    socket.emit "saveModel"
     return
 
   # clean each localStorage record
@@ -538,21 +539,19 @@ settingsCtrl = ($scope, socket, ResultsFactory) ->
       url: url,
       name: name,
       success: true,
-      percentage: 0
+      percentage: 0,
+      refreshing: []
     }
     switch device
       when 'desktop'
         delete $scope.new.desktop
         $scope.list.desktop.push(newObject)
-        $scope.filtered.desktop.push(newObject)
       when 'mobile'
         delete $scope.new.mobile
         $scope.list.mobile.push(newObject)
-        $scope.filtered.mobile.push(newObject)
       when 'tablet'
         delete $scope.new.tablet
         $scope.list.tablet.push(newObject)
-        $scope.filtered.tablet.push(newObject)
 
     return
 
@@ -640,24 +639,16 @@ globalCtrl = ($scope, $location, PagesFactory, ResultsFactory, VersionService, s
       return
     return
 
+  ResultsFactory.getWebPerfs (data) ->
+    $scope.webperf = data
+    return
+
   $scope.filterBySliderValue = (offset) ->
     $scope.sliderOffset = offset
     return
 
   $scope.compareAll = () ->
     $scope.$broadcast 'compareAll'
-    return
-
-  $scope.keyPress = (ev) ->
-    if ev.which is 116 #T
-      angular.element('#back-to-top').click()
-    else if ev.which is 114 # R
-      angular.forEach $scope.list[$scope.device], (page)->
-        if page.low
-          page.low = !page.low
-        else
-          page.low = true
-        return
     return
 
   $scope.setDevice = (device) ->

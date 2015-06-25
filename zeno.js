@@ -32,15 +32,15 @@ var Zeno = function (app, server, io, params) {
 
     this.log           = utils.log;
     this.devices       = ['desktop', 'tablet', 'mobile'];
-    this.ext           = '.png';
     this.phantomScript = path.join(__dirname, 'phantomScript.js');
-    this.instance      = [];
-    this.cookiesList   = [];
-    this.modules       = [];
-    this.listtoshot    = [];
-    this.versions      = [];
-    this.results       = {};
-    this.pages         = {};
+    this.ext           = '.png'; // default extension
+    this.instance      = [];     // list of environments
+    this.cookiesList   = [];     // list of available cookies
+    this.modules       = [];     // list of loaded modules
+    this.listtoshot    = [];     // current queue
+    this.versions      = [];     // list of detected versions
+    this.results       = {};     // last version results
+    this.pages         = {};     // model
 
     this.emitter = new (require('events').EventEmitter)();
     this.emitter.setMaxListeners(200);
@@ -282,6 +282,7 @@ Zeno.prototype = {
                 self.pages.mobile  = data.list.mobile;
                 self.pages.tablet  = data.list.tablet;
                 self.instance      = self.pages.envs;
+                self.pages.edited  = true;
             });
 
             /*
@@ -298,7 +299,10 @@ Zeno.prototype = {
             });
 
             socket.on('saveModel', function () {
-                // todo
+                fs.writeFile('pages.json', JSON.stringify(self.pages), function (err) {
+                    if (err) return self.log(err);
+                    self.pages.edited = false;
+                });
             });
         });
     },
