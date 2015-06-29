@@ -117,7 +117,7 @@ Available parameters:<br>
 
 Available web services:
 
-    http://localhost:1234/upadte/:environment
+    http://localhost:1234/update/:environment
     http://localhost:1234/pages
     http://localhost:1234/compare/:env1/:env2
     http://localhost:1234/results
