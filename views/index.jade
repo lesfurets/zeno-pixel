@@ -18,11 +18,11 @@ html(ng-app="zeno", ng-controller="GlobalController", lang="en")
                     p
                         input(type='checkbox', ng-model="hideSuccess", id="hs")
                         label(for="hs", class="checkbox")
-                        span Hide success ({{list[device].length - results[device].results.length}})
+                        label(for="hs", class="cbText") Hide success ({{list[device].length - results[device].results.length}})
                     p
                         input(type='checkbox', ng-model="hideFailures", id="hf")
                         label(for="hf", class="checkbox")
-                        span Hide failures ({{results[device].results.length}})
+                        label(for="hf", class="cbText") Hide failures ({{results[device].results.length}})
                 div(class="threshold")
                     span Threshold : {{sliderOffset}} %
                     div(class="flex", style="margin-top:20px")
@@ -40,7 +40,7 @@ html(ng-app="zeno", ng-controller="GlobalController", lang="en")
                         p(ng-repeat="env in list.envs", style="display:inline")
                           input(type='checkbox', ng-model="compareform.env[env.alias]", id="{{env.alias}}")
                           label(for="{{env.alias}}", class="checkbox")
-                          span {{env.alias}}
+                          label(for="{{env.alias}}", class="cbText") {{env.alias}}
                     div(ng-show="compareform.valid==2", class="launch")
                         div Remaining: {{ listToCompare.length }} / {{ list[device].length }}
                         button(ng-click="compareAll()" ng-class="{stopCompare: compareform.comparing}") {{compareform.text}}

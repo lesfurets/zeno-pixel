@@ -712,24 +712,27 @@ Zeno.prototype = {
                     envs.push(env.alias);
                 });
 
-                fs.readFile(path.join(self.dir, dir, 'status.json'), function (err, data) {
+                fs.readFile(path.join(self.dir, dir, 'results.json'), function (err, data) {
                     if (!err) {
                         var status = JSON.parse(data);
+                    } else { //considere the version as full
+                        self.versions.push({
+                            name: dir,
+                            desktop: envs,
+                            tablet: envs,
+                            mobile: envs
+                        });
                     }
-                    // else considere the version as full
-
-                    self.versions.push({
-                        name: dir,
-                        desktop: envs,
-                        tablet: envs,
-                        mobile: envs
-                    });
                 });
 
             });
         });
     },
 
+    /*
+     * Return true if a version is complete i.e all the envs have been captured
+     * @param version
+     */
     isVersionComplete: function (version) {
         var length = this.instance.length;
         if(version.desktop.length === length && version.tablet.length === length && version.mobile.length === length) {
