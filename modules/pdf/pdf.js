@@ -14,11 +14,11 @@ exports.module = function (zeno) {
     }
 
     //Add a route to create a PDF for one environment
-    zeno.app.get('/' + pdf + '/:env/:device', function(req, res) {
+    zeno.app.get('/pdf/:env/:device', function(req, res) {
         var doc  = new pdfDoc(),
             d    = new Date(),
             date = d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate(),
-            name = pdf + '/extract_' + env + '_' + date + '.pdf';
+            name = pdf + '/extract_' + req.params.env + '_' + date + '.pdf';
 
         doc.pipe(fs.createWriteStream(name));
 
@@ -28,7 +28,7 @@ exports.module = function (zeno) {
             align: 'center'
         });
 
-        zeno.pages[device].forEach(function(page) {
+        zeno.pages[req.params.device].forEach(function(page) {
             doc.addPage();
             doc.fontSize(12);
             doc.text(page.name, 10, 10, { link: page.url, underline: false });
