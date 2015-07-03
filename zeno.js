@@ -1,6 +1,7 @@
 'use strict';
 
-var fs    = require('fs'),
+var zeno  = require('./package'),
+    fs    = require('fs'),
     util  = require('util'),
     path  = require('path'),
     spawn = require('child_process').spawn,
@@ -72,6 +73,7 @@ Zeno.prototype = {
         // Init results object
         this.devices.forEach(function(device) {
             self.results.engine = self.engine.name;
+            self.results.couple = [];
             self.results[device]         = {};
             self.results[device].results = [];
         });
@@ -80,6 +82,7 @@ Zeno.prototype = {
         this.addListeners();
         this.addSocketIoListeners();
 
+        this.log('Zeno version: ' + zeno.version);
         this.log('Engine detected: ' + this.engine.name + ' ' + this.engine.version);
 
         // Fetch configuration file
@@ -93,7 +96,8 @@ Zeno.prototype = {
                     tablet: [],
                     mobile: []
                 };
-                self.instance     = self.pages.envs;
+                self.instance = self.pages.envs;
+                self.results.couple = [self.instance[0].alias, self.instance[1].alias];
             }
 
             if (self.pages.proxy) {
@@ -761,7 +765,7 @@ Zeno.prototype = {
     },
 
     /*
-     * Update results list
+     * Update results list with a new error result
      * @param name: image name described in configuration
      * @param device: device where the comparaison has been computed
      * @param percentage: result of the comparaison

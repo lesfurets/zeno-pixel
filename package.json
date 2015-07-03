@@ -1,7 +1,7 @@
 {
   "name": "ZenoProject",
   "version": "1.0.0",
-  "author": "MFO <matthieu.fourtina@lesfurets.com>",
+  "author": "matthieu fourtina <matthieu.fourtina@gmail.com>",
   "description": "Screenshot comparaison tool",
   "private": false,
   "repository": {
@@ -14,7 +14,7 @@
   "contributors": [
     {
       "name": "Matthieu Fourtina",
-      "email": "matthieu.fourtina@lesfurets.com"
+      "email": "matthieu.fourtina@gmail.com"
     }
   ],
   "scripts": {

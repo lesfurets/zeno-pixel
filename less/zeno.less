@@ -400,6 +400,7 @@ div[ng-view] {
 
 .fa-info-circle {
     top : 10px !important;
+    font-size: 20px;
 }
 
 .spinner {
@@ -784,7 +785,7 @@ input[type="checkbox"]:checked + label.checkbox:after {
 
             a { color : #1F4474;}
 
-            div{
+            .imgBlock {
                 position: relative;
                 border-bottom: 1px solid @white;
 
@@ -836,7 +837,7 @@ input[type="checkbox"]:checked + label.checkbox:after {
                 padding : 20px 0;
             }
 
-            div:not(:first-child) {
+            &>div:not(:first-child) {
                 height: @imHeight;
             }
 
@@ -886,18 +887,17 @@ input[type="checkbox"]:checked + label.checkbox:after {
 }
 
 .tooltip {
-    position        : absolute !important;
+    position        : absolute;
     z-index         : 20;
     top             : 10px;
-    left            : 30px;
+    right           : 50px;
     background-color: @white;
     font-size       : 12px;
-    padding         : 5px !important;
+    padding         : 5px;
     letter-spacing  : 1px;
     border          : 1px solid #BABABA;
 
     div {
-        height: inherit !important;
         padding: 0 !important;
     }
 

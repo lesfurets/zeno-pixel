@@ -5,6 +5,7 @@
 zenoCtrl = ($scope, $location, $timeout, ZenoService, PagesFactory, ResultsFactory, socket, $routeParams) ->
   $scope.sorted      = false
   $scope.hasFiltered = false # to help lazyload and filtering: true first time filtered is used
+  $scope.lastVersion = $scope.versions[$scope.versions.length - 1]
 
   if $routeParams.device && contains($scope.devices, $routeParams.device)
     $scope.setDevice($routeParams.device)
@@ -44,7 +45,7 @@ zenoCtrl = ($scope, $location, $timeout, ZenoService, PagesFactory, ResultsFacto
       end = ''
       if typeof param != "undefined"
         end = param
-      path = $scope.dir + $scope.versions[$scope.versions.length - 1].name + "/" + env + name + $scope.thumb + end
+      path = $scope.dir + $scope.lastVersion.name + "/" + env + name + $scope.thumb + end
     return path
 
   # Returns a valid host for a choosen environement
@@ -82,7 +83,7 @@ zenoCtrl = ($scope, $location, $timeout, ZenoService, PagesFactory, ResultsFacto
     if dropEnv.offset
       second = $scope.dir + $scope.versions[$scope.versions.length - 1 + dropEnv.offset].name + "/" + dropEnv.server + src + $scope.ext
     else
-      second = $scope.dir + $scope.versions[$scope.versions.length - 1].name + "/" + dropEnv.server + src + $scope.ext
+      second = $scope.dir + $scope.lastVersion.name + "/" + dropEnv.server + src + $scope.ext
 
     realIndex  = $index # real index and not the filtered one
 
@@ -158,8 +159,8 @@ zenoCtrl = ($scope, $location, $timeout, ZenoService, PagesFactory, ResultsFacto
       first    = name + $scope.ext
       offsets  = [$scope.list.envs[0].offset, $scope.list.envs[1].offset]
       ZenoService.compare(newIndex,
-        $scope.dir + $scope.versions[$scope.versions.length - 1].name + "/" + $scope.env[0] + first,
-        $scope.dir + $scope.versions[$scope.versions.length - 1].name + "/" + $scope.env[1] + first,
+        $scope.dir + lastVersion.name + "/" + $scope.env[0] + first,
+        $scope.dir + $scope.lastVersion.name + "/" + $scope.env[1] + first,
         $last, offsets, true)
     else
       $scope.$apply ->
@@ -253,8 +254,8 @@ zenoCtrl = ($scope, $location, $timeout, ZenoService, PagesFactory, ResultsFacto
         first    = name + $scope.ext
         offsets  = [$scope.list.envs[0].offset, $scope.list.envs[1].offset]
         ZenoService.compare(index,
-          $scope.dir + $scope.versions[$scope.versions.length - 1].name + "/" + $scope.env[0] + first,
-          $scope.dir + $scope.versions[$scope.versions.length - 1].name + "/" + $scope.env[1] + first,
+          $scope.dir + $scope.lastVersion.name + "/" + $scope.env[0] + first,
+          $scope.dir + $scope.lastVersion.name + "/" + $scope.env[1] + first,
           $last, offsets, true)
     else
       #need to stop the comparaison, compareText will be set by the last result
@@ -513,7 +514,7 @@ settingsCtrl = ($scope, socket, ResultsFactory) ->
       engine: value
     return
 
-  # call when a disk save is asked by client
+  # call when a save is asked
   $scope.saveModel = () ->
     socket.emit "saveModel"
     return
