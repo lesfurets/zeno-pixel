@@ -83,3 +83,13 @@ angular.module('zeno.directives', [])
         angular.element(element[0].querySelector('.slider-button')).css({left: offset + '%'})
         return
       return
+  # directive to add back action to a button
+ .directive 'backButton', ->
+    {
+      restrict: 'A'
+      link: (scope, elem, attrs) ->
+        elem.bind 'click', ->
+          window.history.back()
+          return
+        return
+    }      
