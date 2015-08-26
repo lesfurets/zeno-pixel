@@ -38,6 +38,7 @@ If they are not alredy installed
     npm install -g less
     npm install -g coffee-script
     npm install -g grunt-cli
+    npm install -g bower
 
 (or omit the -g if you'd prefer not to install globally).
 
