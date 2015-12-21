@@ -48,6 +48,18 @@ div(class='detail')
           a Desktop
           span(class="length") {{list.desktop.length}}
         ul(ng-show="show.desktop")
+
+          li
+            div(style="width:30%")
+              span Name
+              input(style="width: 70%;", ng-model='newPage.name')
+            div(style='float:left')
+              span Url
+              input(ng-model='newPage.url')
+            div(style='float:left')
+              a.btn.btn-primary(ng-click="addModel('desktop')" ng-hide="refreshAddPage") Add page
+              a.fa.fa-refresh.fa-spin(ng-show="refreshAddPage")
+
           li(ng-repeat='url in (filtered.desktop = (list.desktop | filter:query))', ng-mouseenter="visible.d=true", ng-mouseleave="visible.d=false")
             div(style="width:30%")
               span Name
@@ -61,6 +73,18 @@ div(class='detail')
           a(ng-click="") Tablet
           span(class="length") {{list.tablet.length}}
         ul(ng-show="show.tablet")
+
+          li
+            div(style="width:30%")
+              span Name
+              input(style="width: 70%;", ng-model='newPage.name')
+            div(style='float:left')
+              span Url
+              input(ng-model='newPage.url')
+            div(style='float:left')
+              a.btn.btn-primary(ng-click="addModel('tablet')" ng-hide="refreshAddPage") Add page
+              a.fa.fa-refresh.fa-spin(ng-show="refreshAddPage")
+
           li(ng-repeat='url in (filtered.tablet = (list.tablet | filter:query))', ng-mouseenter="visible.t=true", ng-mouseleave="visible.t=false")
             div(style="width:30%")
               span Name
@@ -74,6 +98,18 @@ div(class='detail')
           a(ng-click="") Mobile
           span(class="length") {{list.mobile.length}}
         ul(ng-show="show.mobile")
+
+          li
+            div(style="width:30%")
+              span Name
+              input(style="width: 70%;", ng-model='newPage.name')
+            div(style='float:left')
+              span Url
+              input(ng-model='newPage.url')
+            div(style='float:left')
+              a.btn.btn-primary(ng-click="addModel('mobile')" ng-hide="refreshAddPage") Add page
+              a.fa.fa-refresh.fa-spin(ng-show="refreshAddPage")
+
           li(ng-repeat='url in (filtered.mobile = (list.mobile | filter:query))', ng-mouseenter="visible.m=true", ng-mouseleave="visible.m=false")
             div(style="width:30%")
               span Name
