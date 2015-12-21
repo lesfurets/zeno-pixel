@@ -5,6 +5,7 @@ var fs    = require('fs'),
     path  = require('path'),
     spawn = require('child_process').spawn,
     im    = require('imagemagick'),
+    request = require('request'),
     utils = require('./tools/utils');
 
 var Zeno = function (app, server, io, params) {
@@ -14,6 +15,9 @@ var Zeno = function (app, server, io, params) {
 
     // --log
     this.logFile       = params.log;
+
+    // --fileUrl
+    this.pageUrl       = params.fileUrl || false;
 
     // --file
     this.pageFile      = params.file || 'pages.json';
@@ -88,8 +92,7 @@ Zeno.prototype = {
 
         this.log('Engine detected: ' + this.engine.name + ' ' + this.engine.version);
 
-        // Fetch configuration file
-        fs.readFile(this.pageFile, 'utf-8', function(err, file){
+        var loadConfigurationFile = function(err, file) {
             if (err) {
                 self.log('No file configuration founded');
             } else {
@@ -107,7 +110,18 @@ Zeno.prototype = {
             if (self.startAction) {
                 self.devicesComparaison(self.instance[0], self.instance[1]);
             }
-        });
+        };
+
+        // Fetch configuration file
+        if (this.pageUrl) {
+            request(this.pageUrl, function (err, response, file) {
+                loadConfigurationFile(err, file);
+            });
+        } else {
+            fs.readFile(this.pageFile, 'utf-8', function (err, file) {
+                loadConfigurationFile(err, file);
+            });
+        }
 
         // Fetch cookies file
         fs.readFile(this.cookieFile, 'utf-8', function(err, file){
