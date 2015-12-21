@@ -4,7 +4,7 @@ js/zeno*
 css/zeno*
 
 js/bower_components/
-*/.DS_Store
+.DS_Store
 *.log
 *.pdf
 pages.json

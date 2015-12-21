@@ -15,71 +15,82 @@ exports.module = function (zeno) {
 
         zeno.pages.sitemap.forEach(function(url) {
             url = url.replace('$host', rawHost);
-            getHttpsList(url, function(data) {
+            getListUrls(url, [], function(data) {
                 data.forEach(function (raw) {
                     var url  = raw.replace(rawHost, "$host"),
                         name = raw.replace(rawHost + '/', '');
 
-                    // add each url to the configuration for desktop, tablet and mobile
-                    zeno.pages.desktop.push({
+                    var pageDesktop = {
                         url: url,
                         name: name
-                    });
+                    };
 
-                    zeno.pages.tablet.push({
-                        url: url,
-                        name: 'tablet-' + name
-                    });
 
-                    zeno.pages.mobile.push({
-                        url: url,
-                        name: 'mobile-' + name
-                    });
+                    // add each url to the configuration for desktop, tablet and mobile
+                    if (zeno.pages.desktop.indexOf(pageDesktop) == -1) {
+                        zeno.pages.desktop.push(pageDesktop);
+
+                        zeno.pages.tablet.push({
+                            url: url,
+                            name: 'tablet-' + name
+                        });
+
+                        zeno.pages.mobile.push({
+                            url: url,
+                            name: 'mobile-' + name
+                        });
+                    }
                 });
             });
         });
     }
 
-    function getHttpsList (file, cb) {
-        https.get("https://" + file, function(res) {
-            var xml = '';
-            res.on('data', function(chunk) {
-                xml += chunk;
-            });
-            res.on('end', function() {
-                parseString(xml, function (err, result) {
-                    var list = [];
-                    result.urlset.url.forEach(function (url) {
-                        var link = JSON.stringify(url.loc[0]);
-                        list.push(url.loc[0].replace('https://', '').replace('www.', ''));
-                    });
-
-                    cb(list);
+    function getListUrls (file, list, cb) {
+        if (file.indexOf('http://') > -1) {
+            http.get(file, function (res) {
+                var xml = '';
+                res.on('data', function (chunk) {
+                    xml += chunk;
                 });
+                res.on('end', function () {
+                    parseString(xml, function (err, result) {
+                        computeSitemap(list, cb, result, file)
+                    });
+                });
+            }).on('error', function (e) {
+                zeno.log('Error reading sitemap : ' + file);
             });
-        }).on('error', function(e) {
-            zeno.log('Error reading sitemap : ' + file);
-        });
+        } else if (file.indexOf('https://') > -1) {
+            https.get(file, function (res) {
+                var xml = '';
+                res.on('data', function (chunk) {
+                    xml += chunk;
+                });
+                res.on('end', function () {
+                    parseString(xml, function(err, result){
+                        computeSitemap(list, cb, result, file)
+                    });
+                });
+            }).on('error', function (e) {
+                zeno.log('Error reading sitemap : ' + e);
+            });
+        }
+
     }
 
-    function getHttpList (file, cb) {
-        http.get("http://" + file, function(res) {
-            var xml = '';
-            res.on('data', function(chunk) {
-                xml += chunk;
+    var computeSitemap = function (list, cb, result, link) {
+        if (result != undefined && result.urlset != undefined) {
+            result.urlset.url.forEach(function (url) {
+                var link = JSON.stringify(url.loc[0]);
+                list.push(url.loc[0].replace('https://', '').replace('http://', '').replace('www.', ''));
             });
-            res.on('end', function() {
-                parseString(xml, function (err, result) {
-                    var list = [];
-                    result.urlset.url.forEach(function (url) {
-                        list.push(JSON.stringify(url.loc).replace('http', ''));
-                    });
-
-                    cb(list);
-                });
+            cb(list);
+        } else if (result != undefined && result.sitemapindex != undefined) {
+            result.sitemapindex.sitemap.forEach(function (url) {
+                getListUrls(url.loc[0], list, cb);
             });
-        }).on('error', function(e) {
-            zeno.log('Error reading sitemap : ' + file);
-        });
-    }
+        } else {
+            zeno.log('Bad sitemap : ' + link);
+        }
+    };
 };
