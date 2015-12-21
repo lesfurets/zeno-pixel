@@ -344,6 +344,7 @@ envCtrl = ($scope, $routeParams, $timeout, socket) ->
   $scope.thumb           = '_thumb.png'
   $scope.current         = 0
   $scope.selectedVersion = $scope.versions[$scope.versions.length - 1]
+  $scope.pdfExctrating   = false
 
   angular.forEach $scope.list.envs, (env)->
     if env.alias is $scope.title && $scope.list[$scope.device]?
