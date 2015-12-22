@@ -471,6 +471,15 @@ compareCtrl = ($scope, $routeParams, CompareService) ->
 # Page configuration Controller : #/settings
 # ==================================================
 settingsCtrl = ($scope, socket, ResultsFactory, $timeout) ->
+  socket.emit "getConfType", (data) ->
+    $scope.pagesJson = data
+
+  $scope.updateConfFile = () ->
+    $scope.refreshConf = true
+    socket.emit "updateConfFile", (data) ->
+      $scope.list = data
+      $scope.refreshConf = false
+
   $scope.show =
     desktop: false
     tablet : false

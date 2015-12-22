@@ -283,6 +283,46 @@ Zeno.prototype = {
             });
 
             /*
+             * Get if pages are loaded by url or filesystem
+             */
+            socket.on('getConfType', function (cb) {
+                var conf = {
+                    file: self.pageUrl || self.pageFile,
+                    url: self.pageUrl ? true : false
+                };
+                cb(conf)
+            });
+
+            /*
+             * Update conf file
+             */
+            socket.on('updateConfFile', function (cb) {
+                if (self.pageUrl) {
+                    request(self.pageUrl, function (err, response, file) {
+                        self.pages = JSON.parse(file);
+                        self.pages.refreshing = {
+                            desktop: [],
+                            tablet: [],
+                            mobile: []
+                        };
+                        self.instance = self.pages.envs;
+                        cb(self.pages)
+                    });
+                } else {
+                    fs.readFile(self.pageFile, 'utf-8', function (err, file) {
+                        self.pages = JSON.parse(file);
+                        self.pages.refreshing = {
+                            desktop: [],
+                            tablet: [],
+                            mobile: []
+                        };
+                        self.instance = self.pages.envs;
+                        cb(self.pages)
+                    });
+                }
+            });
+
+            /*
              * Fired when user update the configuration from /pages
              */
             socket.on('updateList', function (data) {
