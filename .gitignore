@@ -9,6 +9,7 @@ js/bower_components/
 *.pdf
 pages.json
 .eslintrc
+coverage
 
 ### Intellij ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm

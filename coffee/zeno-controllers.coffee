@@ -133,8 +133,9 @@ zenoCtrl = ($scope, $location, $timeout, ZenoService, PagesFactory, ResultsFacto
         updatedRow.src = data.src
         # try to add the image in the browser local storage
         # do not keep offset results because there is no thumb (too large)
-        if !data.offsets[0] and !data.offsets[1]
-          ResultsFactory.setStorageImage(updatedRow.name, data.src)
+        if data.offsets != undefined
+          if !data.offsets[0] and !data.offsets[1]
+            ResultsFactory.setStorageImage(updatedRow.name, data.src)
       else
         # clean error data
         ResultsFactory.removeStorageImage(updatedRow.name)

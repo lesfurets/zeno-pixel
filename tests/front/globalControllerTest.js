@@ -1,6 +1,6 @@
 'use strict';
 
-describe('the tests of the Global Controller', function() {
+describe('Global Controller', function() {
 	var scope, $httpBackend, createController, ctrl, rootScope;
 
     var list = {
@@ -8,7 +8,7 @@ describe('the tests of the Global Controller', function() {
         envs : ["env1", "env2", "env3"],
         desktop : [
             {url: "google", name: "google"},
-            {url: "yahoo", name: "yahoo"},
+            {url: "yahoo", name: "yahoo"}
         ],
         tablet : {
             results: []
@@ -43,17 +43,13 @@ describe('the tests of the Global Controller', function() {
             results: []
         }
     };
-
-    var versions = {
-        versions: [
-        "7-11-2014",
-        "7-24-2014"]
-    };
+    var versions = ["7-11-2014", "7-24-2014"];
 
     beforeEach(module('zeno'));
     beforeEach(inject(function($injector) {
         $httpBackend = $injector.get('$httpBackend');
         $httpBackend.when('GET', '/pages').respond(list);
+        $httpBackend.when('GET', '/queue').respond([]);
         $httpBackend.when('GET', '/results').respond(results);
         $httpBackend.when('GET', '/versions').respond(versions);
 
@@ -67,14 +63,35 @@ describe('the tests of the Global Controller', function() {
     }));
 
     it('should fetch a list of pages from json file', function(){
+        $httpBackend.expectGET('/queue');
         $httpBackend.expectGET('/pages');
-        var controller = createController();
+        createController();
         $httpBackend.flush();
-
-        console.log(scope.pages);
-
-        // expect(scope.list).toBeDefined();
-        // expect(scope.list.envs.length).toBe(3);
-        // expect(scope.list.desktop.length).toBe(2);
+        expect(scope.list).toBeDefined();
+        expect(scope.list.envs.length).toBe(3);
+        expect(scope.list.desktop.length).toBe(2);
     });
+
+    it('should set storage directory from ZenoService', function(){
+        createController();
+        expect(scope.dir).toBe('screenshots/');
+    });
+
+    it('should set image extensions from ZenoService', function(){
+        createController();
+        expect(scope.ext).toBe('.png');
+        expect(scope.thumb).toBe('_thumb.png');
+    });
+
+    it('should toggle compare mode if requirements are ok', function(){
+        createController();
+        scope.filtered = list.desktop; // mock the filtered array from ng-repeat
+        scope.$apply(); //to trigger the watch in a digest cycle
+
+        scope.compareAll();
+        expect(scope.compareform.valid).toBe(0);
+        expect(scope.compareform.comparing).toBe(false);
+        expect(scope.listToCompare.length).toBe(0);
+    });
+
 });

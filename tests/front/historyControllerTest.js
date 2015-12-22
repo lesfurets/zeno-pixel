@@ -1,6 +1,6 @@
 'use strict';
 
-describe('the tests of the History Controller', function() {
+describe('History Controller', function() {
 
     var scope, $httpBackend, ctrl;
     var list = {
@@ -30,8 +30,7 @@ describe('the tests of the History Controller', function() {
     // ==================
 
     it('should have variables', function(){
-        expect(scope.dir).toBe('screenshots/versioning/');
-        expect(scope.ext).toBe('.png');
+        expect(scope.dir).toContain('versioning/');
         expect(scope.current).toBe('3-3-2014');
         expect(scope.title).toBe('homepage');
     });

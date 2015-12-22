@@ -1,41 +1,44 @@
-module.exports = function(config){
-  config.set({
+module.exports = function (config) {
+    config.set({
 
-    basePath : '../',
+        basePath: '../',
 
-    files : [
-      'js/bower_components/jquery/jquery.js',
-      'js/bower_components/jquery-ui/jquery-ui.js',
-      'js/bower_components/angular/angular.js',
-      'js/bower_components/angular-route/angular-route.js',
-      'js/bower_components/angular-resource/angular-resource.js',
-      'js/bower_components/angular-sanitize/angular-sanitize.js',
-      'js/bower_components/angular-mocks/angular-mocks.js',
-      'js/bower_components/angular-socket-io/socket.js',
-      'js/bower_components/angular-socket-io/mock/*.js',
-      'js/bower_components/angular-dragdrop/src/angular-dragdrop.min.js',
-      'js/libs/resemble.min.js',
-      'js/libs/sortable.js',
-      'js/*.js',
-      'tests/front/*.js'
-    ],
+        files: [
+            'js/bower_components/jquery/jquery.js',
+            'js/bower_components/jquery-ui/jquery-ui.js',
+            'js/bower_components/angular/angular.js',
+            'js/bower_components/angular-route/angular-route.js',
+            'js/bower_components/angular-resource/angular-resource.js',
+            'js/bower_components/angular-sanitize/angular-sanitize.js',
+            'js/bower_components/angular-mocks/angular-mocks.js',
+            'js/bower_components/angular-socket-io/socket.js',
+            'js/bower_components/angular-socket-io/mock/*.js',
+            'js/bower_components/angular-dragdrop/src/angular-dragdrop.min.js',
+            'js/libs/resemble.min.js',
+            'js/libs/sortable.js',
+            'js/*.js',
+            'tests/front/*.js'
+        ],
 
-    exclude : ['js/zeno.min.js'],
+        preprocessors: {
+            '**/*.coffee': 'coffee',
+            'js/*.js': 'coverage'
+        },
 
-    autoWatch : true,
+        exclude: ['js/zeno.min.js'],
 
-    reporters: ['progress', 'osx', 'ubuntu'],
+        autoWatch: true,
 
-    frameworks: ['jasmine'],
+        reporters: ['coverage'],
 
-    browsers : ['Chrome'],
+        frameworks: ['jasmine'],
 
-    plugins : [
-      'karma-ubuntu-reporter',
-      'karma-chrome-launcher',
-      'karma-osx-reporter',
-      'karma-ubuntu-reporter',
-      'karma-jasmine'
-    ]
-  });
+        browsers: ['PhantomJS'],
+
+        plugins: [
+            'karma-jasmine',
+            'karma-phantomjs-launcher',
+            'karma-coverage'
+        ]
+    });
 };
