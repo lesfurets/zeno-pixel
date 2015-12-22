@@ -1,8 +1,8 @@
 'use strict';
 
-describe('the tests of the Zeno Controller', function() {
+describe('Zeno Controller', function() {
 
-    var scope, $httpBackend, ctrl, rootScope, location;
+    var scope, $httpBackend, ctrl, rootScope, location, zenoService;
     var list = {
         host : "{@alias}.google.com",
         envs : [
@@ -46,22 +46,17 @@ describe('the tests of the Zeno Controller', function() {
 
         scope         = $rootScope.$new();
         scope.list    = list;
+        scope.listToCompare = [];
         scope.results = results;
-        ctrl  = $controller('ZenoController', {$scope: scope});
+        zenoService = {
+            bind: function () {},
+            compare: function () {}
+        };
+        ctrl  = $controller('ZenoController', {$scope: scope, ZenoService: zenoService});
     }));
 
     // tests start here
     // ==================
-
-    it('should set storage directory from ZenoService', function(){
-        expect(scope.dir).toBe('screenshots/');
-    });
-
-    it('should set image extensions from ZenoService', function(){
-        expect(scope.ext).toBe('.png');
-        expect(scope.thumb).toBe('_thumb.png');
-        expect(scope.compareText).toBe('Compare');
-    });
 
     it("should return real index using name", function() {
         scope.device = 'desktop'; // mock the http request from globalController
@@ -85,34 +80,5 @@ describe('the tests of the Zeno Controller', function() {
         scope.filtered = scope.filtered.slice(1);
         var google = scope.getFilteredIndex('results');
         expect(google).toBe(0);
-    });
-
-    it('should have a success after a broadcast', function(){
-        scope.device = 'desktop'; // mock the http request from globalController
-        expect(scope.list).toBeDefined();
-
-        rootScope.$broadcast('result', {index: 0, success: true});
-        expect(scope.list.success).toBe(1);
-
-        rootScope.$broadcast('result', {index: 1, success: true});
-        expect(scope.list.success).toBe(2);
-    });
-
-    it('should trigger an error if no env is selected', function(){
-        expect(scope.form.invalid).toBe(false);
-        scope.compareAll();
-        expect(scope.form.invalid).toBe(true);
-    });
-
-    it('should toggle compare mode if requirements are ok', function(){
-        scope.filtered = scope.list.desktop; // mock the filtered array from ng-repeat
-
-        scope.form.env = {dev: true, prod: true};
-        scope.$apply(); //to trigger the watch in a digest cycle
-
-        scope.compareAll();
-        expect(scope.form.invalid).toBe(false);
-        expect(scope.comparing).toBe(true);
-        expect(scope.lengthCompare).toBe(2);
     });
 });

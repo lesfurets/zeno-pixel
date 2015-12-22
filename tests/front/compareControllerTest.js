@@ -1,6 +1,6 @@
 'use strict';
 
-describe('the tests of the Compare Controller', function() {
+describe('Compare Controller', function() {
 
     var scope, $httpBackend, ctrl, rootScope;
     var list = {

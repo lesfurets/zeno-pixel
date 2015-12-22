@@ -1,6 +1,6 @@
 'use strict';
 
-describe('the tests of the Version Controller', function() {
+describe('Version Controller', function() {
 
     var scope, $httpBackend, ctrl, timeout;
     var list = {
@@ -13,11 +13,7 @@ describe('the tests of the Version Controller', function() {
             {url: "lesfurets.com", name: "homepage"}
         ]
     };
-    var versions = {
-        versions: [
-        "7-11-2014",
-        "7-24-2014"]
-    };
+    var versions = ["7-11-2014", "7-24-2014"];
 
     beforeEach(module('zeno'));
 
@@ -41,7 +37,6 @@ describe('the tests of the Version Controller', function() {
     // ==================
 
     it('should have variables', function(){
-        expect(scope.dir).toBe('screenshots/');
         expect(scope.current).toBe(0);
         expect(scope.title).toBe('prod');
         expect(scope.device).toBe('desktop');
