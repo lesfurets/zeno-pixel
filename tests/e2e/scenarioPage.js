@@ -3,7 +3,6 @@ describe('Zeno App', function() {
   describe('Pages view', function() {
 
     beforeEach(function() {
-      ptor = protractor.getInstance();
       browser.get('/#/pages');
     });
 
