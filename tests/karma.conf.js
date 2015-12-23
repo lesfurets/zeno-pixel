@@ -21,15 +21,15 @@ module.exports = function (config) {
         ],
 
         preprocessors: {
-            '**/*.coffee': 'coffee',
             'js/*.js': 'coverage'
         },
 
         exclude: ['js/zeno.min.js'],
 
         autoWatch: true,
+        singleRun: true,
 
-        reporters: ['coverage'],
+        reporters: ['progress', 'coverage'],
 
         frameworks: ['jasmine'],
 

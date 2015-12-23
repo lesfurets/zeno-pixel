@@ -1,0 +1,15 @@
+language: node_js
+node_js:
+  - "0.10"
+  - "0.12"
+  - "4"
+
+before_script:
+  - npm install -g grunt-cli
+  - npm install -g mocha
+  - npm install -g coffee-script
+
+script:
+  - grunt
+  - npm test
+  - npm run back
