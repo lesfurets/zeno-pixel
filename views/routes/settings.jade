@@ -1,83 +1,90 @@
 div(class='detail')
-  div(class="detailControl")
-    div
-      button(class="btn add", ng-click="updateModel()") Save
+    div(class="detailControl")
+        div
+            button(class="btn add", ng-click="updateModel()") Save
 
-    h3 Settings
+        h3 Settings
 
-    div(style="position:relative")
-      i(class="fa fa-info-circle", ng-mouseenter="tooltip=true", ng-mouseleave="tooltip=false")
-      div(class="tooltip", ng-show="tooltip")
-        span Use the save button to save configuration on disk
+        div(style="position:relative")
+            i(class="fa fa-info-circle", ng-mouseenter="tooltip=true", ng-mouseleave="tooltip=false")
+            div(class="tooltip", ng-show="tooltip")
+                span Use the save button to save configuration on disk
 
-  div(class="detailContent")
-    ul(class='list')
-      li(class="list-row", style='cursor:default;padding: 0 20px')
-        div(style="padding:0")
-          div(style="width:15%;float:left") Generic Host :
-          div {{list.host}}
-        div(style='overflow:auto')
-          div(style="padding:0; float:left;width:15%;") Environments:
-          div(class='pageInfos')
-            header
-              div Alias
-              div Value
-            ul(ui-sortable="sortableOptions", ng-model="list.envs")
-              li(ng-repeat="env in list.envs")
-                div {{$index + 1}}
-                div {{env.alias}}
-                div {{env.server}}
-                div ☰
-          div(style="float:left;color:rgb(211, 63, 26);margin-left:30px")
-            span Order the list to define a reference couple (top 2)
-        div(style="padding-bottom:0")
-          div(style="width:15%;float:left") Engine :
-          div(class="engineSwitch")
-            div PhantomJs
-            div(class="onoffswitch")
-              input(type="checkbox", name="onoffswitch", class="onoffswitch-checkbox", id="myonoffswitch", ng-model="engine", ng-change="updateEngine()")
-              label(class="onoffswitch-label", for="myonoffswitch")
-                span(class="onoffswitch-inner")
-                span(class="onoffswitch-switch")
-            div SlimerJS
-        div(style="padding-top:0")
-          div(style="width:15%;float:left") Webstorage :
-          button(class="btn", style="margin-top:15px", ng-click="cleanStorage()") Clean
-      li
-        div(ng-click="show.desktop = !show.desktop", ng-class="{selected : show.desktop}")
-          a Desktop
-          span(class="length") {{list.desktop.length}}
-        ul(ng-show="show.desktop")
-          li(ng-repeat='url in (filtered.desktop = (list.desktop | filter:query))', ng-mouseenter="visible.d=true", ng-mouseleave="visible.d=false")
-            div(style="width:30%")
-              span Name
-              span {{url.name}}
-            div(style='float:left')
-              span Url
-              input(ng-model='url.url')
-
-      li
-        div(ng-click="show.tablet = !show.tablet", ng-class="{selected : show.tablet}")
-          a(ng-click="") Tablet
-          span(class="length") {{list.tablet.length}}
-        ul(ng-show="show.tablet")
-          li(ng-repeat='url in (filtered.tablet = (list.tablet | filter:query))', ng-mouseenter="visible.t=true", ng-mouseleave="visible.t=false")
-            div(style="width:30%")
-              span Name
-              span {{url.name}}
-            div(style='float:left')
-              span Url
-              input(ng-model='url.url')
-
-      li
-        div(ng-click="show.mobile = !show.mobile", ng-class="{selected : show.mobile}")
-          a(ng-click="") Mobile
-          span(class="length") {{list.mobile.length}}
-        ul(ng-show="show.mobile")
-          li(ng-repeat='url in (filtered.mobile = (list.mobile | filter:query))', ng-mouseenter="visible.m=true", ng-mouseleave="visible.m=false")
-            div(style="width:30%")
-              span Name
-              span {{url.name}}
-            div(style='float:left')
-              span Url
-              input(ng-model='url.url')
+    div(class="detailContent")
+        ul(class='list')
+            li(class="list-row", style='cursor:default;padding: 0 20px')
+                div(style="padding:0")
+                    div(style="width:15%;float:left") Generic Host :
+                    div {{list.host}}
+                div(style='overflow:auto')
+                    div(style="padding:0; float:left;width:15%;") Environments:
+                    div(style="float:left;margin-top: -30px;")
+                        div(style="color:rgb(211, 63, 26)")
+                            span Order the list to define a reference couple (top 2)
+                        div(class='pageInfos')
+                            header
+                                div &nbsp;
+                                div Alias
+                                div Value
+                                div Alternatives
+                                div &nbsp;
+                            ul(ui-sortable="sortableOptions", ng-model="list.envs")
+                                li(ng-repeat="env in list.envs")
+                                    div {{$index + 1}}
+                                    div {{env.alias}}
+                                    div {{env.server}}&nbsp;
+                                    div
+                                        span(ng-repeat="alternative in env.alternative") {{alternative}}
+                                    div ☰
+                div(style="padding-bottom:0")
+                    div(style="width:15%;float:left") Engine :
+                    div(class="engineSwitch")
+                        div PhantomJs
+                        div(class="onoffswitch")
+                            input(type="checkbox", name="onoffswitch", class="onoffswitch-checkbox", id="myonoffswitch", ng-model="engine", ng-change="updateEngine()")
+                            label(class="onoffswitch-label", for="myonoffswitch")
+                                span(class="onoffswitch-inner")
+                                span(class="onoffswitch-switch")
+                        div SlimerJS
+                div(style="padding-top:0")
+                    div(style="width:15%;float:left") Webstorage :
+                    button(class="btn", style="margin-top:15px", ng-click="cleanStorage()") Clean
+            li
+                div(ng-class="{selected : listSettings.length && showListSettings}", ng-click="showListSettings = !showListSettings")
+                    a Pages
+                    span.length {{listSettings.length}}
+                ul(ng-show="showListSettings")
+                    li.page-setting-head
+                        div.page-setting-name
+                            span Name
+                        div.page-setting-input
+                            span Url
+                        div.page-setting-checkbox
+                            span isDesktop ({{list.desktop.length}})
+                        div.page-setting-checkbox
+                            span isTablet ({{list.tablet.length}})
+                        div.page-setting-checkbox
+                            span isMobile ({{list.mobile.length}})
+                    li(class='{{url.classRefreshing}}', ng-repeat='url in listSettings', ng-class="{'refreshing': url.confRefreshing}")
+                        div.page-setting-name
+                            span {{url.name}}
+                        div.page-setting-input(ng-hide="url.confRefreshing")
+                            input(ng-model='url.url', type="text", ng-change='updateUrlPage(url)', ng-model-options="{updateOn: 'blur'}")
+                        div.page-setting-checkbox(ng-click="updateDevicePage(url, 'desktop', url.isDesktop)", ng-hide="url.confRefreshing")
+                            span(ng-show="url.isDesktop" style="color:#ffffff").fa.fa-check-circle-o
+                            span(ng-hide="url.isDesktop").fa.fa-times-circle-o
+                        div.page-setting-checkbox(ng-click="updateDevicePage(url, 'tablet', url.isTablet)", ng-hide="url.confRefreshing")
+                            span(ng-show="url.isTablet" style="color:#ffffff").fa.fa-check-circle-o
+                            span(ng-hide="url.isTablet").fa.fa-times-circle-o
+                        div.page-setting-checkbox(ng-click="updateDevicePage(url, 'mobile', url.isMobile)", ng-hide="url.confRefreshing")
+                            span(ng-show="url.isMobile" style="color:#ffffff").fa.fa-check-circle-o
+                            span(ng-hide="url.isMobile").fa.fa-times-circle-o
+                        div#ballsWaveG(ng-show="url.confRefreshing")
+                            div#ballsWaveG_1.ballsWaveG
+                            div#ballsWaveG_2.ballsWaveG
+                            div#ballsWaveG_3.ballsWaveG
+                            div#ballsWaveG_4.ballsWaveG
+                            div#ballsWaveG_5.ballsWaveG
+                            div#ballsWaveG_6.ballsWaveG
+                            div#ballsWaveG_7.ballsWaveG
+                            div#ballsWaveG_8.ballsWaveG
