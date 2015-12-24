@@ -1,7 +1,5 @@
 language: node_js
 node_js:
-  - "0.10"
-  - "0.12"
   - "4"
 
 before_install:
@@ -17,10 +15,13 @@ before_script:
   - npm install -g mocha
   - npm install -g coffee-script
   - npm install -g protractor
+  - grunt
   - ./node_modules/protractor/bin/webdriver-manager update
+  - cat pages_template.json >> pages.json
+  - node zenoServer.js &
+  - sleep 2
 
 script:
-  - grunt
   - npm test
   - npm run back
   - npm run protractor

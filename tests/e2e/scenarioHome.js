@@ -39,13 +39,18 @@ describe('Zeno App', function () {
 
         it('should switch /history page atfer a click on a screenshot', function () {
             var homeImg = element.all(by.css('.pages img'));
-            homeImg.get(0).click();
-            browser.getLocationAbsUrl().then(function (url) {
-                expect(url).toBe('/history/homepage');
-            });
+            homeImg.get(0).isDisplayed()
+                .then(function(result) {
+                if (result){
+                    homeImg.get(0).click();
+                    browser.getLocationAbsUrl().then(function (url) {
+                        expect(url).toBe('/history/homepage');
+                    });
 
-            var versions = element.all(by.repeater('date in versions.slice().reverse()'));
-            expect(versions).toBeDefined();
+                    var versions = element.all(by.repeater('date in versions.slice().reverse()'));
+                    expect(versions).toBeDefined();
+                }
+            })
         });
     });
 });

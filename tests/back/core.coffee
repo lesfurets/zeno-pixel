@@ -161,7 +161,7 @@ describe 'Rendering tests',  ->
         return
 
     it "should emit event onScreenshotDone", (done)->
-        this.timeout(5000)
+        this.timeout(20000)
         zeno.on 'onScreenshotDone', (data) ->
             data.name.should.equal('mobile-mock')
             done()
@@ -169,7 +169,8 @@ describe 'Rendering tests',  ->
         return
 
     it "should emit event onCopyDone", (done)->
-        zeno.on 'onCopyDone', (data) ->
+      this.timeout(20000)
+      zeno.on 'onCopyDone', (data) ->
             data.name.should.equal('mobile-mock')
             fs.exists params.folder + data.name + zeno.ext, (exists)->
                 exists.should.be.true
