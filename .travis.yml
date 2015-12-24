@@ -4,12 +4,6 @@ node_js:
   - "0.12"
   - "4"
 
-before_script:
-  - npm install -g grunt-cli
-  - npm install -g mocha
-  - npm install -g coffee-script
-  - npm install -g protractor
-
 before_install:
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
@@ -17,6 +11,12 @@ before_install:
   - sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
   - sudo apt-get update
   - sudo apt-get install google-chrome-stable
+
+before_script:
+  - npm install -g grunt-cli
+  - npm install -g mocha
+  - npm install -g coffee-script
+  - npm install -g protractor
   - ./node_modules/protractor/bin/webdriver-manager update
 
 script:
