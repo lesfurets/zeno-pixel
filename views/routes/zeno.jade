@@ -1,13 +1,14 @@
+doctype html
 div(lazy-img)
   div(class="thead pages")
     ul
       li(ng-click="rowReduce()")
-        div
+        div(sticky, sticky-class="sticky-header")
           span url
         div(ng-repeat="url in (filtered = (list[device] | filter: filterList))", ng-class="{hideLine: url.low, success: url.success, failure: url.failure}", ng-show="hide($index)", ng-click="url.low=!url.low;rowReduce()")
           label {{url.name}}
       li(ng-repeat="env in list.envs")
-        div(ng-mouseenter="env.visible=true", ng-mouseleave="env.visible=false")
+        div(ng-mouseenter="env.visible=true", ng-mouseleave="env.visible=false", sticky, sticky-class="sticky-header")
           span
             a(href='#/env/{{env.alias}}/{{device}}') {{env.alias}}
           i(class="fa fa-refresh refreshEnv", ng-show="!env.offset && env.visible", ng-click="refreshEnv(env, $index)")
@@ -19,7 +20,7 @@ div(lazy-img)
             i(class="fa fa-external-link", style="top:80px", ng-show="hover")
           div(ng-class="{glasspaneRefresh : isRefreshing(url, $parent.$index)}")
       li
-        div
+        div(sticky, sticky-class="sticky-header")
           span result
         div(class="ratio ratio{{$index}}", ng-repeat="url in (filtered = (list[device] | filter: filterList))", ng-class="{hideLine: url.low, success: url.success, failure: url.failure}", ng-show="hide($index)")
           div(class="tooltip", ng-show="webperf", ng-if="url.webperf")

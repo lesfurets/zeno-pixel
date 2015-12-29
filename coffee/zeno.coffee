@@ -14,42 +14,43 @@ angular.module('zeno', [
   # 3rd party dependencies
   'btford.socket-io',
   'ui.sortable',
-  'ngDragDrop'
+  'ngDragDrop',
+  'sticky'
 ]).config ['$routeProvider', ($routeProvider) ->
-  $routeProvider.
-    when('/compare', {
+  $routeProvider
+    .when('/compare', {
       templateUrl: 'routes/zeno',
       controller: 'ZenoController'
-    }).
-    when('/compare/:device', {
+    })
+    .when('/compare/:device', {
       templateUrl: 'routes/zeno',
       controller: 'ZenoController'
-    }).
-    when('/history/:pageId', {
+    })
+    .when('/history/:pageId', {
       templateUrl: 'routes/detail',
       controller: 'HistoryController'
-    }).
-    when('/result/:file1/:file2', {
+    })
+    .when('/result/:file1/:file2', {
       templateUrl: 'routes/compare',
       controller: 'CompareController'
-    }).
-    when('/env/:env/:device', {
+    })
+    .when('/env/:env/:device', {
       templateUrl: 'routes/env',
       controller: 'EnvController'
-    }).
-    when('/summary', {
+    })
+    .when('/summary', {
         templateUrl: 'routes/summary',
         controller: 'SummaryController'
-    }).
-    when('/settings', {
+    })
+    .when('/settings', {
       templateUrl: 'routes/settings',
       controller: 'SettingsController'
-    }).
-    when('/log', {
+    })
+    .when('/log', {
       templateUrl: 'routes/log',
       controller: 'LogController'
-    }).
-    otherwise({
+    })
+    .otherwise({
       redirectTo: '/compare'
     })
 
