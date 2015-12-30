@@ -1,5 +1,8 @@
 #ZENO
 
+## Status
+[![Build Status](https://travis-ci.org/lesfurets/zeno-pixel.svg?branch=master)](https://travis-ci.org/lesfurets/zeno-pixel)
+
 Improve your Continuous Delivery workflow by automating visual/css regression detection.
 Zeno is a [NodeJS](http://nodejs.org) application able to take screenshots and compare them with a previous version or another environment.<br>
 Using [PhantomJS](http://phantomjs.org/) or [SlimerJS](http://slimerjs.org/), Zeno has the ability to emulate the mobile or tablet version of a website
