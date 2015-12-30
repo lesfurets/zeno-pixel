@@ -1,6 +1,5 @@
 #ZENO
 
-## Status
 [![Build Status](https://travis-ci.org/lesfurets/zeno-pixel.svg?branch=master)](https://travis-ci.org/lesfurets/zeno-pixel)
 
 Improve your Continuous Delivery workflow by automating visual/css regression detection.
