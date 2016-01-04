@@ -14,6 +14,7 @@ module.exports = function (config) {
             'js/bower_components/angular-socket-io/socket.js',
             'js/bower_components/angular-socket-io/mock/*.js',
             'js/bower_components/angular-dragdrop/src/angular-dragdrop.min.js',
+            'js/bower_components/ngSticky/lib/sticky.js',
             'js/libs/resemble.min.js',
             'js/libs/sortable.js',
             'js/*.js',

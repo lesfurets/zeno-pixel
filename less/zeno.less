@@ -395,11 +395,15 @@ div[ng-view] {
 
 .fa-info-circle {
     cursor: pointer;
-    z-index: 15;
+    z-index: 9;
     width: 20px;
     top  : 5px;
     left : 5px;
     font-size: 20px;
+}
+
+.sticky-header {
+    background-color: rgb(246, 246, 246);
 }
 
 .spinner {
@@ -959,6 +963,7 @@ input[type="checkbox"]:checked + label.checkbox:after {
     .detailContent {
         flex:1;
         display: flex;
+        max-height: 580px;
 
         .view {
             overflow: auto;
@@ -967,8 +972,8 @@ input[type="checkbox"]:checked + label.checkbox:after {
 
             img {
                 background-color: @white;
-                width: 90%;
-                margin-left: 10px;
+                width: 100%;
+                padding: 0 10px;
             }
         }
 
