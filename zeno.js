@@ -272,6 +272,7 @@ Zeno.prototype = {
                 self.devices.forEach(function (device){
                     data.list[device].forEach(function (url) {
                         delete url.percentage;
+                        delete url.$$hashKey;
                     });
                 });
                 self.pages.desktop = data.list.desktop;
@@ -296,6 +297,13 @@ Zeno.prototype = {
             socket.on('saveList', function () {
                 // todo
             });
+
+            socket.on('addPage', function(device, newPage, cb) {
+                if (newPage) {
+                    self.pages[device].push({name : newPage.name, url: newPage.url});
+                }
+                cb(self.pages)
+            })
         });
     },
 

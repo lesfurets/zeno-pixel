@@ -507,6 +507,14 @@ settingsCtrl = ($scope, socket, ResultsFactory) ->
     socket.emit "saveList"
     return
 
+  $scope.addModel = (device) ->
+    $scope.refreshAddPage = true
+    socket.emit "addPage", device, $scope.newPage, (data) ->
+      $scope.refreshAddPage = false
+      $scope.list = data
+      $scope.newPage = null
+    return
+
   # clean each localStorage record
   $scope.cleanStorage = () ->
     $scope.list.desktop.forEach (page) ->
@@ -615,6 +623,9 @@ globalCtrl = ($scope, $location, PagesFactory, ResultsFactory, VersionService, s
     return
 
   $scope.keyPress = (ev) ->
+    tag = ev.target.tagName.toLocaleLowerCase()
+    if tag == 'input'
+      return
     if ev.which is 116 #T
       angular.element('#back-to-top').click()
     else if ev.which is 114 # R
