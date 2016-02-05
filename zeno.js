@@ -113,6 +113,7 @@ Zeno.prototype = {
         };
 
         // Fetch configuration file
+
         if (this.pageUrl) {
             request(this.pageUrl, function (err, response, file) {
                 loadConfigurationFile(err, file);

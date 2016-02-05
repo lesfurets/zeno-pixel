@@ -65,6 +65,8 @@ div(class='detail')
                             span isTablet ({{list.tablet.length}})
                         div.page-setting-checkbox
                             span isMobile ({{list.mobile.length}})
+                        div.page-setting-cookies
+                            span Cookies
                     li(class='{{url.classRefreshing}}', ng-repeat='url in listSettings', ng-class="{'refreshing': url.confRefreshing}")
                         div.page-setting-name
                             span {{url.name}}
@@ -79,6 +81,9 @@ div(class='detail')
                         div.page-setting-checkbox(ng-click="updateDevicePage(url, 'mobile', url.isMobile)", ng-hide="url.confRefreshing")
                             span(ng-show="url.isMobile" style="color:#ffffff").fa.fa-check-circle-o
                             span(ng-hide="url.isMobile").fa.fa-times-circle-o
+                        div.page-setting-cookies
+                            ul
+                                li(ng-repeat='cookie in url.cookies') {{cookie}}
                         div#ballsWaveG(ng-show="url.confRefreshing")
                             div#ballsWaveG_1.ballsWaveG
                             div#ballsWaveG_2.ballsWaveG

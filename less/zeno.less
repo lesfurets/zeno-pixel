@@ -985,7 +985,6 @@ input[type="checkbox"]:checked + label.checkbox:after {
     .detailContent {
         flex:1;
         display: flex;
-        max-height: 580px;
 
         .view {
             overflow: auto;
@@ -1015,6 +1014,7 @@ input[type="checkbox"]:checked + label.checkbox:after {
         }
         .page-setting-checkbox {
             min-width: 150px;
+            width: 10%;
 
             span {
                 text-align: center;
@@ -1025,8 +1025,25 @@ input[type="checkbox"]:checked + label.checkbox:after {
                 }
             }
         }
+
+        .page-setting-cookies {
+            width: 20%;
+            span {
+                padding-left: 35px;
+            }
+
+            li {
+                &:first-of-type {
+                    border-top: none;
+                }
+                &:last-of-type {
+                    border-bottom: none;
+                }
+            }
+        }
+
         .page-setting-input {
-            width: 40%;
+            width: 30%;
             input[type="text"] {
                 height: 40px;
                 width: 100%;
@@ -1076,6 +1093,12 @@ input[type="checkbox"]:checked + label.checkbox:after {
     }
 }
 
+#env {
+    .detailContent {
+        max-height: 580px;
+    }
+}
+
 .notFound {
     color: @white;
     font-size: 4em;
@@ -1098,102 +1121,50 @@ input[type="checkbox"]:checked + label.checkbox:after {
     width:16px;
     height:16px;
     animation-name:ballsWaveG;
-    -o-animation-name:ballsWaveG;
-    -ms-animation-name:ballsWaveG;
-    -webkit-animation-name:ballsWaveG;
-    -moz-animation-name:ballsWaveG;
     animation-duration:1.5s;
-    -o-animation-duration:1.5s;
-    -ms-animation-duration:1.5s;
-    -webkit-animation-duration:1.5s;
-    -moz-animation-duration:1.5s;
     animation-iteration-count:infinite;
-    -o-animation-iteration-count:infinite;
-    -ms-animation-iteration-count:infinite;
-    -webkit-animation-iteration-count:infinite;
-    -moz-animation-iteration-count:infinite;
     animation-direction:normal;
-    -o-animation-direction:normal;
-    -ms-animation-direction:normal;
-    -webkit-animation-direction:normal;
-    -moz-animation-direction:normal;
     border-radius:8px;
-    -o-border-radius:8px;
-    -ms-border-radius:8px;
-    -webkit-border-radius:8px;
-    -moz-border-radius:8px;
-}
+    }
 
 #ballsWaveG_1{
     left:0;
     animation-delay:0.6s;
-    -o-animation-delay:0.6s;
-    -ms-animation-delay:0.6s;
-    -webkit-animation-delay:0.6s;
-    -moz-animation-delay:0.6s;
 }
 
 #ballsWaveG_2{
     left:16px;
     animation-delay:0.75s;
-    -o-animation-delay:0.75s;
-    -ms-animation-delay:0.75s;
-    -webkit-animation-delay:0.75s;
-    -moz-animation-delay:0.75s;
 }
 
 #ballsWaveG_3{
     left:31px;
     animation-delay:0.9s;
-    -o-animation-delay:0.9s;
-    -ms-animation-delay:0.9s;
-    -webkit-animation-delay:0.9s;
-    -moz-animation-delay:0.9s;
 }
 
 #ballsWaveG_4{
     left:47px;
     animation-delay:1.05s;
-    -o-animation-delay:1.05s;
-    -ms-animation-delay:1.05s;
-    -webkit-animation-delay:1.05s;
-    -moz-animation-delay:1.05s;
 }
 
 #ballsWaveG_5{
     left:62px;
     animation-delay:1.2s;
-    -o-animation-delay:1.2s;
-    -ms-animation-delay:1.2s;
-    -webkit-animation-delay:1.2s;
-    -moz-animation-delay:1.2s;
 }
 
 #ballsWaveG_6{
     left:78px;
     animation-delay:1.35s;
-    -o-animation-delay:1.35s;
-    -ms-animation-delay:1.35s;
-    -webkit-animation-delay:1.35s;
-    -moz-animation-delay:1.35s;
 }
 
 #ballsWaveG_7{
     left:94px;
     animation-delay:1.5s;
-    -o-animation-delay:1.5s;
-    -ms-animation-delay:1.5s;
-    -webkit-animation-delay:1.5s;
-    -moz-animation-delay:1.5s;
 }
 
 #ballsWaveG_8{
     left:109px;
     animation-delay:1.64s;
-    -o-animation-delay:1.64s;
-    -ms-animation-delay:1.64s;
-    -webkit-animation-delay:1.64s;
-    -moz-animation-delay:1.64s;
 }
 
 
