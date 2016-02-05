@@ -113,6 +113,7 @@ Zeno.prototype = {
         };
 
         // Fetch configuration file
+
         if (this.pageUrl) {
             request(this.pageUrl, function (err, response, file) {
                 loadConfigurationFile(err, file);
@@ -295,6 +296,69 @@ Zeno.prototype = {
 
             socket.on('saveList', function () {
                 // todo
+            });
+
+            socket.on('addDevicePage', function (page, device, cb) {
+                delete page.percentage;
+                delete page.$$hashKey;
+                delete page.confRefreshing;
+                delete page.classRefreshing;
+                if (page) {
+                    self.pages[device].push(page);
+                    cb('ok');
+                } else {
+                    cb('ko');
+                }
+            });
+            var hasSameAlternativeAndCookies = function(page1, page2) {
+                return (page1.alternative == page2.alternative
+                && JSON.stringify(page1.cookies) == JSON.stringify(page2.cookies));
+            };
+
+            var isSamePage = function (page1, page2) {
+                return (page1.url == page2.url && hasSameAlternativeAndCookies(page1, page2));
+            };
+
+            socket.on('removeDevicePage', function (page, device, cb) {
+                var i = self.pages[device].length;
+                while (i--) {
+                    var k = self.pages[device][i];
+                    if (isSamePage(k, page)) {
+                        self.pages[device].splice(i, 1);
+                        cb('ok');
+                        return;
+                    }
+                }
+                cb('ko');
+            });
+
+            socket.on('updateUrlPage', function (page, devices, cb) {
+                var urlBase;
+                var present = false;
+                var firstDevice = devices[0];
+                devices.shift();
+                self.pages[firstDevice].some(function (k) {
+                    if (k.name == page.name
+                        && hasSameAlternativeAndCookies(k, page)) {
+                        urlBase = k.url;
+                        k.url = page.url;
+                        return present = true;
+                    }
+                });
+                if (!present) {
+                    cb('ko');
+                    return;
+                }
+                devices.some(function (device) {
+                    self.pages[device].some(function (k) {
+                        if (k.url == urlBase
+                            && hasSameAlternativeAndCookies(k, page)) {
+                            k.url = page.url;
+                            return;
+                        }
+                    });
+                });
+                cb('ok');
             });
         });
     },

@@ -470,24 +470,109 @@ compareCtrl = ($scope, $routeParams, CompareService) ->
 
 # Page configuration Controller : #/settings
 # ==================================================
-settingsCtrl = ($scope, socket, ResultsFactory) ->
+settingsCtrl = ($scope, socket, ResultsFactory, $timeout) ->
   $scope.show =
     desktop: false
     tablet : false
     mobile : false
 
-  # deep watch on model: a little bit aggresive
-  $scope.$watch 'list', (newList) ->
-    # clean model of useless data
-    for device in $scope.devices
-      for page in newList[device]
-        delete page.src        # only needed for the views
-        delete page.low        # only needed for the views
+  $scope.showListSettings = true
 
-    socket.emit "updateList",
-      list: newList
-    return
-  , true
+  isSamePage = (page1, page2) ->
+    page1.url == page2.url \
+      and page1.alternative == page2.alternative \
+      and JSON.stringify(page1.cookies) == JSON.stringify(page2.cookies)
+
+  transformListIntoListSetting = () ->
+    list = []
+    angular.copy($scope.list.desktop, list)
+    angular.forEach(list, (listItem) ->
+      listItem.isDesktop = true
+    )
+    angular.forEach($scope.list.tablet, (tabletItem) ->
+      isPresent = false
+      angular.forEach(list, (listItem) ->
+        if (isSamePage(listItem, tabletItem))
+          listItem.isTablet = isPresent = true
+      )
+      if (!isPresent)
+        tabletItem.isTablet = true
+        list.push(tabletItem)
+    )
+    angular.forEach($scope.list.mobile, (mobileItem) ->
+      isPresent = false
+      angular.forEach(list, (listItem) ->
+        if (isSamePage(listItem, mobileItem))
+          listItem.isMobile = isPresent = true
+      )
+      if (!isPresent)
+        mobileItem.isMobile = true
+        list.push(mobileItem)
+    )
+    return list
+
+  $scope.listSettings = transformListIntoListSetting()
+
+  $scope.updateUrlPage = (page) ->
+    page.confRefreshing = true
+    devices = []
+    if page.isDesktop
+      devices.push 'desktop'
+    if page.isTablet
+      devices.push 'tablet'
+    if page.isMobile
+      devices.push 'mobile'
+    socket.emit('updateUrlPage', page, devices, (result) ->
+      if (result == "ok")
+        page.confRefreshing = false
+        page.classRefreshing = 'success'
+        $timeout(() ->
+          page.classRefreshing = ''
+        , 3000)
+      else
+        page.confRefreshing = false
+        page.classRefreshing = 'error'
+        $timeout(() ->
+          page.classRefreshing = ''
+        , 3000)
+    )
+
+  $scope.updateDevicePage = (page, device, oldState) ->
+    page.confRefreshing = true
+    presentState = !oldState
+    arg = 'is' + device.charAt(0).toUpperCase() + device.slice(1);
+    if (presentState)
+      socket.emit('addDevicePage', page, device, (result) ->
+        if (result == "ok")
+          page[arg] = presentState
+          page.confRefreshing = false
+          page.classRefreshing = 'success'
+          $timeout(() ->
+            page.classRefreshing = ''
+          , 3000)
+        else
+          page.confRefreshing = false
+          page.classRefreshing = 'error'
+          $timeout(() ->
+            page.classRefreshing = ''
+          , 3000)
+      )
+    else
+      socket.emit('removeDevicePage', page, device, (result) ->
+        if (result == "ok")
+          page[arg] = presentState
+          page.confRefreshing = false
+          page.classRefreshing = 'success'
+          $timeout(() ->
+            page.classRefreshing = ''
+          , 3000)
+        else
+          page.confRefreshing = false
+          page.classRefreshing = 'error'
+          $timeout(() ->
+            page.classRefreshing = ''
+          , 3000)
+      )
 
   $scope.updateEngine = () ->
     value = ''
@@ -657,7 +742,7 @@ zenoCtrl.$inject     = ['$scope', '$location', '$timeout', 'ZenoService', 'Pages
 envCtrl.$inject      = ['$scope', '$routeParams', '$timeout', 'socket']
 historyCtrl.$inject  = ['$scope', 'VersionService', '$routeParams']
 compareCtrl.$inject  = ['$scope', '$routeParams', 'CompareService']
-settingsCtrl.$inject = ['$scope', 'socket', 'ResultsFactory']
+settingsCtrl.$inject = ['$scope', 'socket', 'ResultsFactory', '$timeout']
 logCtrl.$inject      = ['$scope', 'socket', '$http', '$interval']
 summaryCtrl.$inject  = ['$scope']
 globalCtrl.$inject   = ['$scope', '$location', 'PagesFactory', 'ResultsFactory', 'VersionService', 'socket', 'dir', 'ext']
