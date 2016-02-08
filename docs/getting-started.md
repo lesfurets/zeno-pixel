@@ -110,8 +110,10 @@ And go to: http://localhost:1234.<br>
 Available parameters:<br>
 * `--port`: application port (default: 1337)<br>
 * `--log`: log file name<br>
-* `--file`: configuration file name (default: pages.json)
+* `--file`: configuration file name (default: pages.json)<br>
 * `--cookie`: cookie file name (default: cookies.json)<br>
+* `--fileUrl`: configuration file absolute url override `--file`<br>
+* `--cookieUrl`: cookie file absolute url override `--cookie`<br>
 * `--folder`: folder name(default: screenshots)<br>
 * `--engine`: headless engine phantomjs|slimerjs<br>
 * `--startAction`: compare images from the reference couple at startup<br>
