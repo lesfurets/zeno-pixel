@@ -629,7 +629,12 @@ logCtrl = ($scope, socket, $http, $interval) ->
 
 # Summary Controller : #/summary
 # ==================================================
-summaryCtrl = ($scope) ->
+summaryCtrl = ($scope, $http) ->
+  $scope.webperf = {}
+
+  $http.get('/webperf').success (data) ->
+    $scope.webperf = data
+
   return
 
 # Global Controller : One controller to rule them all
@@ -744,7 +749,7 @@ historyCtrl.$inject  = ['$scope', 'VersionService', '$routeParams']
 compareCtrl.$inject  = ['$scope', '$routeParams', 'CompareService']
 settingsCtrl.$inject = ['$scope', 'socket', 'ResultsFactory', '$timeout']
 logCtrl.$inject      = ['$scope', 'socket', '$http', '$interval']
-summaryCtrl.$inject  = ['$scope']
+summaryCtrl.$inject  = ['$scope', '$http']
 globalCtrl.$inject   = ['$scope', '$location', 'PagesFactory', 'ResultsFactory', 'VersionService', 'socket', 'dir', 'ext']
 
 angular.module('zeno.controllers', [])

@@ -11,6 +11,14 @@ exports.module = function (zeno) {
     webperf.tablet  = {};
     webperf.mobile  = {};
 
+    var pathWebperf = './modules/webperf';
+    var backupWebperf = pathWebperf + '/backup/webperf-1.json';
+    var fileWebperf = pathWebperf + '/current/webperf-1.json';
+
+    var fs = require('fs');
+    var data = fs.readFileSync(backupWebperf);
+    webperf = JSON.parse(data);
+
     zeno.on('onScreenshotDone', function (data) {
         zeno.pages[data.options.device].forEach(function(page) {
             if (data.name && page.name === data.name) {
@@ -34,46 +42,43 @@ exports.module = function (zeno) {
                 }
 
                 webperf[data.options.device][page.name][dateFormat] = data.metrics;
+
+                var webPerfString = JSON.stringify(webperf);
+                fs.writeFile(fileWebperf, webPerfString, function (err) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        console.log("screenshot saved");
+                    }
+                });
             }
         });
     });
 
     zeno.app.get('/webperf', function(req, res) {
-        res.send(JSON.stringify(webperf));
+        res.send(JSON.stringify(webperf, null, 4));
     });
 
     zeno.app.get('/webperf/date/:date', function(req, res) {
-        if (webperf[req.params.date])
-            res.send(JSON.stringify(webperf[req.params.date]));
-        else
-            res.send('{"status":"Incorrect date or date format (mm-dd-yyyy)"}');
+        res.send('{"status":"not implemented yet"}');
     });
 
-    zeno.app.get('/webperf/:env/:name', function(req, res) {
-        if (webperf[req.params.env][req.params.name])
-            res.send(JSON.stringify(webperf[req.params.env][req.params.name]));
+    zeno.app.get('/webperf/env/:env/:name', function (req, res) {
+        res.send('{"status":"not implemented yet"}');
+    });
+
+
+    zeno.app.get('/webperf/device/:device', function(req, res) {
+        if (webperf[req.params.device])
+            res.send(JSON.stringify(webperf[req.params.device]));
         else
             res.send('{"status":"Incorrect name or no result available"}');
     });
 
-    zeno.app.post('/webperf/:env/:name', function(req, res) {
-        if (!req.body) return res.sendStatus(400);
-
-        var body = {};
-        try {
-            body = JSON.parse(req.body);
-        } catch (err) {
-            res.send('{"status":"request refused, bad request", "error":"' + err + '"}');
-        }
-
-        if(req.params.env && req.params.name && webperf[req.params.env]) {
-            if (!webperf[req.params.env][req.params.name]) {
-                webperf[req.params.env][req.params.name] = body;
-                res.send('{"status":"ok"}');
-            } else
-                res.send('{"status":"request refused, already created"}');
-        } else {
-            res.send('{"status":"request refused, bad parameters"}');
-        }
+    zeno.app.get('/webperf/device/:device/:name', function(req, res) {
+        if (webperf[req.params.device][req.params.name])
+            res.send(JSON.stringify(webperf[req.params.device][req.params.name]));
+        else
+            res.send('{"status":"Incorrect name or no result available"}');
     });
 };

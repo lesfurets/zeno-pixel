@@ -1,3 +1,4 @@
+doctype html
 h2 Summary
 
 div(class="central summary")
@@ -29,3 +30,15 @@ div(class="central summary")
             li
                 label Error
                 span(style="color:#DC3912") {{results.desktop.results.length + results.mobile.results.length + results.tablet.results.length}}
+
+h2 WebPerf
+
+div
+    div(ng-repeat='(env, wp) in webperf')
+        h3 {{env}}
+        li(ng-repeat='(name, dates) in wp') {{name}}
+            div(ng-repeat='(keyDate, dateMetrics) in dates')
+                div {{keyDate}}{{dateMetrics}}
+
+
+
