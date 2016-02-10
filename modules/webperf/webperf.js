@@ -1,7 +1,8 @@
 /**********************
  * Plugins: WebPerformance plugin
  * @author: @mfourtina
- * @version: 0.1
+ * @updathor: @jfitoussi
+ * @version: 0.2
  **********************/
 exports.module = function (zeno) {
     var webperf         = {},
@@ -13,11 +14,20 @@ exports.module = function (zeno) {
 
     var pathWebperf = './modules/webperf';
     var backupWebperf = pathWebperf + '/backup/webperf-1.json';
-    var fileWebperf = pathWebperf + '/current/webperf-1.json';
+    var currentFileWebperf = pathWebperf + '/current/webperf.json';
 
     var fs = require('fs');
-    var data = fs.readFileSync(backupWebperf);
-    webperf = JSON.parse(data);
+    fs.stat(currentFileWebperf, function (err, stat) {
+        if (err == null) {
+            webperf = JSON.parse(fs.readFileSync(currentFileWebperf));
+        } else if (err.code = "ENOENT") {
+            fs.stat(backupWebperf, function (err, stat) {
+                if (err == null) {
+                    webperf = JSON.parse(fs.readFileSync(backupWebperf))
+                }
+            });
+        }
+    });
 
     zeno.on('onScreenshotDone', function (data) {
         zeno.pages[data.options.device].forEach(function(page) {
@@ -44,7 +54,7 @@ exports.module = function (zeno) {
                 webperf[data.options.device][page.name][dateFormat] = data.metrics;
 
                 var webPerfString = JSON.stringify(webperf);
-                fs.writeFile(fileWebperf, webPerfString, function (err) {
+                fs.writeFile(currentFileWebperf, webPerfString, function (err) {
                     if (err) {
                         console.log(err);
                     } else {
