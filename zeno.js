@@ -22,6 +22,9 @@ var Zeno = function (app, server, io, params) {
     // --file
     this.pageFile      = params.file || 'pages.json';
 
+    // --cookieUrl
+    this.cookieUrl     = params.cookieUrl || false;
+
     // --cookie
     this.cookieFile    = params.cookie || 'cookies.json';
 
@@ -43,6 +46,7 @@ var Zeno = function (app, server, io, params) {
     this.cookiesList   = [];
     this.modules       = [];
     this.listtoshot    = [];
+    this.versions      = [];
     this.versions      = [];
     this.results       = {};
     this.pages         = {};
@@ -113,7 +117,6 @@ Zeno.prototype = {
         };
 
         // Fetch configuration file
-
         if (this.pageUrl) {
             request(this.pageUrl, function (err, response, file) {
                 loadConfigurationFile(err, file);
@@ -125,12 +128,25 @@ Zeno.prototype = {
         }
 
         // Fetch cookies file
-        fs.readFile(this.cookieFile, 'utf-8', function(err, file){
-            if (err) { this.log(err); }
-            else {
-                self.cookiesList = JSON.parse(file);
-            }
-        });
+        if (this.cookieUrl) {
+            request(this.cookieUrl, function (err, response, file) {
+                if (err) {
+                    this.log(err);
+                }
+                else {
+                    self.cookiesList = JSON.parse(file);
+                }
+            });
+        } else {
+            fs.readFile(this.cookieFile, 'utf-8', function (err, file) {
+                if (err) {
+                    this.log(err);
+                }
+                else {
+                    self.cookiesList = JSON.parse(file);
+                }
+            });
+        }
     },
 
     /*
@@ -359,6 +375,21 @@ Zeno.prototype = {
                     });
                 });
                 cb('ok');
+            });
+
+            socket.on('getCookiesList', function (cb) {
+                cb(self.cookiesList)
+            });
+
+            socket.on('modifyCookieValue', function(cookie, cb) {
+                try {
+                    var cookieName = cookie.name;
+                    self.cookiesList[cookieName].value = cookie.value;
+                    cb("ok")
+                } catch(exception) {
+                    self.log(exception);
+                    cb("ko")
+                }
             });
         });
     },

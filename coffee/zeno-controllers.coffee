@@ -476,7 +476,16 @@ settingsCtrl = ($scope, socket, ResultsFactory, $timeout) ->
     tablet : false
     mobile : false
 
+  $scope.cookies = [];
+  $scope.cookiesLength = 0
+
+  socket.emit "getCookiesList", (cookies) ->
+    $scope.cookies = cookies
+    $scope.cookiesLength = Object.keys($scope.cookies).length
+
+
   $scope.showListSettings = true
+  $scope.showListCookiesSettings = true
 
   isSamePage = (page1, page2) ->
     page1.url == page2.url \
@@ -512,6 +521,22 @@ settingsCtrl = ($scope, socket, ResultsFactory, $timeout) ->
     return list
 
   $scope.listSettings = transformListIntoListSetting()
+
+  $scope.updateCookieValue = (cookie) ->
+    socket.emit("modifyCookieValue", cookie, (result) ->
+      if (result == "ok")
+        cookie.confRefreshing = false
+        cookie.classRefreshing = 'success'
+        $timeout(() ->
+          cookie.classRefreshing = ''
+        , 3000)
+      else
+        cookie.confRefreshing = false
+        cookie.classRefreshing = 'error'
+        $timeout(() ->
+          cookie.classRefreshing = ''
+        , 3000)
+    )
 
   $scope.updateUrlPage = (page) ->
     page.confRefreshing = true

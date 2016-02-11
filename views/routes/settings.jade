@@ -1,3 +1,4 @@
+doctype html
 div(class='detail')
     div(class="detailControl")
         div
@@ -50,11 +51,34 @@ div(class='detail')
                     div(style="width:15%;float:left") Webstorage :
                     button(class="btn", style="margin-top:15px", ng-click="cleanStorage()") Clean
             li
+                div(ng-class="{selected : cookiesLength && showListCookiesSettings}", ng-click="showListCookiesSettings = !showListCookiesSettings")
+                    a Cookies
+                    span.length {{cookiesLength}}
+                ul(ng-show="showListCookiesSettings")
+                    li.page-setting-head
+                        div.page-setting-name
+                            span Name
+                        div.page-setting-input
+                            span Value
+                        div.page-setting-checkbox
+                            span Domain
+                        div.page-setting-checkbox
+                            span Path
+                    li(class='{{cookie.classRefreshing}}', ng-repeat='cookie in cookies', ng-class="{'refreshing': cookie.confRefreshing}")
+                        div.page-setting-name
+                            span {{cookie.name}}
+                        div.page-setting-input(ng-hide="url.confRefreshing")
+                            input(ng-model='cookie.value', type="text", ng-change='updateCookieValue(cookie)', ng-model-options="{updateOn: 'blur'}")
+                        div.page-setting-checkbox
+                            span {{cookie.domain}}
+                        div.page-setting-checkbox
+                            span {{cookie.path}}
+            li
                 div(ng-class="{selected : listSettings.length && showListSettings}", ng-click="showListSettings = !showListSettings")
                     a Pages
                     span.length {{listSettings.length}}
                 ul(ng-show="showListSettings")
-                    li.page-setting-head
+                    li.page-setting-head(sticky)
                         div.page-setting-name
                             span Name
                         div.page-setting-input
