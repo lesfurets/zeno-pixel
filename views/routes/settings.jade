@@ -50,6 +50,12 @@ div(class='detail')
                 div(style="padding-top:0")
                     div(style="width:15%;float:left") Webstorage :
                     button(class="btn", style="margin-top:15px", ng-click="cleanStorage()") Clean
+                div(style="padding-top:0")
+                    div(style="width:15%;float:left") Conf file :
+                    div(style="display:inline-block")
+                        button.btn(ng-click="updateConfFile()" ng-hide="refreshConf") Refesh conf
+                        span(style="margin-left: 10px") {{ pagesJson.file }}
+                        span(ng-show="refreshConf").fa.fa-refresh.fa-spin
             li
                 div(ng-class="{selected : cookiesLength && showListCookiesSettings}", ng-click="showListCookiesSettings = !showListCookiesSettings")
                     a Cookies
