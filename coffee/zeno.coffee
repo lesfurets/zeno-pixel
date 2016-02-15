@@ -15,7 +15,8 @@ angular.module('zeno', [
   'btford.socket-io',
   'ui.sortable',
   'ngDragDrop',
-  'sticky'
+  'sticky',
+  'n3-line-chart'
 ]).config ['$routeProvider', ($routeProvider) ->
   $routeProvider
     .when('/compare', {

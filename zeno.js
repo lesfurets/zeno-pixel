@@ -447,6 +447,9 @@ Zeno.prototype = {
             self.modules = dirs;
 
             self.modules.forEach(function(dir) {
+                if (dir[0] == '.') {
+                    return
+                }
                 var module = require('./' + name + '/' + dir + '/' + dir);
 
                 if (module.module) {

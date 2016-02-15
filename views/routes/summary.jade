@@ -1,3 +1,4 @@
+doctype html
 h2 Summary
 
 div(class="central summary")
@@ -29,3 +30,31 @@ div(class="central summary")
             li
                 label Error
                 span(style="color:#DC3912") {{results.desktop.results.length + results.mobile.results.length + results.tablet.results.length}}
+
+h2 WebPerf
+div#webperf-container
+    div
+        div.webperf-options
+            h3 Desktop
+            div
+                label Page
+                select(ng-options='page for page in pagesDesktop', ng-model="selectedDesktopPage" ng-change="updateDesktop()")
+        div.webperf-chart
+            linechart(data="dataDesktop" options="options")
+    div
+        div.webperf-options
+            h3 Tablet
+            div
+                label Page
+                select(ng-options='page for page in pagesTablet', ng-model="selectedTabletPage" ng-change="updateTablet()")
+        div.webperf-chart
+            linechart(data="dataTablet" options="options")
+    div
+        div.webperf-options
+            h3 Mobile
+            div
+                label Page
+                select(ng-options='page for page in pagesMobile', ng-model="selectedMobilePage" ng-change="updateMobile()")
+        div.webperf-chart
+            linechart(data="dataMobile" options="options")
+

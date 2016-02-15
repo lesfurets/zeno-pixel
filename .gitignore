@@ -2,6 +2,8 @@ node_modules/*
 screenshots/*
 js/zeno*
 css/zeno*
+modules/webperf/backup
+modules/webperf/current
 
 js/bower_components/
 .DS_Store

@@ -663,7 +663,132 @@ logCtrl = ($scope, socket, $http, $interval) ->
 
 # Summary Controller : #/summary
 # ==================================================
-summaryCtrl = ($scope) ->
+summaryCtrl = ($scope, $http) ->
+  $scope.webperf = {}
+  $scope.pagesDesktop = []
+  $scope.pagesTablet = []
+  $scope.pagesMobile = []
+  $scope.metrics = ["req", "size", "time", "errors", "jsErrors"]
+  $scope.selectedMetrics = "time"
+
+  $http.get('/webperf').success (data) ->
+    $scope.webperf = data
+    for page of data.desktop
+      $scope.pagesDesktop.push(page)
+    for page of data.tablet
+      $scope.pagesTablet.push(page)
+    for page of data.mobile
+      $scope.pagesMobile.push(page)
+    firstPage = data.desktop.homepage
+    $scope.selectedDesktopPage = "homepage"
+    $scope.selectedTabletPage = "tabletHomepage"
+    $scope.selectedMobilePage = "mobileHomepage"
+    $scope.dataDesktop.dataset0 = fromObjectWPtoList(firstPage)
+    $scope.dataTablet.dataset0 = fromObjectWPtoList(data.tablet.tabletHomepage)
+    $scope.dataMobile.dataset0 = fromObjectWPtoList(data.mobile.mobileHomepage)
+
+  fromObjectWPtoList = (page) ->
+    i = 0
+    listTmp = []
+    for date of page
+      month = date.split('-')[0]
+      day = date.split('-')[1]
+      year = date.split('-')[2]
+      jsDate = new Date(year, month, day)
+      listTmp.push({
+        x: jsDate
+        req: page[date].req
+        size: page[date].size / 10000
+        time: page[date].time / 1000
+        errors: page[date].errors.length
+        jsErrors: page[date].jsErrors.length
+      })
+    return listTmp
+
+  $scope.updateDesktop = () ->
+    page = $scope.webperf.desktop[$scope.selectedDesktopPage]
+    $scope.dataDesktop.dataset0 = fromObjectWPtoList(page)
+
+  $scope.updateTablet = () ->
+    page = $scope.webperf.tablet[$scope.selectedTabletPage]
+    $scope.dataTablet.dataset0 = fromObjectWPtoList(page)
+
+  $scope.updateMobile = () ->
+    page = $scope.webperf.mobile[$scope.selectedMobilePage]
+    $scope.dataMobile.dataset0 = fromObjectWPtoList(page)
+
+  $scope.dataDesktop = {
+    dataset0: []
+  };
+
+  $scope.dataTablet = {
+    dataset0: []
+  };
+
+  $scope.dataMobile = {
+    dataset0: []
+  };
+
+  $scope.updateMetrics = () ->
+    console.log($scope.selectedMetrics)
+    $scope.options.series.key = $scope.selectedMetrics
+    $scope.options.series.label = $scope.selectedMetrics
+    $scope.$digest()
+
+  $scope.options = {
+    series: [
+      {
+        axis: "y",
+        dataset: "dataset0",
+        key: "time",
+        label: "Time (s)",
+        color: "#1f77b4",
+        type: ['line', 'dot', 'area'],
+        id: 'time'
+      },
+      {
+        axis: "y",
+        dataset: "dataset0",
+        key: "req",
+        label: "Requests Number",
+        color: "rgba(70,191,189,1)",
+        type: ['line', 'dot', 'area'],
+        id: 'req'
+      },
+      {
+        axis: "y",
+        dataset: "dataset0",
+        key: "size",
+        label: "Size(ko)*10",
+        color: "rgba(253,180,92,1)",
+        type: ['line', 'dot', 'area'],
+        id: 'size'
+      },
+      {
+        axis: "y",
+        dataset: "dataset0",
+        key: "errors",
+        label: "Errors",
+        color: "rgba(247,70,74,1)",
+        type: ['line', 'dot', 'area'],
+        id: 'errors'
+      },
+      {
+        axis: "y",
+        dataset: "dataset0",
+        key: "jsErrors",
+        label: "Errors JS",
+        color: "rgb(247, 70, 147)",
+        type: ['line', 'dot', 'area'],
+        id: 'jsErrors'
+      }
+    ],
+    axes: {x: {
+      key: "x",
+      type: "date"
+    }}
+  };
+
   return
 
 # Global Controller : One controller to rule them all
@@ -778,7 +903,7 @@ historyCtrl.$inject  = ['$scope', 'VersionService', '$routeParams']
 compareCtrl.$inject  = ['$scope', '$routeParams', 'CompareService']
 settingsCtrl.$inject = ['$scope', 'socket', 'ResultsFactory', '$timeout']
 logCtrl.$inject      = ['$scope', 'socket', '$http', '$interval']
-summaryCtrl.$inject  = ['$scope']
+summaryCtrl.$inject  = ['$scope', '$http']
 globalCtrl.$inject   = ['$scope', '$location', 'PagesFactory', 'ResultsFactory', 'VersionService', 'socket', 'dir', 'ext']
 
 angular.module('zeno.controllers', [])
