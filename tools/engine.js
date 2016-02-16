@@ -20,6 +20,15 @@ var slimerjs = {
 	version: pkg.version
 };
 
+pkg = require('phantomjs-prebuilt');
+var phantomjs2 = {
+	name: 'phantomjs2',
+	engine: 'webkit',
+	path: pkg.path,
+	ssl: '--ssl-protocol=tlsv1',
+	version: pkg.version
+};
+
 module.exports.get = function (name) {
 	var engine;
 
@@ -28,6 +37,8 @@ module.exports.get = function (name) {
 			engine = slimerjs;
 		} else if (name === 'phantomjs') {
 			engine = phantomjs;
+		} else if (name === 'phantomjs2') {
+			engine = phantomjs2;
 		} else {
 			throw 'Bad argument: engine "' + name + '"';
 		}

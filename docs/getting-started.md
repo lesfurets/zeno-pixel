@@ -115,7 +115,7 @@ Available parameters:<br>
 * `--fileUrl`: configuration file absolute url override `--file`<br>
 * `--cookieUrl`: cookie file absolute url override `--cookie`<br>
 * `--folder`: folder name(default: screenshots)<br>
-* `--engine`: headless engine phantomjs|slimerjs<br>
+* `--engine`: headless engine phantomjs|slimerjs|phantomjs2<br>
 * `--startAction`: compare images from the reference couple at startup<br>
 
 Available web services:
