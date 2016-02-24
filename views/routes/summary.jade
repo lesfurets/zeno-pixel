@@ -58,3 +58,6 @@ div#webperf-container
         div.webperf-chart
             linechart(data="dataMobile" options="options")
 
+h2 Screenshot queue {{queue}}
+div#screenshot-queue
+    div(ng-repeat='page in queuePages') {{page.options.env}} {{page.name}}
