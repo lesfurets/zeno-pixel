@@ -671,6 +671,9 @@ summaryCtrl = ($scope, $http) ->
   $scope.metrics = ["req", "size", "time", "errors", "jsErrors"]
   $scope.selectedMetrics = "time"
 
+  $http.get('/ua').success (data) ->
+    $scope.userAgents = data
+
   $http.get('/webperf').success (data) ->
     $scope.webperf = data
     for page of data.desktop

@@ -53,6 +53,9 @@ var Zeno = function (app, server, io, params) {
 
     this.emitter = new (require('events').EventEmitter)();
     this.emitter.setMaxListeners(200);
+    this.uaDesktop = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:44.0) Gecko/20100101 Firefox/44.0';
+    this.uaMobile = 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_2_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13D15 Safari/601.1';
+    this.uaTablet = 'Mozilla/5.0 (iPad; CPU OS 9_0 like Mac OS X) AppleWebKit/601.1.17 (KHTML, like Gecko) Version/8.0 Mobile/13A175 Safari/600.1.4';
 };
 
 Zeno.prototype = {
@@ -191,6 +194,13 @@ Zeno.prototype = {
         });
         this.app.get('/results/:device', function(req, res) {
             res.send(JSON.stringify(self.results[req.params.device]));
+        });
+        this.app.get('/ua', function(req, res) {
+            var userAgents = {};
+            userAgents.uaDesktop = self.uaDesktop;
+            userAgents.uaTablet = self.uaTablet;
+            userAgents.uaMobile = self.uaMobile;
+            res.send(JSON.stringify(userAgents));
         });
 
         this.app.get('/log', function(req, res) {
@@ -652,13 +662,13 @@ Zeno.prototype = {
 
         if (device === 'mobile') {
             details.viewport = {width: 640, height: 1100};
-            details.ua = 'Mozilla/5.0 (iPhone; CPU iPhone OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5376e Safari/8536.25';
+            details.ua = self.uaMobile;
         } else if (device === 'desktop') {
             details.viewport = {width: 1600, height: 1100};
-            details.ua = 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36';
+            details.ua = self.uaDesktop;
         } else if (device === 'tablet') {
             details.viewport = {width: 1024, height: 1100};
-            details.ua = 'Mozilla/5.0 (iPad; CPU OS 4_3_5 like Mac OS X; en-us) AppleWebKit/533.17.9 (KHTML, like Gecko) Version/5.0.2 Mobile/8L1 Safari/6533.18.5';
+            details.ua = self.uaTablet;
         } else {
             return;
         }
