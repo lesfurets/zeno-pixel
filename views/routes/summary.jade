@@ -30,6 +30,17 @@ div(class="central summary")
             li
                 label Error
                 span(style="color:#DC3912") {{results.desktop.results.length + results.mobile.results.length + results.tablet.results.length}}
+h2 UserAgent
+div.ua-container
+    div.ua-label Desktop
+    div.ua-value {{ userAgents.uaDesktop }}
+div.ua-container
+    div.ua-label Tablet
+    div.ua-value {{ userAgents.uaTablet }}
+div.ua-container
+    div.ua-label Mobile
+    div.ua-value {{ userAgents.uaMobile }}
+
 
 h2 WebPerf
 div#webperf-container
