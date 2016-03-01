@@ -609,11 +609,7 @@ settingsCtrl = ($scope, socket, ResultsFactory, $timeout) ->
       )
 
   $scope.updateEngine = () ->
-    value = ''
-    if $scope.engine
-      value = 'slimerjs'
-    else
-      value = 'phantomjs'
+    value = $scope.engine
 
     $scope.$emit "updateEngine", value
 
@@ -842,8 +838,8 @@ globalCtrl = ($scope, $location, PagesFactory, ResultsFactory, VersionService, s
               page.success    = false
               page.failure    = true
 
-          if $scope.results.engine is 'slimerjs'
-            $scope.engine = true
+
+          $scope.engine = $scope.results.engine
 
           # add success information if page no error
           if !page.hasOwnProperty('percentage')

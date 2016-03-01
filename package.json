@@ -35,6 +35,7 @@
     "n3-charts": "^2.0.11",
     "pdfkit": "0.7.0",
     "phantomjs": "~1.9.15",
+    "phantomjs-prebuilt": "^2.1.4",
     "pngjs": "0.4.0",
     "slimerjs": "^0.9.5",
     "socket.io": "1.1.0",

@@ -39,14 +39,11 @@ div(class='detail')
                                     div ☰
                 div(style="padding-bottom:0")
                     div(style="width:15%;float:left") Engine :
-                    div(class="engineSwitch")
-                        div PhantomJs
-                        div(class="onoffswitch")
-                            input(type="checkbox", name="onoffswitch", class="onoffswitch-checkbox", id="myonoffswitch", ng-model="engine", ng-change="updateEngine()")
-                            label(class="onoffswitch-label", for="myonoffswitch")
-                                span(class="onoffswitch-inner")
-                                span(class="onoffswitch-switch")
-                        div SlimerJS
+                    div(style="padding: 15px 0")
+                        select(ng-model='engine', ng-change="updateEngine()")
+                            option(label="phantomJS") phantomjs
+                            option(label="slimerJS") slimerjs
+                            option(label="phantomJS2") phantomjs2
                 div(style="padding-top:0")
                     div(style="width:15%;float:left") Webstorage :
                     button(class="btn", style="margin-top:15px", ng-click="cleanStorage()") Clean
