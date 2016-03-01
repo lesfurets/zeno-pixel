@@ -25,7 +25,7 @@ html(ng-app="zeno", ng-controller="GlobalController as global", lang="en")
                         label(for="hf", class="checkbox")
                         span Hide failures ({{results[device].results.length}})
                 div(class="threshold")
-                    span Threshold : {{sliderOffset}} %
+                    span Mismatch : {{sliderOffset}} %
                     div(class="flex", style="margin-top:20px")
                         div 0
                         div(slider, class="slider")
@@ -67,10 +67,11 @@ html(ng-app="zeno", ng-controller="GlobalController as global", lang="en")
                         label Engine
                         span {{results.engine}}
                     li
-                        label Queue
-                        span {{queue}}
+                        a(href="/#/summary#screenshot-queue").label Screenshoting
+                        a(href="/#/summary#screenshot-queue").value {{queue}}
                     li
-                        label
+                        label Comparing
+                        span {{ listToCompare.length }}
         div(class="container")
             div(class="tabs")
                 div(class="tab", ng-class="{active: isTabActive('desktop')}")

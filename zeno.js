@@ -257,9 +257,7 @@ Zeno.prototype = {
         });
 
         this.on('onEnvUpdate', function (data){
-            self.io.sockets.emit('queueChangeEvent', {
-                size: self.listtoshot.length
-            });
+            self.io.sockets.emit('queueChangeEvent', self.listtoshot);
         });
     },
 
@@ -623,9 +621,7 @@ Zeno.prototype = {
     next: function () {
         this.listtoshot.splice(0, 1);
 
-        this.io.sockets.emit('queueChangeEvent', {
-            size: this.listtoshot.length
-        });
+        this.io.sockets.emit('queueChangeEvent', this.listtoshot);
 
         if (this.listtoshot.length){
             this.takeScreenshot(
@@ -793,9 +789,7 @@ Zeno.prototype = {
             options : options
         });
 
-        this.io.sockets.emit('queueChangeEvent', {
-            size: this.listtoshot.length
-        });
+        this.io.sockets.emit('queueChangeEvent', this.listtoshot);
 
         // do not trigger update if it's already running, just queue it
         if(this.listtoshot.length === 1) {
