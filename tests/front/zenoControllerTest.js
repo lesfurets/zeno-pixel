@@ -44,10 +44,10 @@ describe('Zeno Controller', function() {
         rootScope = $rootScope;
         spyOn(rootScope, '$broadcast').andCallThrough();
 
-        scope         = $rootScope.$new();
-        scope.list    = list;
+        scope               = $rootScope.$new();
+        scope.list          = list;
         scope.listToCompare = [];
-        scope.results = results;
+        scope.results       = results;
         zenoService = {
             bind: function () {},
             compare: function () {}
