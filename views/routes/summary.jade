@@ -50,7 +50,7 @@ div#webperf-container
             div
                 label Page
                 select(ng-options='page for page in pagesDesktop', ng-model="selectedDesktopPage" ng-change="updateDesktop()")
-        div.webperf-chart
+        div.webperf-chart(ng-if="pagesDesktop.length !== 0")
             linechart(data="dataDesktop" options="options")
     div
         div.webperf-options
@@ -58,7 +58,7 @@ div#webperf-container
             div
                 label Page
                 select(ng-options='page for page in pagesTablet', ng-model="selectedTabletPage" ng-change="updateTablet()")
-        div.webperf-chart
+        div.webperf-chart(ng-if="pagesTablet.length !== 0")
             linechart(data="dataTablet" options="options")
     div
         div.webperf-options
@@ -66,7 +66,7 @@ div#webperf-container
             div
                 label Page
                 select(ng-options='page for page in pagesMobile', ng-model="selectedMobilePage" ng-change="updateMobile()")
-        div.webperf-chart
+        div.webperf-chart(ng-if="pagesMobile.length !== 0")
             linechart(data="dataMobile" options="options")
 
 h2 Screenshot queue {{queue}}

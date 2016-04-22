@@ -667,6 +667,10 @@ summaryCtrl = ($scope, $http) ->
   $scope.metrics = ["req", "size", "time", "errors", "jsErrors"]
   $scope.selectedMetrics = "time"
 
+  $scope.dataDesktop = {dataset0: []}
+  $scope.dataTablet = {dataset0: []}
+  $scope.dataMobile = {dataset0: []}
+
   $http.get('/ua').success (data) ->
     $scope.userAgents = data
 
@@ -678,29 +682,37 @@ summaryCtrl = ($scope, $http) ->
       $scope.pagesTablet.push(page)
     for page of data.mobile
       $scope.pagesMobile.push(page)
-    firstPage = data.desktop.homepage
-    $scope.selectedDesktopPage = "homepage"
-    $scope.selectedTabletPage = "tabletHomepage"
-    $scope.selectedMobilePage = "mobileHomepage"
-    $scope.dataDesktop.dataset0 = fromObjectWPtoList(firstPage)
-    $scope.dataTablet.dataset0 = fromObjectWPtoList(data.tablet.tabletHomepage)
-    $scope.dataMobile.dataset0 = fromObjectWPtoList(data.mobile.mobileHomepage)
+
+    for key, value of data.desktop
+      $scope.selectedDesktopPage = value
+      $scope.dataDesktop.dataset0 = fromObjectWPtoList(data.desktop[key])
+      break
+
+    for key, value of data.tablet
+      $scope.selectedTabletPage = value
+      $scope.dataTablet.dataset0 = fromObjectWPtoList(data.tablet[key])
+      break
+
+    for key, value of data.mobile
+      $scope.selectedMobilePage = value
+      $scope.dataMobile.dataset0 = fromObjectWPtoList(data.mobile[key])
+      break
 
   fromObjectWPtoList = (page) ->
     i = 0
     listTmp = []
     for date of page
-      month = date.split('-')[0]
-      day = date.split('-')[1]
-      year = date.split('-')[2]
-      jsDate = new Date(year, month, day)
+      month  = date.split('-')[0]
+      day    = date.split('-')[1]
+      year   = date.split('-')[2]
+      jsDate = new Date(year, (month-1), day)
       listTmp.push({
-        x: jsDate
-        req: page[date].req
-        size: page[date].size / 10000
-        time: page[date].time / 1000
-        errors: page[date].errors.length
-        jsErrors: page[date].jsErrors.length
+        x        : jsDate
+        req      : page[date].req
+        size     : page[date].size / 10000
+        time     : page[date].time / 1000
+        errors   : page[date].errors.length
+        jsErrors : page[date].jsErrors.length
       })
     return listTmp
 
@@ -715,18 +727,6 @@ summaryCtrl = ($scope, $http) ->
   $scope.updateMobile = () ->
     page = $scope.webperf.mobile[$scope.selectedMobilePage]
     $scope.dataMobile.dataset0 = fromObjectWPtoList(page)
-
-  $scope.dataDesktop = {
-    dataset0: []
-  };
-
-  $scope.dataTablet = {
-    dataset0: []
-  };
-
-  $scope.dataMobile = {
-    dataset0: []
-  };
 
   $scope.updateMetrics = () ->
     console.log($scope.selectedMetrics)
