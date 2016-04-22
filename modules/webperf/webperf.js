@@ -4,19 +4,18 @@
  * @updathor: @jfitoussi
  * @version: 0.2
  **********************/
+var fs = require('fs');
+
 exports.module = function (zeno) {
-    var webperf         = {},
-        list            = [];
+    var webperf = {};
 
     webperf.desktop = {};
     webperf.tablet  = {};
     webperf.mobile  = {};
 
-    var pathWebperf = './modules/webperf';
-    var backupWebperf = pathWebperf + '/backup/webperf-1.json';
-    var currentFileWebperf = pathWebperf + '/current/webperf.json';
+    var backupWebperf      = __dirname + '/backup/webperf-1.json';
+    var currentFileWebperf = __dirname + '/current/webperf.json';
 
-    var fs = require('fs');
     fs.stat(currentFileWebperf, function (err, stat) {
         if (err == null) {
             webperf = JSON.parse(fs.readFileSync(currentFileWebperf));
@@ -33,9 +32,9 @@ exports.module = function (zeno) {
         zeno.pages[data.options.device].forEach(function(page) {
             if (data.name && page.name === data.name) {
                 var d          = new Date(),
-                    dateFormat = d.getMonth()+'-'+d.getDate()+'-'+d.getFullYear();
+                    dateFormat = (d.getMonth()+1)+'-'+d.getDate()+'-'+d.getFullYear();
 
-                page.webperf    = data.metrics;
+                page.webperf = data.metrics;
 
                 // Push webperf to all connected clients
                 zeno.io.sockets.emit('updateOneWebPerf', {
@@ -57,8 +56,6 @@ exports.module = function (zeno) {
                 fs.writeFile(currentFileWebperf, webPerfString, function (err) {
                     if (err) {
                         console.log(err);
-                    } else {
-                        console.log("screenshot saved");
                     }
                 });
             }

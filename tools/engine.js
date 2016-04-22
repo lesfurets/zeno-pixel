@@ -1,32 +1,22 @@
 /*
  * Defines webkit and gecko engines
  */
-
-var pkg = require('phantomjs');
-var phantomjs = {
-	name: 'phantomjs',
-	engine: 'webkit',
-	path: pkg.path,
-	ssl: '--ssl-protocol=tlsv1',
-	version: pkg.version
-};
-
 pkg = require('slimerjs');
 var slimerjs = {
-	name: 'slimerjs',
-	engine: 'gecko',
-	path: pkg.path,
-	ssl: '--ssl-protocol=TLSv1',
-	version: pkg.version
+	name    : 'slimerjs',
+	engine  : 'gecko',
+	path    : pkg.path,
+	ssl     : '--ssl-protocol=TLSv1',
+	version : pkg.version
 };
 
 pkg = require('phantomjs-prebuilt');
-var phantomjs2 = {
-	name: 'phantomjs2',
-	engine: 'webkit',
-	path: pkg.path,
-	ssl: '--ssl-protocol=tlsv1',
-	version: pkg.version
+var phantomjs = {
+	name    : 'phantomjs',
+	engine  : 'webkit',
+	path    : pkg.path,
+	ssl     : '--ssl-protocol=tlsv1',
+	version : pkg.version
 };
 
 module.exports.get = function (name) {
@@ -37,8 +27,6 @@ module.exports.get = function (name) {
 			engine = slimerjs;
 		} else if (name === 'phantomjs') {
 			engine = phantomjs;
-		} else if (name === 'phantomjs2') {
-			engine = phantomjs2;
 		} else {
 			throw 'Bad argument: engine "' + name + '"';
 		}

@@ -54,8 +54,8 @@ var Zeno = function (app, server, io, params) {
     this.emitter = new (require('events').EventEmitter)();
     this.emitter.setMaxListeners(200);
     this.uaDesktop = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:44.0) Gecko/20100101 Firefox/44.0';
-    this.uaMobile = 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_2_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13D15 Safari/601.1';
-    this.uaTablet = 'Mozilla/5.0 (iPad; CPU OS 9_0 like Mac OS X) AppleWebKit/601.1.17 (KHTML, like Gecko) Version/8.0 Mobile/13A175 Safari/600.1.4';
+    this.uaMobile  = 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_2_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13D15 Safari/601.1';
+    this.uaTablet  = 'Mozilla/5.0 (iPad; CPU OS 9_0 like Mac OS X) AppleWebKit/601.1.17 (KHTML, like Gecko) Version/8.0 Mobile/13A175 Safari/600.1.4';
 };
 
 Zeno.prototype = {
@@ -307,25 +307,35 @@ Zeno.prototype = {
             socket.on('updateConfFile', function (cb) {
                 if (self.pageUrl) {
                     request(self.pageUrl, function (err, response, file) {
-                        self.pages = JSON.parse(file);
-                        self.pages.refreshing = {
-                            desktop: [],
-                            tablet: [],
-                            mobile: []
-                        };
-                        self.instance = self.pages.envs;
-                        cb(self.pages)
+                        try {
+                            self.pages = JSON.parse(file);
+                            self.pages.refreshing = {
+                                desktop: [],
+                                tablet : [],
+                                mobile : []
+                            };
+                            self.instance = self.pages.envs;
+                            self.log('Configuration reloaded with success');
+                            cb(self.pages);
+                        } catch (e) {
+                            console.log("Error reloading conf: " + e);
+                        }
                     });
                 } else {
                     fs.readFile(self.pageFile, 'utf-8', function (err, file) {
-                        self.pages = JSON.parse(file);
-                        self.pages.refreshing = {
-                            desktop: [],
-                            tablet: [],
-                            mobile: []
-                        };
-                        self.instance = self.pages.envs;
-                        cb(self.pages)
+                        try {
+                            self.pages = JSON.parse(file);
+                            self.pages.refreshing = {
+                                desktop: [],
+                                tablet : [],
+                                mobile : []
+                            };
+                            self.instance = self.pages.envs;
+                            self.log('Configuration reloaded with success');
+                            cb(self.pages);
+                        } catch (e) {
+                            console.log("Error reloading conf: " + e);
+                        }
                     });
                 }
             });
@@ -737,14 +747,14 @@ Zeno.prototype = {
             cookies = [],
             height  = 1100;
 
-        if(device === 'tablet') {
-            ua = 'Mozilla/5.0 (iPad; CPU OS 8_0 like Mac OS X) AppleWebKit/538.34.9 (KHTML, like Gecko) Mobile/12A4265u';
+        if (device === 'tablet') {
+            ua = this.uaTablet;
             width = 1024;
-        } else if(device === 'mobile') {
-            ua = 'Mozilla/5.0 (iPhone; CPU iPhone OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5376e Safari/8536.25';
+        } else if (device === 'mobile') {
+            ua = this.uaMobile;
             width = 640;
-        } else if(device === 'desktop') {
-            ua = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.114 Safari/537.36';
+        } else if (device === 'desktop') {
+            ua = this.uaDesktop;
             width = 1600;
         } else {
             return;

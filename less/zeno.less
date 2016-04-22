@@ -40,15 +40,15 @@ a {
 }
 
 header {
-    padding: 5px 20px;
-    background : #0A101B;
-    overflow: auto;
+    padding    : 0 20px;
+    height: 40px;
+    background : linear-gradient(to top,#090A0A 0,#38393f 100%);
+    overflow   : auto;
 
     .logo {
         float         : left;
-        padding-top   : 3px;
         text-transform: uppercase;
-        font-size     : 33px;
+        font-size     : 30px;
         font-weight   : 400;
     }
 
@@ -57,12 +57,12 @@ header {
     }
 
     .search {
-        color: #fff;
-        position: absolute;
-        right: 10px;
-        font-size: 25px;
-        margin-top: 5px;
-        cursor: pointer;
+        color      : #fff;
+        position   : absolute;
+        right      : 10px;
+        font-size  : 20px;
+        margin-top : 7px;
+        cursor     : pointer;
 
         .fa {color  : @white;}
 
@@ -73,9 +73,9 @@ header {
             outline         : none;
             display         : none;
             position        : absolute;
-            font-size       : 18px;
+            font-size       : 15px;
             top             : 15px;
-            padding         : 4px;
+            padding         : 2px;
             width           : 0;
         }
 
@@ -604,10 +604,10 @@ input[type="checkbox"]:checked + label.checkbox:after {
             padding: 0;
 
             header {
-                border: 1px solid @boder-color;
-                background-color: rgb(237, 241, 243);
-                overflow: auto;
-                padding: 5px;
+                border     : 1px solid @boder-color;
+                background : rgb(237, 241, 243);
+                overflow   : auto;
+                padding    : 5px;
 
                 div {
                     float: left;
