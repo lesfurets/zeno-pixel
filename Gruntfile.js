@@ -80,6 +80,12 @@ module.exports = function (grunt) {
                 },
                 files: ['css/*.css'],
                 tasks: []
+            },
+            jade: {
+                options: {
+                    livereload: true,
+                },
+                files: ['views/**/*.jade']
             }
         }
 

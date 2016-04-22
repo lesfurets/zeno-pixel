@@ -39,11 +39,11 @@ html(ng-app="zeno", ng-controller="GlobalController as global", lang="en")
                 form
                     div(class="envList")
                         p(ng-repeat="env in list.envs", style="display:inline")
-                          input(type='checkbox', ng-model="compareform.env[env.alias]", id="{{env.alias}}")
-                          label(for="{{env.alias}}", class="checkbox")
-                          span {{env.alias}}
+                          input(type='checkbox', ng-model="compareform.env[env.alias]", id="{{::env.alias}}")
+                          label(for="{{::env.alias}}", class="checkbox")
+                          span {{::env.alias}}
                     div(ng-show="compareform.valid==2", class="launch")
-                        div Remaining: {{ listToCompare.length }} / {{ list[device].length }}
+                        div Remaining: {{listToCompare.length}} / {{::list[device].length}}
                         button(ng-click="compareAll()" ng-class="{stopCompare: compareform.comparing}") {{compareform.text}}
             div(class="block pieblock")
                 ul
@@ -51,17 +51,17 @@ html(ng-app="zeno", ng-controller="GlobalController as global", lang="en")
                         label Desktop
                         span(style="color:#DC3912") {{results.desktop.results.length}}
                         span /
-                        span(style="color:#109618") {{list.desktop.length}}
+                        span(style="color:#109618") {{::list.desktop.length}}
                     li
                         label Tablet
                         span(style="color:#DC3912") {{results.tablet.results.length}}
                         span /
-                        span(style="color:#109618") {{list.tablet.length}}
+                        span(style="color:#109618") {{::list.tablet.length}}
                     li
                         label Mobile
                         span(style="color:#DC3912") {{results.mobile.results.length}}
                         span /
-                        span(style="color:#109618") {{list.mobile.length}}
+                        span(style="color:#109618") {{::list.mobile.length}}
                 ul
                     li
                         label Engine
@@ -71,7 +71,7 @@ html(ng-app="zeno", ng-controller="GlobalController as global", lang="en")
                         a(href="/#/summary#screenshot-queue").value {{queue}}
                     li
                         label Comparing
-                        span {{ listToCompare.length }}
+                        span {{listToCompare.length}}
         div(class="container")
             div(class="tabs")
                 div(class="tab", ng-class="{active: isTabActive('desktop')}")

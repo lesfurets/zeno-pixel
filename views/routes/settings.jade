@@ -3,7 +3,6 @@ div(class='detail')
     div(class="detailControl")
         div
             button(class="btn add", ng-click="updateModel()") Save
-
         h3 Settings
 
         div(style="position:relative")
@@ -43,7 +42,6 @@ div(class='detail')
                         select(ng-model='engine', ng-change="updateEngine()")
                             option(label="phantomJS") phantomjs
                             option(label="slimerJS") slimerjs
-                            option(label="phantomJS2") phantomjs2
                 div(style="padding-top:0")
                     div(style="width:15%;float:left") Webstorage :
                     button(class="btn", style="margin-top:15px", ng-click="cleanStorage()") Clean
