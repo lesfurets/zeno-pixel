@@ -23,6 +23,21 @@ exports.module = function (zeno) {
             fs.stat(backupWebperf, function (err, stat) {
                 if (err == null) {
                     webperf = JSON.parse(fs.readFileSync(backupWebperf))
+                } else {
+                    zeno.log("No webperf file found: creating webperf.json");
+
+                    // fallback: create the webperf file
+                    var defaultWebPerf = {
+                       desktop: {},
+                       tablet: {},
+                       mobile: {}
+                    };
+
+                    fs.writeFile(__dirname + "/current/webperf.json", JSON.stringify(defaultWebPerf), function(err) {
+                        if(err) {
+                            return zeno.log(err);
+                        }
+                    }); 
                 }
             });
         }
