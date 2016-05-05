@@ -17,7 +17,9 @@ angular.module('zeno', [
   'ngDragDrop',
   'sticky',
   'n3-line-chart'
-]).config ['$routeProvider', ($routeProvider) ->
+]).config ['$routeProvider', '$compileProvider', ($routeProvider, $compileProvider) ->
+  $compileProvider.debugInfoEnabled(false)
+  
   $routeProvider
     .when('/compare', {
       templateUrl: 'routes/zeno',
