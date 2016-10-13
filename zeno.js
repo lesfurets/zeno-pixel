@@ -47,7 +47,7 @@ var Zeno = function (app, server, io, params) {
     this.modules       = [];
     this.listtoshot    = [];
     this.versions      = [];
-    this.versions      = [];
+    this.versionsByPage = {};
     this.results       = {};
     this.pages         = {};
 
@@ -56,6 +56,9 @@ var Zeno = function (app, server, io, params) {
     this.uaDesktop = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:44.0) Gecko/20100101 Firefox/44.0';
     this.uaMobile  = 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_2_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13D15 Safari/601.1';
     this.uaTablet  = 'Mozilla/5.0 (iPad; CPU OS 9_0 like Mac OS X) AppleWebKit/601.1.17 (KHTML, like Gecko) Version/8.0 Mobile/13A175 Safari/600.1.4';
+    this.vpDesktop = 1280;
+    this.vpTablet  = 1024;
+    this.vpMobile  = 640;
 };
 
 Zeno.prototype = {
@@ -73,7 +76,7 @@ Zeno.prototype = {
             fs.mkdirSync(path.join(this.dir, this.versioning));
         }
 
-        this.updateVersionList();
+        this.updateVersionList(true);
 
         if (this.logFile) {
             var logFile   = fs.createWriteStream(this.logFile, {flags : 'a'});
@@ -164,13 +167,24 @@ Zeno.prototype = {
 
         this.app.get('/update/:env', function(req, res) {
             self.instance.forEach(function (env) {
-                if(env.alias === req.params.env) {
+                if(env.alias === req.params.env || "all" === req.params.env) {
                     self.envScreenshot(env, 'desktop');
                     self.envScreenshot(env, 'mobile');
                     self.envScreenshot(env, 'tablet');
                 }
             });
             res.send('Update ' + req.params.env + ' in progress\n');
+        });
+
+        this.app.get('/update/:env/:screenshotId', function(req, res) {
+            self.instance.forEach(function (env) {
+                if(env.alias === req.params.env) {
+                    self.envScreenshot(env, 'desktop', req.params.screenshotId);
+                    self.envScreenshot(env, 'mobile', req.params.screenshotId);
+                    self.envScreenshot(env, 'tablet', req.params.screenshotId);
+                }
+            });
+            res.send('Update ' + req.params.env + ' with ' + req.params.screenshotId+ 'in progress\n');
         });
 
         this.app.get('/routes/:name', function(req, res) {
@@ -189,6 +203,14 @@ Zeno.prototype = {
             res.send(JSON.stringify(self.versions));
         });
 
+        this.app.get('/versions/page/', function(req, res) {
+            res.send(JSON.stringify(self.versionsByPage));
+        });
+
+        this.app.get('/versions/page/:page', function(req, res) {
+            res.send(JSON.stringify(self.versionsByPage[req.params.page]));
+        });
+
         this.app.get('/results', function(req, res) {
             res.send(JSON.stringify(self.results));
         });
@@ -196,11 +218,19 @@ Zeno.prototype = {
             res.send(JSON.stringify(self.results[req.params.device]));
         });
         this.app.get('/ua', function(req, res) {
+            var data = {};
             var userAgents = {};
             userAgents.uaDesktop = self.uaDesktop;
             userAgents.uaTablet = self.uaTablet;
             userAgents.uaMobile = self.uaMobile;
-            res.send(JSON.stringify(userAgents));
+
+            var viewPorts = {};
+            viewPorts.vpDesktop = self.vpDesktop;
+            viewPorts.vpTablet= self.vpTablet;
+            viewPorts.vpMobile= self.vpMobile;
+            data.userAgents = userAgents;
+            data.viewPorts = viewPorts;
+            res.send(JSON.stringify(data));
         });
 
         this.app.get('/log', function(req, res) {
@@ -287,7 +317,7 @@ Zeno.prototype = {
              * Fired when an environment is refreshed by a client
              */
             socket.on('refreshEnv', function (data) {
-                self.envScreenshot(data.env, data.type, socket);
+                self.envScreenshot(data.env, data.type, 'manual', socket);
             });
 
             /*
@@ -537,12 +567,22 @@ Zeno.prototype = {
             self = this,
             path = p.join(this.dir, options.env +  name + this.ext);
 
-        // directory name pattern : mm-dd-yyyy
-        var todayDir = p.join(this.dir, this.versioning, (d.getMonth() + 1) + '-' + d.getDate() + '-' + d.getFullYear());
+        if (options.hasOwnProperty('date')) {
+            d = options.date;
+        }
 
-        if (!fs.existsSync(todayDir)) {
-            fs.mkdir(todayDir, function (err){
-                self.updateVersionList();
+        // directory name pattern : mm-dd-yyyy-hh-mm-ss(?-screenshotId)
+        var versionPath = (d.getMonth() + 1) + '-' + d.getDate() + '-' + d.getFullYear() + '-' + d.getHours() + '-' + d.getMinutes() + '-' + d.getSeconds();
+        if (options.hasOwnProperty('screenshotId')) {
+            versionPath += '-' + options.screenshotId;
+        }
+
+        var screenshotPackDir = p.join(this.dir, this.versioning, versionPath);
+
+        if (!fs.existsSync(screenshotPackDir)) {
+            fs.mkdir(screenshotPackDir, function (err){
+                var screenShotName = options.env + name + self.ext;
+                self.updateVersionList(false, screenShotName, versionPath);
             });
         }
 
@@ -589,7 +629,7 @@ Zeno.prototype = {
 
             // Copy for versioning
             var stream = fs.createReadStream(path);
-            stream.pipe(fs.createWriteStream(todayDir + '/' + options.env + name + self.ext));
+            stream.pipe(fs.createWriteStream(screenshotPackDir + '/' + options.env + name + self.ext));
             stream.on('end', function(){
                 self.emit('onCopyDone', {
                     name: name
@@ -606,7 +646,7 @@ Zeno.prototype = {
 
                 // Copy for versioning
                 var stream = fs.createReadStream(path);
-                stream.pipe(fs.createWriteStream(todayDir + '/' + options.env + name + '_thumb' + self.ext));
+                stream.pipe(fs.createWriteStream(screenshotPackDir + '/' + options.env + name + '_thumb' + self.ext));
                 stream.on('end', function(){
                     self.emit('onCopyDone', {
                         name: name
@@ -658,8 +698,9 @@ Zeno.prototype = {
      * Refresh a whole environment for one device
      * @param env environment object
      * @param device device name
+     * @param packScreenshotId id of screenshot pack
      */
-    envScreenshot: function (env, device) {
+    envScreenshot: function (env, device, paramScreenshotId) {
         var server,
             cookies = [],
             self    = this,
@@ -667,13 +708,13 @@ Zeno.prototype = {
             details = {};
 
         if (device === 'mobile') {
-            details.viewport = {width: 640, height: 1100};
+            details.viewport = {width: this.vpMobile, height: 1100};
             details.ua = self.uaMobile;
         } else if (device === 'desktop') {
-            details.viewport = {width: 1600, height: 1100};
+            details.viewport = {width: this.vpDesktop, height: 1100};
             details.ua = self.uaDesktop;
         } else if (device === 'tablet') {
-            details.viewport = {width: 1024, height: 1100};
+            details.viewport = {width: this.vpTablet, height: 1100};
             details.ua = self.uaTablet;
         } else {
             return;
@@ -697,8 +738,13 @@ Zeno.prototype = {
                         cookies      : cookies,
                         device       : device,
                         userAgent    : details.ua,
-                        viewportSize : details.viewport
+                        viewportSize : details.viewport,
+                        date         : new Date(),
                     };
+
+                    if (typeof paramScreenshotId !== "undefined") {
+                        options.screenshotId = paramScreenshotId;
+                    }
 
                     if (typeof alternative !== 'undefined'){
                         server = alternative;
@@ -749,13 +795,13 @@ Zeno.prototype = {
 
         if (device === 'tablet') {
             ua = this.uaTablet;
-            width = 1024;
+            width = this.vpTablet;
         } else if (device === 'mobile') {
             ua = this.uaMobile;
-            width = 640;
+            width = this.vpMobile;
         } else if (device === 'desktop') {
             ua = this.uaDesktop;
-            width = 1600;
+            width = this.vpDesktop;
         } else {
             return;
         }
@@ -781,6 +827,7 @@ Zeno.prototype = {
             userAgent  : ua,
             cookies    : cookies,
             device     : device,
+            date       : new Date(),
             viewportSize :
                 {width: width, height: height}
         };
@@ -810,23 +857,70 @@ Zeno.prototype = {
     /*
      * Read versionning folder to update and sort the list
      */
-    updateVersionList: function () {
+    updateVersionList: function (withFullRead, file, version) {
         this.log('Fetch versions list');
         var self = this;
-        fs.readdir(path.join(this.dir, this.versioning), function(err, dirs){
-            if (err) { return self.log(err); }
+        var pathVersioning = path.join(this.dir, this.versioning);
+        var functionCompareDate = function (a, b) {
+            // read mm-dd-yyyy-hh-mm-ss(?-screenshotId)
+            var as = a.split('-');
+            var bs = b.split('-');
+            if (as.length == 3) {
+                var date1 = new Date(as[2], parseInt(as[0], 10) - 1, as[1]);
+            } else {
+                var date1 = new Date(as[2], parseInt(as[0], 10) - 1, as[1], as[3], as[4], as[5]);
+            }
+            if (bs.length == 3) {
+                var date2 = new Date(bs[2], parseInt(bs[0], 10) - 1, bs[1]);
+            } else {
+                var date2 = new Date(bs[2], parseInt(bs[0], 10) - 1, bs[1], bs[3], bs[4], bs[5]);
+            }
+            var diff = date1 - date2;
 
-            dirs.sort(function (a, b) {
-                var as = a.split('-');
-                var bs = b.split('-');
-                var diff = new Date(as[2], parseInt(as[0], 10) - 1, as[1]) - new Date(bs[2], parseInt(bs[0], 10) - 1, bs[1]);
+            return diff;
+        };
+        var makeVersionsByPage = function (file, version) {
+            if (self.versionsByPage.hasOwnProperty(file)) {
+                if (self.versionsByPage[file].indexOf(version) == -1) {
+                    self.versionsByPage[file].push(version);
+                    self.versionsByPage[file].sort(functionCompareDate);
+                } else {
 
-                return diff;
+                }
+            } else {
+                self.versionsByPage[file] = [version];
+            }
+        };
+        if (withFullRead) {
+            fs.readdir(pathVersioning, function (err, dirs) {
+                if (err) {
+                    return self.log(err);
+                }
+
+                dirs.sort(functionCompareDate);
+
+                self.versions = dirs;
+                self.io.sockets.emit('updateVersionEvent', {versions: self.versions});
+                dirs.forEach(function (version) {
+                    fs.readdir(path.join(pathVersioning, version), function (err, files) {
+                        if (files) {
+                            files.forEach(function (file) {
+                                makeVersionsByPage(file, version);
+                            });
+                            self.io.sockets.emit('updateVersionByPageEvent', {versionsByPage: self.versionsByPage});
+                        }
+                    });
+                });
             });
-
-            self.versions = dirs;
+        } else {
+            if (self.versions.indexOf(version) == -1) {
+                self.versions.push(version);
+                self.versions.sort(functionCompareDate)
+            }
+            makeVersionsByPage(file, version);
             self.io.sockets.emit('updateVersionEvent', {versions: self.versions});
-        });
+            self.io.sockets.emit('updateVersionByPageEvent', {versionsByPage: self.versionsByPage});
+        }
     },
 
     /*

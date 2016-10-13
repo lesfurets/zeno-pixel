@@ -39,7 +39,12 @@ zenoCtrl = ($scope, $location, $timeout, ZenoService, PagesFactory, ResultsFacto
   # Returns a valid path uri for a choosen environement
   $scope.resolveDiskPath = (env, name, param, offset) ->
     if offset
-      path = $scope.dir + "versioning/" + $scope.versions[$scope.versions.length - 1 + offset] + "/" + env + name + $scope.ext
+      screenShotName = env + name + $scope.ext
+      versions = $scope.versionsByPage[screenShotName]
+      if versions == "undefined"
+        return
+      version = versions[versions.length - 1 + offset]
+      path = $scope.dir + "versioning/" + version + "/" + screenShotName
     else
       end = ''
       if typeof param != "undefined"
@@ -341,16 +346,18 @@ zenoCtrl = ($scope, $location, $timeout, ZenoService, PagesFactory, ResultsFacto
 # ============================================
 envCtrl = ($scope, $routeParams, $timeout, socket) ->
   $scope.title           = $routeParams.env
+  $scope.firstPage       = $scope.list[$scope.device][0].name + $scope.ext
   $scope.device          = $routeParams.device
   $scope.thumb           = '_thumb.png'
   $scope.current         = 0
-  $scope.selectedVersion = $scope.versions[$scope.versions.length - 1]
+  versions = $scope.versionsByPage[$scope.firstPage]
+  $scope.selectedVersion = versions[versions.length - 1]
   $scope.pdfExctrating   = false
 
   angular.forEach $scope.list.envs, (env)->
     if env.alias is $scope.title && $scope.list[$scope.device]?
       $scope.value        = env.server
-      $scope.mainImageUrl = $scope.dir + $scope.value + $scope.list[$scope.device][0].name + $scope.ext
+      $scope.mainImageUrl = $scope.dir + $scope.value + $scope.firstPage
     return
 
   $scope.$watch 'current', () ->
@@ -388,7 +395,8 @@ envCtrl = ($scope, $routeParams, $timeout, socket) ->
 historyCtrl = ($scope, VersionService, $routeParams) ->
   $scope.title        = $routeParams.pageId
   $scope.dir          = $scope.dir + 'versioning/'
-  $scope.available    = $scope.versions.slice($scope.versions.length-15, $scope.versions.length).reverse()
+  versionsByCurrent   = $scope.versionsByPage[$scope.title + $scope.ext]
+  $scope.available    = versionsByCurrent.slice(versionsByCurrent.length-100, versionsByCurrent.length).reverse()
   $scope.current      = $scope.available[0]
   $scope.mainImageUrl = $scope.dir + $scope.title + $scope.ext
 
@@ -672,7 +680,8 @@ summaryCtrl = ($scope, $http) ->
   $scope.dataMobile = {dataset0: []}
 
   $http.get('/ua').success (data) ->
-    $scope.userAgents = data
+    $scope.userAgents = data.userAgents
+    $scope.viewPorts = data.viewPorts
 
   $http.get('/webperf').success (data) ->
     $scope.webperf = data
@@ -817,6 +826,10 @@ globalCtrl = ($scope, $location, PagesFactory, ResultsFactory, VersionService, s
     $scope.versions = res
     return
 
+  VersionService.getVersionsByPageAll().query (res)->
+    $scope.versionsByPage = res
+    return
+
   PagesFactory.getQueue (data) ->
     $scope.queue = data.length
     $scope.queuePages = data
@@ -886,6 +899,11 @@ globalCtrl = ($scope, $location, PagesFactory, ResultsFactory, VersionService, s
   # fired when a version update is done
   socket.on "updateVersionEvent", (update) ->
     $scope.versions = update.versions
+    return
+
+  # fired when a version update is done
+  socket.on "updateVersionByPageEvent", (update) ->
+    $scope.versionsByPage = update.versionsByPage
     return
 
   # fired when the queue is updated
