@@ -701,7 +701,7 @@ Zeno.prototype = {
         }
 
         if (!utils.contains(this.pages.refreshing[device], env.server)) {
-            this.log('Update ' + device + ' screenshots (' + env.server + ', ' + paramScreenshotId + ')');
+            this.log('Update ' + device + ' screenshots (' + env.server + ')');
             this.pages.refreshing[device].push(env.server);
 
             pages.forEach(function (page) {
