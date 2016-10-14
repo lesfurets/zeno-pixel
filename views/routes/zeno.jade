@@ -1,39 +1,86 @@
 doctype html
-div(lazy-img)
-  div(class="thead pages")
-    ul
-      li(ng-click="rowReduce()")
-        div(sticky, sticky-class="sticky-header")
-          span url
-        div(ng-repeat="url in (filtered = (list[device] | filter: filterList))", ng-class="{hideLine: url.low, success: url.success, failure: url.failure}", ng-show="hide($index)", ng-click="url.low=!url.low;rowReduce()")
-          label {{url.name}}
-      li(ng-repeat="env in list.envs")
-        div(ng-mouseenter="env.visible=true", ng-mouseleave="env.visible=false", sticky, sticky-class="sticky-header")
-          span
-            a(href='#/env/{{env.alias}}/{{device}}') {{::env.alias}}
-          i(class="fa fa-refresh refreshEnv", ng-show="!env.offset && env.visible", ng-click="refreshEnv(env, $index)")
-        div(ng-repeat="url in (filtered = (list[device] | filter: filterList))", ng-class="{hideLine: url.low, success: url.success, failure: url.failure}", ng-show="hide($index)", ng-model="$parent.name", data-drop="true", jqyoui-droppable="{onDrop:'dropCallback($parent.$index, url.name, $index)'}")
-          a(ng-href="#/history/{{env.server}}{{url.name}}", class="link dragLink")
-            img(data-offset="{{env.offset}}", data-original="{{resolveDiskPath(env.server, url.name, url.params, env.offset)}}", ng-model="$parent.name", ng-class="{draging: url.draging}", data-drag="true", data-jqyoui-options="{revert: 'invalid'}", jqyoui-draggable="{index: {{$parent.$index}}, onStart:'dragStart()', onStop:'dragStop()'}")
-          i(class="fa fa-refresh", ng-show="!env.offset", ng-click="refreshImage($parent.$index, $index)")
-          a(ng-href="{{resolveHost(env, url)}}", target="_blank")
-            i(class="fa fa-external-link", style="top:80px")
-          div(ng-class="{glasspaneRefresh : isRefreshing(url, $parent.$index)}")
-      li
-        div(sticky, sticky-class="sticky-header")
-          span result
-        div(class="ratio ratio{{$index}}", ng-repeat="url in (filtered = (list[device] | filter: filterList))", ng-class="{hideLine: url.low, success: url.success, failure: url.failure}", ng-show="hide($index)")
-          div(class="tooltip", ng-show="webperf", ng-if="url.webperf")
-            div
-              label Time
-              span {{url.webperf.time / 1000}} s
-            div
-              label Requests
-              span {{url.webperf.req}}
-            div
-              label Size
-              span {{url.webperf.size  / 1000}} ko
-          i(class="fa fa-info-circle", ng-mouseenter="webperf=true", ng-mouseleave="webperf=false")
-          span(class="diffHeader") Mismatch: {{url.percentage}} %
-          a(ng-if="::hasImage(url, $index)", ng-href="{{getComputedUrl(url)}}", class="storage")
-            img(ng-src="{{getStoredImage(url)}}")
+div.main.summary.collapsed(ng-class="{collapse: filter}")
+  div(class="block refine")
+    div(class="filter")
+      span Filters
+      p
+        input(type='checkbox', ng-model="hideSuccess", id="hs")
+        label(for="hs", class="checkbox")
+        span Hide success ({{list[device].length - results[device].results.length}})
+      p
+        input(type='checkbox', ng-model="hideFailures", id="hf")
+        label(for="hf", class="checkbox")
+        span Hide failures ({{results[device].results.length}})
+    div(class="threshold")
+      p Mismatch : {{sliderOffset}} %
+      div(class="flex", style="margin-top:20px")
+        div 0
+        div(slider, class="slider", style="width:100px")
+          div(class="slider-back")
+          div(class="slider-progress")
+          div(class="slider-button")
+        div 100
+
+  div(class="block compare")
+    span Select 2 environments to compare
+    div(class="envList")
+      p(ng-repeat="env in list.envs")
+        input(type='checkbox', ng-model="compareform.env[env.alias]", id="{{::env.alias}}")
+        label(for="{{::env.alias}}", class="checkbox")
+        span {{::env.alias}}
+    div(ng-show="compareform.valid==2", class="launch")
+      div Remaining: {{listToCompare.length}} / {{::list[device].length}}
+      button(ng-click="compareAll()" ng-class="{stopCompare: compareform.comparing}") {{compareform.text}}
+  div(class="block pieblock")
+    span State of Zeno
+    p
+      a(href="/#/summary#screenshot-queue").label Screenshoting :
+      a(href="/#/summary#screenshot-queue").value  {{queue}}
+    p Comparing : {{listToCompare.length}}
+  div.block
+    span Show/Hide environments
+      p.clickable(ng-repeat="env in list.envs", ng-click="env.hide=!env.hide")
+        i.fa.fa-eye(ng-show="env.hide")
+        i.fa.fa-eye-slash(ng-hide="env.hide")
+        span {{env.alias}}
+
+div.main
+  div(lazy-img)
+    div(class="thead pages")
+      ul
+        li(ng-click="rowReduce()")
+          div.list-header(sticky, offset="40")
+            span NAME
+          div(ng-repeat="url in (filtered = (list[device] | filter: filterList))", ng-class="{hideLine: url.low, success: url.success, failure: url.failure}", ng-show="hide($index)", ng-click="url.low=!url.low;rowReduce()")
+            label {{url.name}}
+        li(ng-repeat="env in list.envs" ng-hide="env.hide")
+          div.list-header(ng-mouseenter="env.visible=true", ng-mouseleave="env.visible=false", sticky, offset="40")
+            span
+              a(href='#/env/{{env.alias}}/{{device}}') {{::env.alias}}
+            i(class="fa fa-refresh refreshEnv", ng-show="!env.offset", ng-click="refreshEnv(env, $index)")
+            i(class="fa fa-eye-slash refreshEnv", ng-show="!env.offset", ng-click="env.hide=!env.hide")
+          div(ng-repeat="url in (filtered = (list[device] | filter: filterList))", ng-class="{hideLine: url.low, success: url.success, failure: url.failure}", ng-show="hide($index)", ng-model="$parent.name", data-drop="true", jqyoui-droppable="{onDrop:'dropCallback($parent.$index, url.name, $index)'}")
+            a(ng-href="#/history/{{env.server}}{{url.name}}", class="link dragLink")
+              img(data-offset="{{env.offset}}", data-original="{{resolveDiskPath(env.server, url.name, url.params, env.offset)}}", ng-model="$parent.name", ng-class="{draging: url.draging}", data-drag="true", data-jqyoui-options="{revert: 'invalid'}", jqyoui-draggable="{index: {{$parent.$index}}, onStart:'dragStart()', onStop:'dragStop()'}")
+            i(class="fa fa-refresh", ng-show="!env.offset", ng-click="refreshImage($parent.$index, $index)")
+            a(ng-href="{{resolveHost(env, url)}}", target="_blank")
+              i(class="fa fa-external-link", style="top:11px; right:40px")
+            div(ng-class="{glasspaneRefresh : isRefreshing(url, $parent.$index)}")
+        li
+          div.list-header(sticky, offset="40")
+            span result
+          div(class="ratio ratio{{$index}}", ng-repeat="url in (filtered = (list[device] | filter: filterList))", ng-class="{hideLine: url.low, success: url.success, failure: url.failure}", ng-show="hide($index)")
+            div(class="tooltip", ng-show="webperf", ng-if="url.webperf")
+              div
+                label Time
+                span {{url.webperf.time / 1000}} s
+              div
+                label Requests
+                span {{url.webperf.req}}
+              div
+                label Size
+                span {{url.webperf.size  / 1000}} ko
+            i(class="fa fa-info-circle", ng-mouseenter="webperf=true", ng-mouseleave="webperf=false")
+            span(class="diffHeader") Mismatch: {{url.percentage}} %
+            a(ng-if="::hasImage(url, $index)", ng-href="{{getComputedUrl(url)}}", class="storage")
+              img(ng-src="{{getStoredImage(url)}}")

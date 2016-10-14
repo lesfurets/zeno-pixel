@@ -1,74 +1,75 @@
 doctype html
-h2 Summary
+div.main
+    h2 Summary
 
-div(class="central summary")
-    div(class="block")
-        ul
-            li(class="flex")
-                label Desktop
-                span {{results.desktop.results.length}}
-                div(class="progress-bar")
-                    div(class="progress", ng-style="{'width': ((results.desktop.results.length*100/list.desktop.length) + 1) + '%'}")
-            li(class="flex")
-                label Tablet
-                span {{results.tablet.results.length}}
-                div(class="progress-bar")
-                    div(class="progress", ng-style="{'width': ((results.tablet.results.length*100/list.desktop.length) + 1) + '%'}")
-            li(class="flex")
-                label Mobile
-                span {{results.mobile.results.length}}
-                div(class="progress-bar")
-                    div(class="progress", ng-style="{'width': ((results.mobile.results.length*100/list.desktop.length) + 1) + '%'}")
-    div(class="block")
-        ul
-            li
-                label Success
-                span(style="color:#109618") {{list.desktop.length + list.mobile.length + list.tablet.length - (results.desktop.results.length + results.mobile.results.length + results.tablet.results.length)}}
-            li
-                label Warning
-                span(style="color:#FF9900") 0
-            li
-                label Error
-                span(style="color:#DC3912") {{results.desktop.results.length + results.mobile.results.length + results.tablet.results.length}}
-h2 UserAgent
-div.ua-container
-    div.ua-label Desktop
-    div.ua-value {{ userAgents.uaDesktop }}
-div.ua-container
-    div.ua-label Tablet
-    div.ua-value {{ userAgents.uaTablet }}
-div.ua-container
-    div.ua-label Mobile
-    div.ua-value {{ userAgents.uaMobile }}
+    div(class="central summary")
+        div(class="block")
+            ul
+                li(class="flex")
+                    label Desktop
+                    span {{results.desktop.results.length}}
+                    div(class="progress-bar")
+                        div(class="progress", ng-style="{'width': ((results.desktop.results.length*100/list.desktop.length) + 1) + '%'}")
+                li(class="flex")
+                    label Tablet
+                    span {{results.tablet.results.length}}
+                    div(class="progress-bar")
+                        div(class="progress", ng-style="{'width': ((results.tablet.results.length*100/list.desktop.length) + 1) + '%'}")
+                li(class="flex")
+                    label Mobile
+                    span {{results.mobile.results.length}}
+                    div(class="progress-bar")
+                        div(class="progress", ng-style="{'width': ((results.mobile.results.length*100/list.desktop.length) + 1) + '%'}")
+        div(class="block")
+            ul
+                li
+                    label Success
+                    span(style="color:#109618") {{list.desktop.length + list.mobile.length + list.tablet.length - (results.desktop.results.length + results.mobile.results.length + results.tablet.results.length)}}
+                li
+                    label Warning
+                    span(style="color:#FF9900") 0
+                li
+                    label Error
+                    span(style="color:#DC3912") {{results.desktop.results.length + results.mobile.results.length + results.tablet.results.length}}
+    h2 ViewPorts Width / UserAgent
+    div.ua-container
+        div.ua-label Desktop
+        div.ua-value {{ viewPorts.vpDesktop }} / {{ userAgents.uaDesktop }}
+    div.ua-container
+        div.ua-label Tablet
+        div.ua-value {{ viewPorts.vpTablet}} / {{ userAgents.uaTablet }}
+    div.ua-container
+        div.ua-label Mobile
+        div.ua-value {{ viewPorts.vpMobile }} / {{ userAgents.uaMobile }}
 
 
-h2 WebPerf
-div#webperf-container
-    div
-        div.webperf-options
-            h3 Desktop
-            div
-                label Page
-                select(ng-options='page for page in pagesDesktop', ng-model="selectedDesktopPage" ng-change="updateDesktop()")
-        div.webperf-chart(ng-if="pagesDesktop.length !== 0")
-            linechart(data="dataDesktop" options="options")
-    div
-        div.webperf-options
-            h3 Tablet
-            div
-                label Page
-                select(ng-options='page for page in pagesTablet', ng-model="selectedTabletPage" ng-change="updateTablet()")
-        div.webperf-chart(ng-if="pagesTablet.length !== 0")
-            linechart(data="dataTablet" options="options")
-    div
-        div.webperf-options
-            h3 Mobile
-            div
-                label Page
-                select(ng-options='page for page in pagesMobile', ng-model="selectedMobilePage" ng-change="updateMobile()")
-        div.webperf-chart(ng-if="pagesMobile.length !== 0")
-            linechart(data="dataMobile" options="options")
+    h2 WebPerf
+    div#webperf-container
+        div
+            div.webperf-options
+                h3 Desktop
+                div
+                    label Page
+                    select(ng-options='page for page in pagesDesktop', ng-model="selectedDesktopPage" ng-change="updateDesktop()")
+            div.webperf-chart(ng-if="pagesDesktop.length !== 0")
+                linechart(data="dataDesktop" options="options")
+        div
+            div.webperf-options
+                h3 Tablet
+                div
+                    label Page
+                    select(ng-options='page for page in pagesTablet', ng-model="selectedTabletPage" ng-change="updateTablet()")
+            div.webperf-chart(ng-if="pagesTablet.length !== 0")
+                linechart(data="dataTablet" options="options")
+        div
+            div.webperf-options
+                h3 Mobile
+                div
+                    label Page
+                    select(ng-options='page for page in pagesMobile', ng-model="selectedMobilePage" ng-change="updateMobile()")
+            div.webperf-chart(ng-if="pagesMobile.length !== 0")
+                linechart(data="dataMobile" options="options")
 
-h2 Screenshot queue {{queue}}
-div#screenshot-queue
-    div(ng-repeat='page in queuePages') {{page.options.env}} {{page.name}}
+    h2 Screenshot queue {{queue}}
+    div#screenshot-queue
+        div(ng-repeat='page in queuePages') {{page.options.env}} {{page.name}}

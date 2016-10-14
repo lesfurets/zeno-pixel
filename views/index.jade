@@ -12,94 +12,35 @@ html(ng-app="zeno", ng-controller="GlobalController as global", lang="en")
 
         include nav
 
-        div(class="summary")
-            div(class="block refine")
-                div(class="filter")
-                    span Filters
-                    p
-                        input(type='checkbox', ng-model="hideSuccess", id="hs")
-                        label(for="hs", class="checkbox")
-                        span Hide success ({{list[device].length - results[device].results.length}})
-                    p
-                        input(type='checkbox', ng-model="hideFailures", id="hf")
-                        label(for="hf", class="checkbox")
-                        span Hide failures ({{results[device].results.length}})
-                div(class="threshold")
-                    span Mismatch : {{sliderOffset}} %
-                    div(class="flex", style="margin-top:20px")
-                        div 0
-                        div(slider, class="slider")
-                            div(class="slider-back")
-                            div(class="slider-progress")
-                            div(class="slider-button")
-                        div 100
-
-            div(class="block compare")
-                span Select 2 environments
-                form
-                    div(class="envList")
-                        p(ng-repeat="env in list.envs", style="display:inline")
-                          input(type='checkbox', ng-model="compareform.env[env.alias]", id="{{::env.alias}}")
-                          label(for="{{::env.alias}}", class="checkbox")
-                          span {{::env.alias}}
-                    div(ng-show="compareform.valid==2", class="launch")
-                        div Remaining: {{listToCompare.length}} / {{::list[device].length}}
-                        button(ng-click="compareAll()" ng-class="{stopCompare: compareform.comparing}") {{compareform.text}}
-            div(class="block pieblock")
-                ul
-                    li
-                        label Desktop
-                        span(style="color:#DC3912") {{results.desktop.results.length}}
-                        span /
-                        span(style="color:#109618") {{::list.desktop.length}}
-                    li
-                        label Tablet
-                        span(style="color:#DC3912") {{results.tablet.results.length}}
-                        span /
-                        span(style="color:#109618") {{::list.tablet.length}}
-                    li
-                        label Mobile
-                        span(style="color:#DC3912") {{results.mobile.results.length}}
-                        span /
-                        span(style="color:#109618") {{::list.mobile.length}}
-                ul
-                    li
-                        label Engine
-                        span {{results.engine}}
-                    li
-                        a(href="/#/summary#screenshot-queue").label Screenshoting
-                        a(href="/#/summary#screenshot-queue").value {{queue}}
-                    li
-                        label Comparing
-                        span {{listToCompare.length}}
         div(class="container")
-            div(class="tabs")
-                div(class="tab", ng-class="{active: isTabActive('desktop')}")
-                    a(href='#/compare/desktop')
-                        span Desktop
-                div(class="tab", ng-class="{active: isTabActive('tablet')}")
-                    a(href='#/compare/tablet')
-                        span Tablet
-                div(class="tab", ng-class="{active: isTabActive('mobile')}")
-                    a(href='#/compare/mobile')
-                        span Mobile
             div(class="subcontainer")
-                nav
+                nav.left-nav(ng-show="location.path().indexOf('compare') !== -1 || location.path().indexOf('env') !== -1 || location.path().indexOf('history') !== -1 || location.path().indexOf('result') !== -1")
                     ul
-                        li(ng-class="{active: isIconActive()}")
-                            a(href="#/compare")
-                                i(class="fa fa-picture-o")
-                        li(ng-class="{active: location.path()=='/summary'}")
-                            a(href="#/summary")
-                                i(class="fa fa-line-chart")
-                        li(ng-class="{active: location.path()=='/settings'}")
-                            a(href="#/settings")
-                                i(class="fa fa-cog")
-                        li(ng-class="{active: location.path()=='/log'}")
-                            a(href="#/log")
-                                i(class="fa fa-info")
-                div(class="main")
-                    div(ng-view)
+                        li(ng-class="{activate: filter}", ng-show="location.path().indexOf('compare') !== -1")
+                            a(ng-click="filter=!filter")
+                                i.fa.fa-cog
+                        li(ng-class="{active: isTabActive('desktop')}")
+                            a(href="#/compare/desktop")
+                                i(class="fa fa-desktop")
+                                div
+                                    span(style="color:#DC3912") {{results.desktop.results.length}}
+                                    span /
+                                    span(style="color:#109618") {{::list.desktop.length}}
+                        li(ng-class="{active: isTabActive('tablet')}")
+                            a(href="#/compare/tablet")
+                                i(class="fa fa-tablet")
+                                div
+                                    span(style="color:#DC3912") {{results.tablet.results.length}}
+                                    span /
+                                    span(style="color:#109618") {{::list.tablet.length}}
+                        li(ng-class="{active: isTabActive('mobile')}")
+                            a(href="#/compare/mobile")
+                                i(class="fa fa-mobile")
+                                div
+                                    span(style="color:#DC3912") {{results.mobile.results.length}}
+                                    span /
+                                    span(style="color:#109618") {{::list.mobile.length}}
+                div(ng-view)
 
     //- Third party
     script(src="js/bower_components/jquery/jquery.min.js")
