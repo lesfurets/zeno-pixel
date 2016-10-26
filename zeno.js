@@ -47,7 +47,6 @@ var Zeno = function (app, server, io, params) {
     this.modules       = [];
     this.listtoshot    = [];
     this.versions      = [];
-    this.versions      = [];
     this.results       = {};
     this.pages         = {};
 
@@ -171,6 +170,17 @@ Zeno.prototype = {
                 }
             });
             res.send('Update ' + req.params.env + ' in progress\n');
+        });
+
+        this.app.get('/update/:env/:screenshotId', function(req, res) {
+            self.instance.forEach(function (env) {
+                if(env.alias === req.params.env) {
+                    self.envScreenshot(env, 'desktop', req.params.screenshotId);
+                    self.envScreenshot(env, 'mobile', req.params.screenshotId);
+                    self.envScreenshot(env, 'tablet', req.params.screenshotId);
+                }
+            });
+            res.send('Update ' + req.params.env + ' with ' + req.params.screenshotId+ 'in progress\n');
         });
 
         this.app.get('/routes/:name', function(req, res) {
@@ -537,11 +547,21 @@ Zeno.prototype = {
             self = this,
             path = p.join(this.dir, options.env +  name + this.ext);
 
-        // directory name pattern : mm-dd-yyyy
-        var todayDir = p.join(this.dir, this.versioning, (d.getMonth() + 1) + '-' + d.getDate() + '-' + d.getFullYear());
+        if (options.hasOwnProperty('date')) {
+            d = options.date;
+        }
 
-        if (!fs.existsSync(todayDir)) {
-            fs.mkdir(todayDir, function (err){
+        // directory name pattern : mm-dd-yyyy-hh-mm-ss(?-screenshotId)
+        var screenshotPackDir = p.join(this.dir, this.versioning,
+            (d.getMonth() + 1) + '-' + d.getDate() + '-' + d.getFullYear() + '-'
+            + d.getHours() + '-' + d.getMinutes() + '-' + d.getSeconds());
+
+        if (options.hasOwnProperty('screenshotId')) {
+            screenshotPackDir += '-' + options.screenshotId;
+        }
+
+        if (!fs.existsSync(screenshotPackDir)) {
+            fs.mkdir(screenshotPackDir, function (err){
                 self.updateVersionList();
             });
         }
@@ -589,7 +609,7 @@ Zeno.prototype = {
 
             // Copy for versioning
             var stream = fs.createReadStream(path);
-            stream.pipe(fs.createWriteStream(todayDir + '/' + options.env + name + self.ext));
+            stream.pipe(fs.createWriteStream(screenshotPackDir + '/' + options.env + name + self.ext));
             stream.on('end', function(){
                 self.emit('onCopyDone', {
                     name: name
@@ -606,7 +626,7 @@ Zeno.prototype = {
 
                 // Copy for versioning
                 var stream = fs.createReadStream(path);
-                stream.pipe(fs.createWriteStream(todayDir + '/' + options.env + name + '_thumb' + self.ext));
+                stream.pipe(fs.createWriteStream(screenshotPackDir + '/' + options.env + name + '_thumb' + self.ext));
                 stream.on('end', function(){
                     self.emit('onCopyDone', {
                         name: name
@@ -658,8 +678,9 @@ Zeno.prototype = {
      * Refresh a whole environment for one device
      * @param env environment object
      * @param device device name
+     * @param packScreenshotId id of screenshot pack
      */
-    envScreenshot: function (env, device) {
+    envScreenshot: function (env, device, paramScreenshotId) {
         var server,
             cookies = [],
             self    = this,
@@ -670,7 +691,7 @@ Zeno.prototype = {
             details.viewport = {width: 640, height: 1100};
             details.ua = self.uaMobile;
         } else if (device === 'desktop') {
-            details.viewport = {width: 1600, height: 1100};
+            details.viewport = {width: 1280, height: 1100};
             details.ua = self.uaDesktop;
         } else if (device === 'tablet') {
             details.viewport = {width: 1024, height: 1100};
@@ -680,7 +701,7 @@ Zeno.prototype = {
         }
 
         if (!utils.contains(this.pages.refreshing[device], env.server)) {
-            this.log('Update ' + device + ' screenshots (' + env.server + ')');
+            this.log('Update ' + device + ' screenshots (' + env.server + ', ' + paramScreenshotId + ')');
             this.pages.refreshing[device].push(env.server);
 
             pages.forEach(function (page) {
@@ -697,8 +718,13 @@ Zeno.prototype = {
                         cookies      : cookies,
                         device       : device,
                         userAgent    : details.ua,
-                        viewportSize : details.viewport
+                        viewportSize : details.viewport,
+                        date         : new Date(),
                     };
+
+                    if (typeof paramScreenshotId !== "undefined") {
+                        options.screenshotId = paramScreenshotId;
+                    }
 
                     if (typeof alternative !== 'undefined'){
                         server = alternative;
@@ -755,7 +781,7 @@ Zeno.prototype = {
             width = 640;
         } else if (device === 'desktop') {
             ua = this.uaDesktop;
-            width = 1600;
+            width = 1280;
         } else {
             return;
         }
@@ -781,6 +807,7 @@ Zeno.prototype = {
             userAgent  : ua,
             cookies    : cookies,
             device     : device,
+            date       : new Date(),
             viewportSize :
                 {width: width, height: height}
         };
@@ -817,9 +844,20 @@ Zeno.prototype = {
             if (err) { return self.log(err); }
 
             dirs.sort(function (a, b) {
+                // read mm-dd-yyyy-hh-mm-ss(?-screenshotId)
                 var as = a.split('-');
                 var bs = b.split('-');
-                var diff = new Date(as[2], parseInt(as[0], 10) - 1, as[1]) - new Date(bs[2], parseInt(bs[0], 10) - 1, bs[1]);
+                if (as.length == 3) {
+                    var date1 = new Date(as[2], parseInt(as[0], 10) - 1, as[1]);
+                } else {
+                    var date1 = new Date(as[2], parseInt(as[0], 10) - 1, as[1], as[3], as[4], as[5]);
+                }
+                if (bs.length == 3) {
+                    var date2 = new Date(bs[2], parseInt(bs[0], 10) - 1, bs[1]);
+                } else {
+                    var date2 = new Date(bs[2], parseInt(bs[0], 10) - 1, bs[1], bs[3], bs[4], bs[5]);
+                }
+                var diff = date1 - date2;
 
                 return diff;
             });
