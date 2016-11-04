@@ -111,6 +111,17 @@ angular.module('zeno.services', [])
     @getVersions = () ->
       return $resource('/versions')
 
+    @getVersionsByPageAll = () ->
+      return $resource('/versions/page/', null, {
+        query: {
+          method: 'GET',
+          isArray: false
+        }
+      })
+
+    @getVersionsByPage = (pageScreenshot) ->
+      return $resource('/versions/page/' + pageScreenshot)
+
     @compare = (file1, file2, block) ->
       @block   = block
       @file1   = file1

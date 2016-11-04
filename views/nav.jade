@@ -1,9 +1,48 @@
 header
-  div(class="logo")
-      a(href="#/compare")
-          div(class="s") ZENO
-  div(class="search", ng-class="{'search-open': showSearch}", focus-input)
-      div(ng-click="showSearch=!showSearch")
-          i(class="fa fa-search")
-      input(type="text", ng-model="query")
-      i(class="fa fa-times", ng-click="query=''")
+    nav#primary-nav-wrap
+        ul
+            li.logo
+                a(href="#/compare")
+                    div(class="s") ZENO
+            li(ng-class="{active: isIconActive()}")
+                a(href="#/compare")
+                    i.fa.fa-picture-o
+                    span.hidden-xs Comparison
+                ul
+                    li(ng-class="{active: isTabActive('desktop')}")
+                        a(href="#/compare/desktop")
+                            i(class="fa fa-desktop")
+                            span  Desktop
+                    li(ng-class="{active: isTabActive('tablet')}")
+                        a(href="#/compare/tablet")
+                            i(class="fa fa-tablet")
+                            span  Tablet
+                    li(ng-class="{active: isTabActive('mobile')}")
+                        a(href="#/compare/mobile")
+                            i(class="fa fa-mobile")
+                            span  Mobile
+            li(ng-class="{active: location.path()=='/summary'}")
+                a(href="#/summary")
+                    i.fa.fa-line-chart
+                    span.hidden-xs Summary
+            li(ng-class="{active: location.path()=='/settings'}")
+                a(href="#/settings")
+                    i.fa.fa-cog
+                    span.hidden-xs Settings
+            li(ng-class="{active: location.path()=='/log'}")
+                a(href="#/log")
+                    i.fa.fa-info
+                    span.hidden-xs Log
+            li(ng-show="queuePages.length > 0")
+                a(href="/#/summary#screenshot-queue")
+                    i.fa.fa-list
+                    span Queue
+                ul
+                    li(ng-repeat="page in queuePages")
+                     a {{page.options.env}}{{page.name}}
+            li(class="search", ng-class="{'search-open': showSearch}", focus-input)
+                a(ng-click="showSearch=!showSearch")
+                    i(class="fa fa-search")
+                    span(ng-hide="showSearch") Search
+                input(type="text", ng-model="query")
+                i(class="fa fa-times", ng-click="query=''")
