@@ -40,6 +40,8 @@ header
                 ul
                     li(ng-repeat="page in queuePages")
                      a {{page.options.env}}{{page.name}}
+            li
+                a(ng-show="location.path().indexOf('compare') !== -1") Press E to toggle expand
             li(class="search", ng-class="{'search-open': showSearch}", focus-input)
                 a(ng-click="showSearch=!showSearch")
                     i(class="fa fa-search")

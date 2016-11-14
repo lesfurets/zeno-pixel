@@ -37,13 +37,14 @@ exports.module = function (zeno) {
                         if(err) {
                             return zeno.log(err);
                         }
-                    }); 
+                    });
                 }
             });
         }
     });
 
     zeno.on('onScreenshotDone', function (data) {
+      try {
         zeno.pages[data.options.device].forEach(function(page) {
             if (data.name && page.name === data.name) {
                 var d          = new Date(),
@@ -75,6 +76,9 @@ exports.module = function (zeno) {
                 });
             }
         });
+      } catch (e) {
+        zeno.console.log(e);
+      }
     });
 
     zeno.app.get('/webperf', function(req, res) {

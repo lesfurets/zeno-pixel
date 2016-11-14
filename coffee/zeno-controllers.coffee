@@ -309,6 +309,13 @@ zenoCtrl = ($scope, $location, $timeout, ZenoService, PagesFactory, ResultsFacto
       $(window).trigger('rowReduce')
     return isfiltered[0] && isfiltered[1]
 
+
+  $scope.toggleExpand = (url) ->
+    if !url.bigDisplay
+      url.bigDisplay=!url.bigDisplay
+      $scope.rowReduce()
+
+
   # socketIO listeners
   # ------------------
 
@@ -874,12 +881,12 @@ globalCtrl = ($scope, $location, PagesFactory, ResultsFactory, VersionService, s
   $scope.keyPress = (ev) ->
     if ev.which is 116 #T
       angular.element('#back-to-top').click()
-    else if ev.which is 114 # R
+    else if ev.which is 101 #E
       angular.forEach $scope.list[$scope.device], (page)->
-        if page.low
-          page.low = !page.low
+        if page.bigDisplay
+          page.bigDisplay = !page.bigDisplay
         else
-          page.low = true
+          page.bigDisplay = true
         return
     return
 

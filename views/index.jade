@@ -16,7 +16,7 @@ html(ng-app="zeno", ng-controller="GlobalController as global", lang="en")
             div(class="subcontainer")
                 nav.left-nav(ng-show="location.path().indexOf('compare') !== -1 || location.path().indexOf('env') !== -1 || location.path().indexOf('history') !== -1 || location.path().indexOf('result') !== -1")
                     ul
-                        li(ng-class="{activate: filter}", ng-show="location.path().indexOf('compare') !== -1")
+                        li(ng-class="{activate: !filter}", ng-show="location.path().indexOf('compare') !== -1")
                             a(ng-click="filter=!filter")
                                 i.fa.fa-cog
                         li(ng-class="{active: isTabActive('desktop')}")
