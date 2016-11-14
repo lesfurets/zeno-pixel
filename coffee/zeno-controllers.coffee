@@ -353,8 +353,8 @@ zenoCtrl = ($scope, $location, $timeout, ZenoService, PagesFactory, ResultsFacto
 # ============================================
 envCtrl = ($scope, $routeParams, $timeout, socket) ->
   $scope.title           = $routeParams.env
-  $scope.firstPage       = $scope.list[$scope.device][0].name + $scope.ext
   $scope.device          = $routeParams.device
+  $scope.firstPage       = $scope.list[$scope.device][0].name + $scope.ext
   $scope.thumb           = '_thumb.png'
   $scope.current         = 0
   versions = $scope.versionsByPage[$scope.firstPage]

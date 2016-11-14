@@ -14,16 +14,21 @@ describe('Version Controller', function() {
         ]
     };
     var versions = ["7-11-2014", "7-24-2014"];
+    var versionsByPage = {"homepage.png" : versions};
 
     beforeEach(module('zeno'));
 
     beforeEach(inject(function(_$httpBackend_, $rootScope, $controller, $timeout) {
         scope      = $rootScope.$new();
         scope.list = list;
+
+        scope.ext = '.png';
         scope.versions = versions;
+        scope.versionsByPage = versionsByPage;
 
         $httpBackend = _$httpBackend_;
-        $httpBackend.when('GET', '/versions').respond(versions);
+        $httpBackend.when('GET', '/versions/page').respond(versionsByPage);
+        $httpBackend.when('GET', '/pages').respond(list);
 
         timeout = $timeout;
 

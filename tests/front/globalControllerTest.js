@@ -44,11 +44,13 @@ describe('Global Controller', function() {
         }
     };
     var versions = ["7-11-2014", "7-24-2014"];
+    var versionsByPage = {"homepage.png": versions};
 
     beforeEach(module('zeno'));
     beforeEach(inject(function($injector) {
         $httpBackend = $injector.get('$httpBackend');
         $httpBackend.when('GET', '/pages').respond(list);
+        $httpBackend.when('GET', '/versions/page').respond(versionsByPage);
         $httpBackend.when('GET', '/queue').respond([]);
         $httpBackend.when('GET', '/results').respond(results);
         $httpBackend.when('GET', '/versions').respond(versions);
@@ -63,6 +65,7 @@ describe('Global Controller', function() {
     }));
 
     it('should fetch a list of pages from json file', function(){
+        $httpBackend.expectGET('/versions/page');
         $httpBackend.expectGET('/queue');
         $httpBackend.expectGET('/pages');
         createController();

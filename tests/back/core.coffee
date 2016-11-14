@@ -69,6 +69,8 @@ describe 'Core tests', ->
         zeno.modules.should.be.ok
         zeno.modules.length.should.be.above(0)
         zeno.modules.forEach (dir) ->
+            if (dir[0] == '.')
+                return
             module = require(base + 'modules/' + dir + '/' + dir)
             (typeof module).should.be.equal('object')
             return

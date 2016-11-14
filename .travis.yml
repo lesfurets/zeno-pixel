@@ -16,14 +16,9 @@ before_script:
   - npm install -g grunt-cli
   - npm install -g mocha
   - npm install -g coffee-script
-  - npm install -g protractor
   - grunt
-  - ./node_modules/protractor/bin/webdriver-manager update
   - cat pages_template.json >> pages.json
-  - node zenoServer.js &
-  - sleep 2
 
 script:
   - npm test
   - npm run back
-  - npm run protractor
