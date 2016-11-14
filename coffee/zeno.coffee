@@ -85,3 +85,8 @@ $(document).ready ->
   , '#back-to-top'
 
   return
+
+if 'serviceWorker' of navigator
+  navigator.serviceWorker
+  .register('./sw.js')
+  .then(console.log('Service Worker Registered'));
