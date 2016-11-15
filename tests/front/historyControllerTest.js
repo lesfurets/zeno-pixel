@@ -16,7 +16,9 @@ describe('History Controller', function() {
 
     beforeEach(inject(function($rootScope, $controller) {
         scope = $rootScope.$new();
+        scope.ext = '.png';
         scope.versions = versions;
+        scope.versionsByPage = {"homepage.png" : versions};
         scope.current  = scope.versions[scope.versions.length - 1];
 
         ctrl  = $controller('HistoryController', {

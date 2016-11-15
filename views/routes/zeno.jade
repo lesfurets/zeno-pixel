@@ -51,7 +51,7 @@ div.main
         li(ng-click="rowReduce()")
           div.list-header(sticky, offset="40")
             span NAME
-          div(ng-repeat="url in (filtered = (list[device] | filter: filterList))", ng-class="{hideLine: url.low, success: url.success, failure: url.failure}", ng-show="hide($index)", ng-click="url.low=!url.low;rowReduce()")
+          div(ng-repeat="url in (filtered = (list[device] | filter: filterList))", ng-class="{hideLine: !url.bigDisplay, success: url.success, failure: url.failure}", ng-show="hide($index)", ng-click="url.bigDisplay=!url.bigDisplay;rowReduce()")
             label {{url.name}}
         li(ng-repeat="env in list.envs" ng-hide="env.hide")
           div.list-header(ng-mouseenter="env.visible=true", ng-mouseleave="env.visible=false", sticky, offset="40")
@@ -59,7 +59,7 @@ div.main
               a(href='#/env/{{env.alias}}/{{device}}') {{::env.alias}}
             i(class="fa fa-refresh refreshEnv", ng-show="!env.offset", ng-click="refreshEnv(env, $index)")
             i(class="fa fa-eye-slash refreshEnv", ng-show="!env.offset", ng-click="env.hide=!env.hide")
-          div(ng-repeat="url in (filtered = (list[device] | filter: filterList))", ng-class="{hideLine: url.low, success: url.success, failure: url.failure}", ng-show="hide($index)", ng-model="$parent.name", data-drop="true", jqyoui-droppable="{onDrop:'dropCallback($parent.$index, url.name, $index)'}")
+          div(ng-repeat="url in (filtered = (list[device] | filter: filterList))", ng-class="{hideLine: !url.bigDisplay, success: url.success, failure: url.failure}", ng-show="hide($index)", ng-model="$parent.name", data-drop="true", jqyoui-droppable="{onDrop:'dropCallback($parent.$index, url.name, $index)'}", ng-click="toggleExpand(url)")
             a(ng-href="#/history/{{env.server}}{{url.name}}", class="link dragLink")
               img(data-offset="{{env.offset}}", data-original="{{resolveDiskPath(env.server, url.name, url.params, env.offset)}}", ng-model="$parent.name", ng-class="{draging: url.draging}", data-drag="true", data-jqyoui-options="{revert: 'invalid'}", jqyoui-draggable="{index: {{$parent.$index}}, onStart:'dragStart()', onStop:'dragStop()'}")
             i(class="fa fa-refresh", ng-show="!env.offset", ng-click="refreshImage($parent.$index, $index)")
@@ -69,7 +69,7 @@ div.main
         li
           div.list-header(sticky, offset="40")
             span result
-          div(class="ratio ratio{{$index}}", ng-repeat="url in (filtered = (list[device] | filter: filterList))", ng-class="{hideLine: url.low, success: url.success, failure: url.failure}", ng-show="hide($index)")
+          div(class="ratio ratio{{$index}}", ng-repeat="url in (filtered = (list[device] | filter: filterList))", ng-class="{hideLine: !url.bigDisplay, success: url.success, failure: url.failure}", ng-show="hide($index)", ng-click="toggleExpand(url)")
             div(class="tooltip", ng-show="webperf", ng-if="url.webperf")
               div
                 label Time

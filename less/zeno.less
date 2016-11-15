@@ -468,15 +468,15 @@ header {
         }
 
         &.collapsed {
-            margin: 0;
-            padding: 0;
-            max-height: 0;
+            margin: 8px 8px -8px 0;
+            padding: 10px;
+            max-height: 500px;
             transition: max-height 0.7s ease, padding 0.7s ease, margin 0.7s ease;
             overflow: hidden;
             &.collapse {
-                margin: 8px 8px -8px 0;
-                padding: 10px;
-                max-height: 500px;
+                margin: 0;
+                padding: 0;
+                max-height: 0;
             }
         }
     }
@@ -948,6 +948,7 @@ input[type="checkbox"]:checked + label.checkbox:after {
 
             div:not(:first-child) {
                 height: @imHeight;
+                overflow: hidden;
             }
 
             span {
