@@ -44,41 +44,39 @@ exports.module = function (zeno) {
     });
 
     zeno.on('onScreenshotDone', function (data) {
-      try {
-        zeno.pages[data.options.device].forEach(function(page) {
-            if (data.name && page.name === data.name) {
-                var d          = new Date(),
-                    dateFormat = (d.getMonth()+1)+'-'+d.getDate()+'-'+d.getFullYear();
+        if (zeno.pages !== undefined && data !== undefined && data.hasOwnProperty('options') && zeno.pages.hasOwnProperty(data.options.devices)) {
+            zeno.pages[data.options.device].forEach(function (page) {
+                if (data.name && page.name === data.name) {
+                    var d = new Date(),
+                        dateFormat = (d.getMonth() + 1) + '-' + d.getDate() + '-' + d.getFullYear();
 
-                page.webperf = data.metrics;
+                    page.webperf = data.metrics;
 
-                // Push webperf to all connected clients
-                zeno.io.sockets.emit('updateOneWebPerf', {
-                    name   : page.name,
-                    device : data.options.device,
-                    wp     : data.metrics
-                });
+                    // Push webperf to all connected clients
+                    zeno.io.sockets.emit('updateOneWebPerf', {
+                        name: page.name,
+                        device: data.options.device,
+                        wp: data.metrics
+                    });
 
-                if (!webperf[data.options.device].hasOwnProperty(page.name)) {
-                    webperf[data.options.device][page.name] = {};
-                }
-                if(!webperf[data.options.device][page.name].hasOwnProperty(dateFormat)) {
-                    webperf[data.options.device][page.name][dateFormat] = {};
-                }
-
-                webperf[data.options.device][page.name][dateFormat] = data.metrics;
-
-                var webPerfString = JSON.stringify(webperf);
-                fs.writeFile(currentFileWebperf, webPerfString, function (err) {
-                    if (err) {
-                        console.log(err);
+                    if (!webperf[data.options.device].hasOwnProperty(page.name)) {
+                        webperf[data.options.device][page.name] = {};
                     }
-                });
-            }
-        });
-      } catch (e) {
-        zeno.console.log(e);
-      }
+                    if (!webperf[data.options.device][page.name].hasOwnProperty(dateFormat)) {
+                        webperf[data.options.device][page.name][dateFormat] = {};
+                    }
+
+                    webperf[data.options.device][page.name][dateFormat] = data.metrics;
+
+                    var webPerfString = JSON.stringify(webperf);
+                    fs.writeFile(currentFileWebperf, webPerfString, function (err) {
+                        if (err) {
+                            console.log(err);
+                        }
+                    });
+                }
+            });
+        }
     });
 
     zeno.app.get('/webperf', function(req, res) {
