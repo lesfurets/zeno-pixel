@@ -819,7 +819,7 @@ globalCtrl = ($scope, $location, PagesFactory, ResultsFactory, VersionService, s
   $scope.sliderOffset = 0
   $scope.thumb        = '_thumb.png'
   $scope.hideFailures = false
-  $scope.hideSuccess  = false
+  $scope.hideSuccess  = true
 
   $scope.$on "updateEngine", (evt, data) ->
     $scope.results.engine = data
