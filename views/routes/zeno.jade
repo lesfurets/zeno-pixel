@@ -12,14 +12,9 @@ div.main.summary.collapsed(ng-class="{collapse: filter}")
         label(for="hf", class="checkbox")
         span Hide failures ({{results[device].results.length}})
     div(class="threshold")
-      p Mismatch : {{sliderOffset}} %
-      div(class="flex", style="margin-top:20px")
-        div 0
-        div(slider, class="slider", style="width:100px")
-          div(class="slider-back")
-          div(class="slider-progress")
-          div(class="slider-button")
-        div 100
+      p Mismatch :
+        input.slider-offset(ng-model="sliderOffset" type="number")
+        span %
 
   div(class="block compare")
     span Select 2 environments to compare
