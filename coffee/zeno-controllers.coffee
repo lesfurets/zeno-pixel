@@ -301,11 +301,14 @@ zenoCtrl = ($scope, $location, $timeout, ZenoService, PagesFactory, ResultsFacto
     else
       if $scope.filtered && $scope.hasFiltered
         element.params = "?redisplay"
-    if $scope.sliderOffset > 0
+    sliderOffset = parseFloat($scope.sliderOffset)
+    if sliderOffset > 0
+      $scope.hideSuccess = false
       isfiltered[1] = false
       for error in $scope.results[$scope.device].results
-        if error.name is element.name and $scope.sliderOffset < error.percentage
-          isfiltered[1] = true
+        percentage = parseFloat(error.percentage)
+        if error.name is element.name
+          isfiltered[1] = sliderOffset <= percentage
       $(window).trigger('rowReduce')
     return isfiltered[0] && isfiltered[1]
 
