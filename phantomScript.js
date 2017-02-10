@@ -9,13 +9,13 @@ var page     = require('webpage').create(),
     options  = JSON.parse(system.args[1]),
     metrics  = {req: 0, size:0, time:0, errors: [], jsErrors: []};
 
-if(options.cookies) {
+if (options.cookies) {
     for (var i = 0; i < options.cookies.length; i++) {
         phantom.addCookie(options.cookies[i]);
     }
 }
 
-if(options.ua) {
+if (options.ua) {
     page.settings.userAgent = options.ua;
 }
 

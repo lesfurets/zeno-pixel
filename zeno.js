@@ -1,12 +1,12 @@
 'use strict';
 
-var fs    = require('fs'),
-    util  = require('util'),
-    path  = require('path'),
-    spawn = require('child_process').spawn,
-    im    = require('imagemagick'),
+var fs      = require('fs'),
+    util    = require('util'),
+    path    = require('path'),
+    spawn   = require('child_process').spawn,
+    im      = require('imagemagick'),
     request = require('request'),
-    utils = require('./tools/utils');
+    utils   = require('./tools/utils');
 
 var Zeno = function (app, server, io, params) {
     this.app           = app;
@@ -37,22 +37,23 @@ var Zeno = function (app, server, io, params) {
     // --startAction
     this.startAction   = params.startAction || false;
 
-    this.log           = utils.log;
-    this.devices       = ['desktop', 'tablet', 'mobile'];
-    this.versioning    = 'versioning';
-    this.ext           = '.png';
-    this.phantomScript = path.join(__dirname, 'phantomScript.js');
-    this.instance      = [];
-    this.cookiesList   = [];
-    this.modules       = [];
-    this.listtoshot    = [];
-    this.versions      = [];
+    this.log            = utils.log;
+    this.devices        = ['desktop', 'tablet', 'mobile'];
+    this.versioning     = 'versioning';
+    this.ext            = '.png';
+    this.phantomScript  = path.join(__dirname, 'phantomScript.js');
+    this.instance       = [];
+    this.cookiesList    = [];
+    this.modules        = [];
+    this.listtoshot     = [];
+    this.versions       = [];
+    this.results        = {};
+    this.pages          = {};
     this.versionsByPage = {};
-    this.results       = {};
-    this.pages         = {};
 
     this.emitter = new (require('events').EventEmitter)();
     this.emitter.setMaxListeners(200);
+
     this.uaDesktop = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:44.0) Gecko/20100101 Firefox/44.0';
     this.uaMobile  = 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_2_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13D15 Safari/601.1';
     this.uaTablet  = 'Mozilla/5.0 (iPad; CPU OS 9_0 like Mac OS X) AppleWebKit/601.1.17 (KHTML, like Gecko) Version/8.0 Mobile/13A175 Safari/600.1.4';
@@ -67,7 +68,7 @@ Zeno.prototype = {
      * @param cb end initialization callback
      */
     init: function(cb) {
-        var self = this;
+        const self = this;
 
         if (!fs.existsSync(this.dir)) {
             fs.mkdirSync(this.dir);
@@ -79,21 +80,21 @@ Zeno.prototype = {
         this.updateVersionList(true);
 
         if (this.logFile) {
-            var logFile   = fs.createWriteStream(this.logFile, {flags : 'a'});
-            var logStdout = process.stdout;
+            const logFile   = fs.createWriteStream(this.logFile, {flags : 'a'});
+            const logStdout = process.stdout;
 
             // copy stdout in the log file
-            console.log = function(d) {
-                logFile.write(util.format(d) + '\n');
-                logStdout.write(util.format(d) + '\n');
+            console.log = d => {
+                logFile.write('$(util.format(d)}\n');
+                logStdout.write('$(util.format(d)}\n');
             };
         }
 
         // Init results object
-        this.devices.forEach(function(device) {
-            self.results.engine = self.engine.name;
-            self.results[device]         = {};
-            self.results[device].results = [];
+        this.devices.forEach((device) => {
+            this.results.engine          = this.engine.name;
+            this.results[device]         = {};
+            this.results[device].results = [];
         });
 
         this.addCoreRoad();
@@ -102,55 +103,45 @@ Zeno.prototype = {
 
         this.log('Engine detected: ' + this.engine.name + ' ' + this.engine.version);
 
-        var loadConfigurationFile = function(err, file) {
+        const loadConfigurationFile = (err, file) => {
             if (err) {
-                self.log('No file configuration founded');
+                this.log('No file configuration founded');
             } else {
-                self.pages            = JSON.parse(file);
-                self.pages.refreshing = {
+                this.pages            = JSON.parse(file);
+                this.pages.refreshing = {
                     desktop: [],
                     tablet: [],
                     mobile: []
                 };
-                self.instance     = self.pages.envs;
+                this.instance     = this.pages.envs;
             }
 
-            self.loadModules(cb);
+            this.loadModules(cb);
 
-            if (self.startAction) {
-                self.devicesComparaison(self.instance[0], self.instance[1]);
+            if (this.startAction) {
+                this.devicesComparaison(this.instance[0], this.instance[1]);
             }
         };
 
         // Fetch configuration file
         if (this.pageUrl) {
-            request(this.pageUrl, function (err, response, file) {
+            request(this.pageUrl, (err, response, file) => {
                 loadConfigurationFile(err, file);
             });
         } else {
-            fs.readFile(this.pageFile, 'utf-8', function (err, file) {
+            fs.readFile(this.pageFile, 'utf-8', (err, file) => {
                 loadConfigurationFile(err, file);
             });
         }
 
         // Fetch cookies file
         if (this.cookieUrl) {
-            request(this.cookieUrl, function (err, response, file) {
-                if (err) {
-                    this.log(err);
-                }
-                else {
-                    self.cookiesList = JSON.parse(file);
-                }
+            request(this.cookieUrl, (err, response, file) => {
+                !!err ? this.log(err) : this.cookiesList = JSON.parse(file);
             });
         } else {
-            fs.readFile(this.cookieFile, 'utf-8', function (err, file) {
-                if (err) {
-                    this.log(err);
-                }
-                else {
-                    self.cookiesList = JSON.parse(file);
-                }
+            fs.readFile(this.cookieFile, 'utf-8', (err, file) => {
+                !!err ? this.log(err) : this.cookiesList = JSON.parse(file);
             });
         }
     },
@@ -161,12 +152,12 @@ Zeno.prototype = {
     addCoreRoad: function () {
         var self = this;
 
-        this.app.get('/', function(req, res) {
+        this.app.get('/', (req, res) => {
             res.render('index');
         });
 
-        this.app.get('/update/:env', function(req, res) {
-            self.instance.forEach(function (env) {
+        this.app.get('/update/:env', (req, res) => {
+            this.instance.forEach(function (env) {
                 if(env.alias === req.params.env || "all" === req.params.env) {
                     self.envScreenshot(env, 'desktop');
                     self.envScreenshot(env, 'mobile');
@@ -176,8 +167,8 @@ Zeno.prototype = {
             res.send('Update ' + req.params.env + ' in progress\n');
         });
 
-        this.app.get('/update/:env/:screenshotId', function(req, res) {
-            self.instance.forEach(function (env) {
+        this.app.get('/update/:env/:screenshotId', (req, res) => {
+            this.instance.forEach(function (env) {
                 if(env.alias === req.params.env) {
                     self.envScreenshot(env, 'desktop', req.params.screenshotId);
                     self.envScreenshot(env, 'mobile', req.params.screenshotId);
@@ -187,55 +178,56 @@ Zeno.prototype = {
             res.send('Update ' + req.params.env + ' with ' + req.params.screenshotId+ 'in progress\n');
         });
 
-        this.app.get('/routes/:name', function(req, res) {
+        this.app.get('/routes/:name', (req, res) => {
             res.render('routes/' + req.params.name);
         });
 
-        this.app.get('/pages', function(req, res) {
-            res.send(JSON.stringify(self.pages));
+        this.app.get('/pages', (req, res) => {
+            res.send(JSON.stringify(this.pages));
         });
 
-        this.app.get('/queue', function(req, res) {
-            res.send(JSON.stringify(self.listtoshot));
+        this.app.get('/queue', (req, res) => {
+            res.send(JSON.stringify(this.listtoshot));
         });
 
-        this.app.get('/versions', function(req, res) {
-            res.send(JSON.stringify(self.versions));
+        this.app.get('/versions', (req, res) => {
+            res.send(JSON.stringify(this.versions));
         });
 
-        this.app.get('/versions/page/', function(req, res) {
-            res.send(JSON.stringify(self.versionsByPage));
+        this.app.get('/versions/page/', (req, res) => {
+            res.send(JSON.stringify(this.versionsByPage));
         });
 
-        this.app.get('/versions/page/:page', function(req, res) {
-            res.send(JSON.stringify(self.versionsByPage[req.params.page]));
+        this.app.get('/versions/page/:page', (req, res) => {
+            res.send(JSON.stringify(this.versionsByPage[req.params.page]));
         });
 
-        this.app.get('/results', function(req, res) {
-            res.send(JSON.stringify(self.results));
+        this.app.get('/results', (req, res) => {
+            res.send(JSON.stringify(this.results));
         });
-        this.app.get('/results/:device', function(req, res) {
-            res.send(JSON.stringify(self.results[req.params.device]));
+        this.app.get('/results/:device', (req, res) => {
+            res.send(JSON.stringify(this.results[req.params.device]));
         });
-        this.app.get('/ua', function(req, res) {
+
+        this.app.get('/ua', (req, res) => {
             var data = {};
             var userAgents = {};
-            userAgents.uaDesktop = self.uaDesktop;
-            userAgents.uaTablet = self.uaTablet;
-            userAgents.uaMobile = self.uaMobile;
+            userAgents.uaDesktop = this.uaDesktop;
+            userAgents.uaTablet  = this.uaTablet;
+            userAgents.uaMobile  = this.uaMobile;
 
             var viewPorts = {};
-            viewPorts.vpDesktop = self.vpDesktop;
-            viewPorts.vpTablet= self.vpTablet;
-            viewPorts.vpMobile= self.vpMobile;
-            data.userAgents = userAgents;
-            data.viewPorts = viewPorts;
+            viewPorts.vpDesktop = this.vpDesktop;
+            viewPorts.vpTablet  = this.vpTablet;
+            viewPorts.vpMobile  = this.vpMobile;
+            data.userAgents     = userAgents;
+            data.viewPorts      = viewPorts;
             res.send(JSON.stringify(data));
         });
 
-        this.app.get('/log', function(req, res) {
-            if (self.logFile) {
-                fs.readFile(self.logFile, 'utf-8', function(err, file){
+        this.app.get('/log', (req, res) => {
+            if (this.logFile) {
+                fs.readFile(this.logFile, 'utf-8', function(err, file){
                     if (err) {self.log(err);}
                     var lines = file.trim().split('\n');
 
@@ -253,17 +245,17 @@ Zeno.prototype = {
             }
         });
 
-        this.app.get('/compareall/:env1/:env2', function(req, res) {
+        this.app.get('/compareall/:env1/:env2', (req, res) => {
             var env1, env2;
-            for (var i = 0; i < self.instance.length; i++) {
-                if (self.instance[i].alias === req.params.env1) {
-                    env1 = self.instance[i];
-                } else if (self.instance[i].alias === req.params.env2) {
-                    env2 = self.instance[i];
+            for (var i = 0; i < this.instance.length; i++) {
+                if (this.instance[i].alias === req.params.env1) {
+                    env1 = this.instance[i];
+                } else if (this.instance[i].alias === req.params.env2) {
+                    env2 = this.instance[i];
                 }
             }
 
-            self.devicesComparaison(env1, env2);
+            this.devicesComparaison(env1, env2);
             res.send('{status: "Comparaison started"}');
         });
     },
@@ -272,8 +264,7 @@ Zeno.prototype = {
      * Attach core listeners
      */
     addListeners: function () {
-        var self = this;
-        this.on('takeScreenshot', function (data) {
+        this.on('takeScreenshot', data => {
             //check for fallbacks
             if(typeof data.options.device === 'undefined') {
                 data.options.device = 'desktop';
@@ -283,11 +274,11 @@ Zeno.prototype = {
                 data.options.env = '';
             }
 
-            self.takeScreenshot(data.url, data.path, data.options);
+            this.takeScreenshot(data.url, data.path, data.options);
         });
 
-        this.on('onEnvUpdate', function (data){
-            self.io.sockets.emit('queueChangeEvent', self.listtoshot);
+        this.on('onEnvUpdate', data => {
+            this.io.sockets.emit('queueChangeEvent', this.listtoshot);
         });
     },
 
@@ -304,7 +295,7 @@ Zeno.prototype = {
             /*
              * Fired when an image is refreshed by a client
              */
-            socket.on('refreshOneScreen', function (data) {
+            socket.on('refreshOneScreen', data => {
                 self.unitScreenshot(
                     self.instance[data.env],
                     data.name,
@@ -316,14 +307,14 @@ Zeno.prototype = {
             /*
              * Fired when an environment is refreshed by a client
              */
-            socket.on('refreshEnv', function (data) {
+            socket.on('refreshEnv', data => {
                 self.envScreenshot(data.env, data.type, 'manual', socket);
             });
 
             /*
              * Get if pages are loaded by url or filesystem
              */
-            socket.on('getConfType', function (cb) {
+            socket.on('getConfType', cb => {
                 var conf = {
                     file: self.pageUrl || self.pageFile,
                     url: self.pageUrl ? true : false
@@ -334,38 +325,31 @@ Zeno.prototype = {
             /*
              * Update conf file
              */
-            socket.on('updateConfFile', function (cb) {
+            
+            var updateConfFile = (file, cb) => {
+                try {
+                    self.pages = JSON.parse(file);
+                    self.pages.refreshing = {
+                        desktop: [],
+                        tablet : [],
+                        mobile : []
+                    };
+                    self.instance = self.pages.envs;
+                    self.log('Configuration reloaded with success');
+                    cb(self.pages);
+                } catch (e) {
+                    console.log("Error reloading conf: " + e);
+                }
+            };
+            
+            socket.on('updateConfFile', cb => {
                 if (self.pageUrl) {
                     request(self.pageUrl, function (err, response, file) {
-                        try {
-                            self.pages = JSON.parse(file);
-                            self.pages.refreshing = {
-                                desktop: [],
-                                tablet : [],
-                                mobile : []
-                            };
-                            self.instance = self.pages.envs;
-                            self.log('Configuration reloaded with success');
-                            cb(self.pages);
-                        } catch (e) {
-                            console.log("Error reloading conf: " + e);
-                        }
+                        updateConfFile(file, cb);
                     });
                 } else {
                     fs.readFile(self.pageFile, 'utf-8', function (err, file) {
-                        try {
-                            self.pages = JSON.parse(file);
-                            self.pages.refreshing = {
-                                desktop: [],
-                                tablet : [],
-                                mobile : []
-                            };
-                            self.instance = self.pages.envs;
-                            self.log('Configuration reloaded with success');
-                            cb(self.pages);
-                        } catch (e) {
-                            console.log("Error reloading conf: " + e);
-                        }
+                        updateConfFile(file, cb);
                     });
                 }
             });
@@ -373,9 +357,9 @@ Zeno.prototype = {
             /*
              * Fired when user update the configuration from /pages
              */
-            socket.on('updateList', function (data) {
-                self.devices.forEach(function (device){
-                    data.list[device].forEach(function (url) {
+            socket.on('updateList', data => {
+                self.devices.forEach(device => {
+                    data.list[device].forEach(url => {
                         delete url.percentage;
                     });
                 });
@@ -388,18 +372,17 @@ Zeno.prototype = {
             /*
              * Fired after each client side comparaison to update the server object
              */
-            socket.on('updateResults', function (data) {
+            socket.on('updateResults', data => {
                 self.updateResultsByName(data.name, data.device, data.percentage);
             });
 
-            socket.on('updateEngine', function (data) {
+            /*
+             * Fired when a client change the rendering engine
+             */
+            socket.on('updateEngine', data => {
                 self.engine       = require('./tools/engine').get(data.engine);
                 self.pages.engine = self.engine.name;
                 self.log('Engine updated : ' + self.engine.name + ' ' + self.engine.version);
-            });
-
-            socket.on('saveList', function () {
-                // todo
             });
 
             socket.on('addDevicePage', function (page, device, cb) {
@@ -414,6 +397,7 @@ Zeno.prototype = {
                     cb('ko');
                 }
             });
+
             var hasSameAlternativeAndCookies = function(page1, page2) {
                 return (page1.alternative == page2.alternative
                 && JSON.stringify(page1.cookies) == JSON.stringify(page2.cookies));
@@ -494,7 +478,7 @@ Zeno.prototype = {
             if (err) {return self.log(err);}
             self.modules = dirs;
 
-            self.modules.forEach(function(dir) {
+            self.modules.forEach(dir => {
                 if (dir[0] == '.') {
                     return
                 }
@@ -508,7 +492,7 @@ Zeno.prototype = {
             });
 
             self.endInit();
-            if(cb) {cb();}
+            if(cb) cb();
         });
     },
 
@@ -516,25 +500,21 @@ Zeno.prototype = {
      * finalize express configuration adn error handling
      */
     endInit: function () {
-        var self = this;
-        this.app.get('*', function(req, res, next) {
-            self.log('Error 404 : ' + req.url);
-            var err = new Error();
+        this.app.get('*', (req, res, next) => {
+            this.log('Error 404 : ' + req.url);
+            let err = new Error();
             err.status = 404;
             next(err);
         });
 
         /* Error handling */
         this.app.use(function(err, req, res, next){
-            if(err.status !== 404) {
-                return next();
-            }
-
+            if(err.status !== 404) return next();
             res.status(404).render('404');
         });
 
-        this.server.listen(this.app.get('port'), function(){
-            self.log('Express server listening on port ' + self.app.get('port'));
+        this.server.listen(this.app.get('port'), _ => {
+            this.log('Express server listening on port ' + this.app.get('port'));
         });
     },
 
@@ -545,11 +525,11 @@ Zeno.prototype = {
     getCookies: function (page) {
         var cookies = [];
         if (page.cookies) {
-            for (var i = 0; i < page.cookies.length; i++) {
-                if(this.cookiesList[page.cookies[i]]) {
-                    cookies.push(this.cookiesList[page.cookies[i]]);
+            page.cookies.forEach(cookie => {
+                if(this.cookiesList[cookie]) {
+                    cookies.push(this.cookiesList[cookie]);
                 }
-            }
+            });
         }
 
         return cookies;
@@ -580,8 +560,8 @@ Zeno.prototype = {
         var screenshotPackDir = p.join(this.dir, this.versioning, versionPath);
 
         if (!fs.existsSync(screenshotPackDir)) {
-            fs.mkdir(screenshotPackDir, function (err){
-                var screenShotName = options.env + name + self.ext;
+            fs.mkdir(screenshotPackDir, err => {
+                var screenShotName = options.env + name + this.ext;
                 self.updateVersionList(false, screenShotName, versionPath);
             });
         }
@@ -590,12 +570,12 @@ Zeno.prototype = {
                 ua          : options.userAgent,
                 viewportSize: options.viewportSize,
                 cookies     : options.cookies,
-                blacklist   : self.pages.blacklist,
+                blacklist   : this.pages.blacklist,
                 path        : path, // path on disk
                 url         : url,  // use to render a page from url
                 body        : options.body  // use to render a page from html
             })],
-            process = spawn(this.engine.path, args);
+        process = spawn(this.engine.path, args);
 
         process.stdout.on('data', function(data) {
             var chunk = '' + data, // cast as a string
@@ -703,19 +683,18 @@ Zeno.prototype = {
     envScreenshot: function (env, device, paramScreenshotId) {
         var server,
             cookies = [],
-            self    = this,
             pages   = this.pages[device],
             details = {};
 
         if (device === 'mobile') {
             details.viewport = {width: this.vpMobile, height: 1100};
-            details.ua = self.uaMobile;
+            details.ua = this.uaMobile;
         } else if (device === 'desktop') {
             details.viewport = {width: this.vpDesktop, height: 1100};
-            details.ua = self.uaDesktop;
+            details.ua = this.uaDesktop;
         } else if (device === 'tablet') {
             details.viewport = {width: this.vpTablet, height: 1100};
-            details.ua = self.uaTablet;
+            details.ua = this.uaTablet;
         } else {
             return;
         }
@@ -724,10 +703,10 @@ Zeno.prototype = {
             this.log('Update ' + device + ' screenshots (' + env.server + ')');
             this.pages.refreshing[device].push(env.server);
 
-            pages.forEach(function (page) {
+            pages.forEach((page) => {
                 if (page.url) {
                     var alternative = undefined;
-                    self.getCookies(cookies, page);
+                    this.getCookies(cookies, page);
 
                     if (page.hasOwnProperty('alternative') && env.hasOwnProperty('alternative')) {
                         alternative = env.alternative[page.alternative];
@@ -752,15 +731,15 @@ Zeno.prototype = {
                         server = env.server;
                     }
 
-                    self.listtoshot.push({
-                        url    : self.parseUrl(server, page.url, env.port),
+                    this.listtoshot.push({
+                        url    : this.parseUrl(server, page.url, env.port),
                         name   : page.name,
                         options: options
                     });
                 }
             });
 
-            self.emit('onEnvUpdate', {
+            this.emit('onEnvUpdate', {
                 device : device,
                 env    : env.server
             });
@@ -858,10 +837,10 @@ Zeno.prototype = {
      * Read versionning folder to update and sort the list
      */
     updateVersionList: function (withFullRead, file, version) {
-        this.log('Fetch versions list');
         var self = this;
         var pathVersioning = path.join(this.dir, this.versioning);
-        var functionCompareDate = function (a, b) {
+
+        var functionCompareDate = (a, b) => {
             // read mm-dd-yyyy-hh-mm-ss(?-screenshotId)
             var as = a.split('-');
             var bs = b.split('-');
@@ -879,29 +858,27 @@ Zeno.prototype = {
 
             return diff;
         };
-        var makeVersionsByPage = function (file, version) {
-            if (self.versionsByPage.hasOwnProperty(file)) {
-                if (self.versionsByPage[file].indexOf(version) == -1) {
-                    self.versionsByPage[file].push(version);
-                    self.versionsByPage[file].sort(functionCompareDate);
-                } else {
 
-                }
+        var makeVersionsByPage = function (file, version) {
+            if (!!self.versionsByPage.file && self.versionsByPage[file].indexOf(version) == -1) {
+                self.versionsByPage[file].push(version);
+                self.versionsByPage[file].sort(functionCompareDate);
             } else {
                 self.versionsByPage[file] = [version];
             }
         };
+
         if (withFullRead) {
-            fs.readdir(pathVersioning, function (err, dirs) {
-                if (err) {
-                    return self.log(err);
-                }
+            this.log('Fetch versions list');
+
+            fs.readdir(pathVersioning, (err, dirs) => {
+                if (err) return this.log(err);
 
                 dirs.sort(functionCompareDate);
 
-                self.versions = dirs;
-                self.io.sockets.emit('updateVersionEvent', {versions: self.versions});
-                dirs.forEach(function (version) {
+                this.versions = dirs;
+                this.io.sockets.emit('updateVersionEvent', {versions: this.versions});
+                dirs.forEach(version => {
                     fs.readdir(path.join(pathVersioning, version), function (err, files) {
                         if (files) {
                             files.forEach(function (file) {
@@ -913,13 +890,15 @@ Zeno.prototype = {
                 });
             });
         } else {
-            if (self.versions.indexOf(version) == -1) {
-                self.versions.push(version);
-                self.versions.sort(functionCompareDate)
+            this.log('Update versions list with: ' + version);
+            if (this.versions.indexOf(version) === -1) {
+                this.versions.push(version);
+                this.versions.sort(functionCompareDate)
             }
+
             makeVersionsByPage(file, version);
-            self.io.sockets.emit('updateVersionEvent', {versions: self.versions});
-            self.io.sockets.emit('updateVersionByPageEvent', {versionsByPage: self.versionsByPage});
+            this.io.sockets.emit('updateVersionEvent', {versions: this.versions});
+            this.io.sockets.emit('updateVersionByPageEvent', {versionsByPage: this.versionsByPage});
         }
     },
 
@@ -985,13 +964,13 @@ Zeno.prototype = {
         this.devices.forEach(function (device) {
             self.results[device].results = [];
             self.pages[device].forEach(function (page) {
-                self.results[device].date  = new Date();
+                self.results[device].date = new Date();
 
                 var name = page.name;
                 utils.compareImages(
                     path.join(self.dir, env1.server + name + self.ext),
                     path.join(self.dir, env2.server + name + self.ext),
-                    function (percentage) {
+                    percentage => {
                         self.updateResultsByName(name, device, percentage);
                     }
                 );

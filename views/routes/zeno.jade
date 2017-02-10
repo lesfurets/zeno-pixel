@@ -51,7 +51,7 @@ div.main
         li(ng-repeat="env in list.envs" ng-hide="env.hide")
           div.list-header(ng-mouseenter="env.visible=true", ng-mouseleave="env.visible=false", sticky, offset="40")
             span
-              a(href='#/env/{{env.alias}}/{{device}}') {{::env.alias}}
+              a(href='#/env/{{::env.alias}}/{{::device}}') {{::env.alias}}
             i(class="fa fa-refresh refreshEnv", ng-show="!env.offset", ng-click="refreshEnv(env, $index)")
             i(class="fa fa-eye-slash refreshEnv", ng-show="!env.offset", ng-click="env.hide=!env.hide")
           div(ng-repeat="url in (filtered = (list[device] | filter: filterList))", ng-class="{hideLine: !url.bigDisplay, success: url.success, failure: url.failure}", ng-show="hide($index)", ng-model="$parent.name", data-drop="true", jqyoui-droppable="{onDrop:'dropCallback($parent.$index, url.name, $index)'}", ng-click="toggleExpand(url)")
